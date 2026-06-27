@@ -1,0 +1,20 @@
+{
+  "name": "admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/admin",
+  "prefix": "lib",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/admin/**/*.ts",
+          "libs/admin/**/*.tsx"
+        ]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:admin"]
+}

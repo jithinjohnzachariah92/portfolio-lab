@@ -1,5 +1,5 @@
 {
-  "name": "nl2mongo",
+  "name": "portfolio-lab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
+    "@primer/css": "^22.3.0",
+    "@primer/react": "^38.29.0",
+    "mongoose": "^9.7.1",
+    "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.3"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@nx/next": "^23.0.0",
+    "@nx/react": "^23.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
-    "@eslint/eslintrc": "^3"
+    "nx": "^23.0.0",
+    "typescript": "^5"
   }
 }

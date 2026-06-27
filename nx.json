@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "extends": "nx/presets/npm.json",
+  "defaultBase": "main",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.ts"
+    ]
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/next/plugin",
+      "options": {
+        "startTargetName": "start",
+        "serveStaticTargetName": "serve"
+      }
+    },
+    {
+      "plugin": "@nx/react/plugin",
+      "options": {
+        "namedInputs": {
+          "production": ["default", "!{projectRoot}/**/*.spec.tsx"],
+          "test": [
+            "default",
+            "{projectRoot}/**/*.spec.tsx",
+            "{projectRoot}/**/*.test.tsx"
+          ]
+        }
+      }
+    }
+  ]
+}
