@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
+    "@jz92/ai-provider": "^0.6.2",
     "@primer/css": "^22.3.0",
     "@primer/react": "^38.29.0",
+    "ai": "^7.0.3",
     "mongoose": "^9.7.1",
     "next": "15.3.3",
     "react": "^19.0.0",
