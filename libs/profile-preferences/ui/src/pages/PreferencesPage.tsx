@@ -83,14 +83,10 @@ export default function PreferencesPage() {
         <div className={styles.container}>
           <div className={styles.inputSection}>
             <div className={styles.aiCard}>
-              <div className={styles.aiCardHeader}>
-                <span className={styles.aiIcon}>✨</span>
-                <span>AI-Powered Input</span>
-              </div>
               <textarea
                 value={naturalInput}
                 onChange={(e) => setNaturalInput(e.target.value)}
-                placeholder='e.g., "I love Nike and casual style, vegetarian"'
+                placeholder='Type in your preferences, we will parse it for you!'
                 className={styles.textarea}
               />
               <button
@@ -99,7 +95,7 @@ export default function PreferencesPage() {
                 disabled={parsing || !naturalInput.trim()}
               >
                 <span>✨</span>
-                {parsing ? "Analyzing..." : "Analyze Preferences"}
+                {parsing ? "Parsing..." : "Submit Preferences"}
               </button>
             </div>
 
