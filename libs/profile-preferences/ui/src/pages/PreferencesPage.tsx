@@ -112,13 +112,13 @@ export default function PreferencesPage() {
                   className={styles.example}
                   onClick={() => setNaturalInput("Prefer Nike and Adidas, sporty style, avoid dairy")}
                 >
-                  "Prefer Nike and Adidas, sporty style"
+                  "Prefer Nike and Adidas, sporty style, avoid dairy"
                 </div>
                 <div
                   className={styles.example}
                   onClick={() => setNaturalInput("Love formal wear, Christmas shopping, Gucci brands")}
                 >
-                  "Love formal wear and luxury brands"
+                  "Love formal wear, Christmas shopping, Gucci brands"
                 </div>
               </div>
             </div>
