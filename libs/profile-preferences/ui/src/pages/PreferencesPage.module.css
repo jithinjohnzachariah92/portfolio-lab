@@ -5,7 +5,8 @@
 }
 
 .header {
-  margin-bottom: 1rem;
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
 }
 
 .title {

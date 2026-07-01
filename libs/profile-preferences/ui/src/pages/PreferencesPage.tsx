@@ -58,7 +58,7 @@ export default function PreferencesPage() {
   return (
     <div className={styles.main}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Your Preferences</h1>
+        <h1 className={styles.title}>Preferences</h1>
         <p className={styles.subtitle}>
           Manage your shopping preferences
         </p>
