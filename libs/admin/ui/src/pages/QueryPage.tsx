@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import styles from "./QueryPage.module.css";
+import { ResultView } from "./ResultView";
+
 
 interface QueryResult {
   success: boolean;
@@ -41,6 +43,7 @@ export default function QueryPage() {
 
   return (
     <main className={styles.main}>
+      <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>NL → Mongo</h1>
         <p className={styles.subtitle}>
@@ -48,12 +51,9 @@ export default function QueryPage() {
         </p>
       </div>
 
-      <div className={styles.container}>
+      
         <div className={styles.inputSection}>
-          <label htmlFor="question" className={styles.label}>
-            Your Question
-          </label>
-          <textarea
+          <input
             id="question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -71,7 +71,7 @@ export default function QueryPage() {
             disabled={loading || !question.trim()}
             className={styles.submitButton}
           >
-            {loading ? "Analyzing..." : "Execute Query"}
+            {loading ? "Fetching..." : "Ask"}
           </button>
         </div>
 
@@ -80,9 +80,7 @@ export default function QueryPage() {
             {result.success ? (
               <>
                 <h2 className={styles.resultTitle}>Results</h2>
-                <pre className={styles.resultData}>
-                  {JSON.stringify(result.data, null, 2)}
-                </pre>
+                <ResultView data={result.data} />
               </>
             ) : (
               <>

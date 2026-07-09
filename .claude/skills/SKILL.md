@@ -29,6 +29,8 @@ Don't over-build. A simple file may be right before a database is. A shared temp
 **6. Bake in the invisible qualities.**
 Production-grade means attending to what no one explicitly asks for: observability (structured, queryable logs/metrics with correlation IDs so you can answer "what happened?" after the fact), security (secrets from env/secret stores only — never logged, hardcoded, or in URLs; watch what lands in published artifacts), graceful degradation (fail soft for users, fail loud in logs), performance and cost (don't do expensive work twice; cache, batch, and bound it), and testability. Raise these proactively rather than waiting to be asked.
 
+**Observability is not done until a test exercises each observable state.** Adding counters, events, or log lines only means the *plumbing* exists — it does not prove the states actually fire, or fire correctly, in the paths that matter. The failure mode: the instrumentation compiles, generic tests pass, and everyone assumes it works — but no test ever drove the code through the specific branches the observability was built to reveal, so a broken or never-triggered signal goes unnoticed. For every distinct state you added visibility for (cache hit vs miss vs eviction, retry vs give-up, each failure category, degraded vs healthy), write a test that provokes exactly that state and asserts the signal fired with the right shape. If you built it to be seen, prove it can be seen. This is the same discipline as evals for AI output: instrumentation you haven't tested is a claim, not a fact.
+
 **7. Separate audiences in failure handling.**
 When something fails, the end user gets a graceful, friendly fallback; the operator gets full diagnostic detail (what failed, where, timing, an error code, a correlation ID) in structured logs. One failure, two audiences. Never let a failure be silent, and never leak raw stack traces or internal detail to end users.
 
@@ -66,9 +68,10 @@ When building anything others will depend on — a library, package, shared modu
 3. Flag any hack you're tempted to use and propose the clean alternative.
 4. For anything others will consume, check the consumer's experience explicitly.
 5. Proactively raise observability, security, performance/cost, and graceful-degradation concerns.
-6. Help sequence: close the current increment before chasing the next thread.
-7. When patches don't take, verify the running state before editing further.
+6. When you add observability, add a test that provokes each observable state and asserts the signal fired — instrumentation isn't done until it's proven.
+7. Help sequence: close the current increment before chasing the next thread.
+8. When patches don't take, verify the running state before editing further.
 
 ## Domain notes
 
-The principles are universal; specific domains add their own concrete checklist on top. For example, when the work is **AI/LLM systems**, the quality bar additionally includes: environment-aware provider routing (cheap/local in dev, best in prod, decided by environment not feature code), response- and provider-level caching, retrying only transient errors (never auth/billing/validation), bounded timeouts, prompt-injection and output-validation safety, and token/cost budgeting. Apply the same shape of thinking to whatever domain is at hand — derive the domain's invisible qualities and bake them in.
+The principles are universal; specific domains add their own concrete checklist on top. For example, when the work is **AI/LLM systems**, the quality bar additionally includes: environment-aware provider routing (cheap/local in dev, best in prod, decided by environment not feature code), response- and provider-level caching, retrying only transient errors (never auth/billing/validation), bounded timeouts, prompt-injection and output-validation safety, and token/cost budgeting. Where multiple cache tiers coexist (an app-level response cache in front of a provider's own prompt cache), the observability must *distinguish* them — an app-cache hit, a provider cache-read, a provider cache-write, and a fresh call are four different states with four different cost profiles, and a test should exercise each so the logs provably tell them apart. Apply the same shape of thinking to whatever domain is at hand — derive the domain's invisible qualities and bake them in.
