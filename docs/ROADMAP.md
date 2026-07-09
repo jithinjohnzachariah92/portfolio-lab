@@ -87,19 +87,31 @@ Same category as #3's hardening — done back-to-back while the pattern was fres
 - [ ] *(deferred)* UI-side confirmation flow for `lowConfidenceItems` — the field is surfaced in the response but nothing renders it yet. Pick up when building the preferences UI.
 - [ ] *(noted)* Prime candidate for RAG (#6) — few-shot retrieval of similar past extractions will improve consistency of low-confidence extractions.
 
-### 5. Embeddings in ai-provider  `[was #6 prereq · med effort · HIGH value · the hinge]`
-Prerequisite for ALL RAG work. Build the capability immediately before consuming it in #6. **Full architecture: AI-CONCEPTS.md §9.**
+### 5a. Extract @jz92/ai-core  `[new · low effort · foundation for everything · do first]`
+Extract interfaces and shared types from `ai-provider` into a standalone contracts package. Nothing depends on implementations; everything depends on shapes. Prerequisite for adding embeddings cleanly. **Full vision: AI-CONCEPTS.md §11.**
 
-- [ ] Add `generateEmbedding()` + `generateEmbeddingBatch()` as first-class capabilities (baked in, not a plug-in abstraction)
-- [ ] Config-routed via `resolveEmbeddingProvider()` (env: `AI_EMBED_PROVIDER`, `AI_EMBED_MODEL`) — switching providers is config, not code
-- [ ] Wire providers: Voyage (default), OpenAI, Ollama
-- [ ] Route through existing `execute()` for cache/retry/timeout/events — but embedding-aware usage handling (no `outputTokens`; don't jam embedding usage into a completion-shaped object)
-- [ ] Tests proving observable states (provider resolution, cache hit on repeat embed, batch)
+- [ ] Create `@jz92/ai-core` npm package (Nx library or standalone)
+- [ ] Extract from `ai-provider/types.ts`: `ProviderConfig`, `AIRequestOptions`, `AIResponse`, `AIEvent` → into `ai-core`
+- [ ] Add new embedding contracts: `EmbeddingProviderConfig`, `EmbeddingRequest`, `EmbeddingResponse`, `EmbeddingBatchResponse`
+- [ ] `ai-provider` imports from `ai-core` (not the other way — dependency rule: downward only)
+- [ ] `EmbeddingResponse` carries `model` + `dimensions` fields — non-negotiable for pgvector store integrity
+- [ ] Publish `@jz92/ai-core` to npm before building #5b
 
-**Key design decisions (see AI-CONCEPTS.md §7 for full reasoning):**
-- **Voyage in BOTH dev and prod** (not Ollama-dev→hosted-prod). Embeddings from different models are incompatible (different dims + geometry); mixing dev/prod vectors = silent garbage. One provider = one vector space. This is the ONE capability that deliberately breaks the env-aware-routing pattern — and that's *correct*, not inconsistent.
-- **Baked in + config-routed, NOT plug-your-own-embedder.** Consumers are my own apps with one chosen provider; a plug-in abstraction would be premature. Config-routing gives hassle-free provider switching (`AI_EMBED_PROVIDER=openai`) without a plug-in mechanism. Upgrade path (expose an `Embedder` interface) noted if the package ever goes public.
-- Voyage isn't first-party in Vercel AI SDK — check community provider vs direct REST when building (verify against actual ecosystem).
+### 5b. Embeddings in @jz92/ai-provider  `[was #5 · med effort · HIGH value · the hinge]`
+Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architecture: AI-CONCEPTS.md §9 + §11.**
+
+- [ ] Add `generateEmbedding()` + `generateEmbeddingBatch()` behind `ai-core` interfaces
+- [ ] `resolveEmbeddingProvider()` — config-routed (`AI_EMBED_PROVIDER`, `AI_EMBED_MODEL`); Voyage default, OpenAI + Ollama wired. Switching providers = one env var change.
+- [ ] Decide Voyage integration approach for `ai@7`: community SDK vs direct REST vs OpenAI-compatible endpoint (search before building — same discipline as the cache-control syntax lesson)
+- [ ] Cache key includes provider + model + text: `embed:${provider}:${model}:${text}` — prevents a cached Voyage vector being returned when caller expects an OpenAI vector
+- [ ] Route through `execute()` spine for retry/timeout/events — embedding-aware usage shape (`inputTokens`, `dimensions`, `modelVersion` — no `outputTokens`)
+- [ ] Tests proving observable states (provider resolution, cache hit on repeat embed, batch, dimension field present)
+- [ ] Publish as `@jz92/ai-provider@0.7.0` (minor bump — new capability)
+
+**Key design decisions (see AI-CONCEPTS.md §7):**
+- **Voyage in BOTH dev and prod** — dimension consistency; the ONE capability that deliberately breaks env-aware routing, and correctly so.
+- **Baked in + config-routed** — not plug-your-own-embedder. Consumers are own apps with one provider; premature abstraction otherwise.
+- **`model` + `dimensions` in response** — written to pgvector alongside each vector; catches mismatches before they corrupt the store.
 
 ### 6. RAG + eval layer + self-evolving store  `[was #6 · HIGH effort · HIGH value · the big one]`
 **Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. Needs #5 done first. **Full architecture: AI-CONCEPTS.md §9.**
@@ -155,6 +167,53 @@ Rebuild NL2Mongo as a multi-step agent rather than a single RAG/extraction call.
 - [ ] Only adopt LangChain/LangGraph's default wrappers if a team is already standardized on that stack (consistency > my layer's rigor)
 
 > **On the original reasoning ("wider context windows will absorb RAG/orchestration, so build agents to prepare") — shaky, don't let it drive architecture:** (a) Wider context ≠ RAG obsolete — retrieval is about *relevance*, not just *fit*. (b) "Agents instead of RAG" is a category error — RAG gets context *in*; agents handle *flow*. (c) "Plumbing gets absorbed" taken seriously argues against `ai-provider` existing — contradicts the strategy. **Build agentically to close gap #2 — NOT because RAG is becoming obsolete.** An interviewer who knows the space will challenge the obsolescence claim.
+
+---
+
+## Platform roadmap — @jz92/* packages
+
+The long-shot vision: a composable TypeScript AI platform where each package is independently useful, independently versioned, and publishable. **Full vision + dependency rules: AI-CONCEPTS.md §11.**
+
+Build order is strictly downward — each package only depends on packages above it in this list.
+
+### P1. @jz92/vector  `[after #5b · provider-agnostic vector stores]`
+- [ ] `VectorStore` interface in `ai-core` (insert, search, delete)
+- [ ] pgvector implementation (right-sized first — no new managed service)
+- [ ] Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version cols are the dimension-consistency insurance
+- [ ] Per-domain table isolation (no cross-domain vector reads)
+- [ ] Pinecone / Weaviate adapters deferred until scale demands it
+
+### P2. @jz92/retrieval  `[after P1 · chunking, retrieval, reranking]`
+- [ ] Chunking strategies (fixed-size, sentence, semantic)
+- [ ] Similarity search (top-k, threshold filtering)
+- [ ] Quality-gated write-back (only good outputs enter the store — the self-evolving store mechanism)
+- [ ] Reranking (cross-encoder or LLM-as-judge) — deferred, add when retrieval quality plateaus
+- [ ] `lib/retrieval` written in-app first, extracted here when second domain needs it (right-sizing)
+
+### P3. @jz92/prompts  `[after P2 · prompt registry]`
+- [ ] Named, versioned prompt templates
+- [ ] Variable interpolation
+- [ ] Few-shot example injection (consumed by `retrieval` for RAG prompt assembly)
+- [ ] Prompt diffing — compare two versions of a prompt against the eval dataset
+
+### P4. @jz92/evals  `[parallel to P2 · golden tests + benchmarks]`
+- [ ] Golden test dataset format (input, expected output, scoring strategy)
+- [ ] Scoring strategies: exact_match, partial_credit, semantic_similarity, LLM-as-judge
+- [ ] CI runner — fails build if score drops below baseline
+- [ ] Regression test for every real bug found (e.g. "test you meat preference" → expected: isEmpty)
+- [ ] Benchmark across prompt versions and model changes
+
+### P5. @jz92/tools  `[before agents · tool registry]`
+- [ ] Tool definition interface (name, description, schema, handler)
+- [ ] Tool registry with lookup
+- [ ] MCP adapter (wraps an MCP server as a tool — reuses Jira MCP work)
+
+### P6. @jz92/agents  `[after P2+P3+P5 · agent runtime]`
+- [ ] ReAct loop (reason → act → observe → repeat)
+- [ ] Planner (decompose a goal into steps)
+- [ ] Supervisor (multi-agent coordination)
+- [ ] NL2Mongo agentic rebuild is the first consumer (milestone #9)
+- [ ] Hand-built first; LangGraph wrapping as an option if the complexity genuinely warrants it
 
 ---
 

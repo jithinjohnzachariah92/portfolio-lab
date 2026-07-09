@@ -5,7 +5,28 @@
 
 ---
 
-## 1. What I've built vs what RAG actually is
+## Contents
+
+### Foundations — understanding the space
+1. [What I've built vs what RAG actually is](#1-what-ive-built-vs-what-rag-actually-is)
+2. [ai-provider vs LangChain — same layer, different scope](#2-ai-provider-vs-langchain--same-layer-different-scope)
+3. [Everything is plumbing around a model call](#3-everything-is-plumbing-around-a-model-call)
+4. [Compose, don't ditch — when a requirement names LangChain/LangGraph](#4-compose-dont-ditch--when-a-requirement-names-langchainlanggraph)
+5. [The AI landscape — deep vs conversant](#5-the-ai-landscape--deep-vs-conversant)
+6. [The two flows (mental model for the apps)](#6-the-two-flows-mental-model-for-the-apps)
+
+### Architecture — how we build it
+7. [Embeddings — local vs Voyage, and why they route differently from completions](#7-embeddings--local-vs-voyage-and-why-they-route-differently-from-completions)
+8. [Platform vs domain — where AI capabilities live in an org](#8-platform-vs-domain--where-ai-capabilities-live-in-an-org)
+9. [The concrete RAG + gateway architecture (execution plan for #5/#6)](#9-the-concrete-rag--gateway-architecture-execution-plan-for-56)
+10. [Testing AI systems — the three-layer model](#10-testing-ai-systems--the-three-layer-model)
+
+### Platform vision
+11. [The @jz92 platform vision — a composable TypeScript AI platform](#11-the-jz92-platform-vision--a-composable-typescript-ai-platform)
+
+---
+
+
 
 **My current pipeline (Preference Parser, NL2Mongo) is structured extraction — NOT RAG:**
 ```
@@ -297,3 +318,57 @@ Layer 2 (evals)         — score output quality on fixed dataset, compare to ba
 > "Three layers: unit tests for the deterministic plumbing around the model (routing, caching, error typing, guardrails); evals to score output quality across a fixed dataset and detect regressions across prompt or model changes; and runtime guardrails — Zod, whitelists, confidence filters — that constrain model output in the request path. The key insight is that none of these test what the model *said* — they test whether my code handles the model's output correctly, whether quality improved or degraded, and whether the output meets a minimum bar to be usable. You never write a test that asserts on LLM output verbatim."
 
 **The failure mode to name in interviews:** teams that only do Layer 1 (unit tests) assume the model is a black box that "just works" and have no visibility into quality degradation over time. Teams that skip Layer 3 (guardrails) expose model hallucinations directly to users. Teams that skip Layer 2 (evals) can't tell whether a prompt change helped or hurt. All three layers are necessary; they answer different questions.
+
+---
+
+## 11. The @jz92 platform vision — a composable TypeScript AI platform
+
+A layered, independently-versioned npm monorepo where each package has a single responsibility, packages depend strictly downward (never sideways), and applications sit at the top consuming whatever they need. The goal: reusable platform capabilities across any project, any LLM, while keeping domain knowledge (RAG corpora, evals, prompts) in the applications that own them.
+
+```
+@jz92/ai-core          Interfaces & contracts — the foundation everything depends on
+       ↓
+@jz92/ai-provider      Chat · Embeddings · Streaming · Routing · Caching · Retries
+                        Telemetry · Cost · Metrics · Provider Adapters
+       ↓
+@jz92/vector           Provider-agnostic vector stores (pgvector, Pinecone, Weaviate)
+       ↓
+@jz92/retrieval        Chunking · Retrieval · Reranking
+       ↓
+@jz92/prompts          Prompt Registry
+       ↓
+@jz92/evals            Golden Tests · Benchmarks  ← sits beside apps, not in runtime
+       ↓
+@jz92/tools            Tool Registry
+       ↓
+@jz92/agents           Agent Runtime · Planner · ReAct · Supervisor
+       ↓
+Applications           portfolio-lab · NL2Mongo · Research Agent · ...
+```
+
+**Why `ai-core` is the right foundation:**
+`ai-core` owns only interfaces and shared types — no implementations, no runtime dependencies. This means `vector`, `retrieval`, and `agents` can depend on `ai-core` shapes without pulling in `ai-provider`'s provider SDKs. Swapping the embedding provider (Voyage → OpenAI) is a config change in `ai-provider`, not a change in anything that depends on it. This is the "depend on abstractions, not implementations" principle applied at the package level.
+
+**Package responsibilities (one-liners):**
+- `ai-core` — contracts: `CompletionProvider`, `EmbeddingProvider`, `AIResponse`, `EmbeddingResponse`, `ProviderConfig`, `AIEvent`. Nothing else.
+- `ai-provider` — implements `ai-core` contracts for specific providers (Anthropic, OpenAI, Voyage, Ollama); owns routing, caching, retry, timeout, observability.
+- `vector` — provider-agnostic vector store interface + implementations (pgvector, Pinecone, Weaviate). Depends on `ai-core` for `EmbeddingResponse` shape; calls `ai-provider` for embedding generation.
+- `retrieval` — chunking strategies, similarity search, reranking. Depends on `vector` for storage and `ai-provider` for query embedding.
+- `prompts` — a registry of named, versioned prompt templates. Consumed by `retrieval` (few-shot assembly), `agents`, and applications.
+- `evals` — golden test datasets, scoring harness, benchmarks. Sits beside applications in CI; not in the runtime request path.
+- `tools` — tool definitions and registry, consumed by `agents`.
+- `agents` — agent runtime: ReAct loop, planner, supervisor. The top of the platform stack. Depends on `retrieval`, `prompts`, `tools`, and `ai-provider`.
+
+**Build order (what we're doing):**
+1. `ai-core` — extract contracts from `ai-provider` (already partially there as `types.ts`)
+2. `ai-provider` — add embeddings behind `ai-core` interfaces
+3. `vector` — pgvector implementation first (right-sized for current needs)
+4. `retrieval` — chunking + similarity search for the Preference Parser domain
+5. `evals` — golden test harness (milestone #6)
+6. `agents` — NL2Mongo agentic rebuild (milestone #9)
+
+**The portfolio angle:**
+This is not a portfolio *project* — it's a publishable TypeScript AI *platform*. Each package is independently useful, independently versioned, composable. `@jz92/retrieval` could be consumed by someone else's project. `@jz92/agents` is a lightweight TypeScript-native alternative to LangChain for teams on the TS stack. The whole stack demonstrates the org-scale platform/domain architecture from §8 — except you're building the platform itself, not just an application on top of one.
+
+**The dependency rule (never violate this):**
+Packages only depend downward. `ai-provider` never imports from `retrieval`. `vector` never imports from `agents`. If you find yourself importing upward, the abstraction boundary has leaked — extract an interface into `ai-core` instead.
