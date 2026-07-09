@@ -87,15 +87,34 @@ Same category as #3's hardening — done back-to-back while the pattern was fres
 - [ ] *(deferred)* UI-side confirmation flow for `lowConfidenceItems` — the field is surfaced in the response but nothing renders it yet. Pick up when building the preferences UI.
 - [ ] *(noted)* Prime candidate for RAG (#6) — few-shot retrieval of similar past extractions will improve consistency of low-confidence extractions.
 
-### 5a. Extract @jz92/ai-core  `[new · low effort · foundation for everything · do first]`
-Extract interfaces and shared types from `ai-provider` into a standalone contracts package. Nothing depends on implementations; everything depends on shapes. Prerequisite for adding embeddings cleanly. **Full vision: AI-CONCEPTS.md §11.**
+### 5a. Extract @jz92/ai-core  `[new · low-med effort · foundation for everything · do first]`
+Extract contracts, event bus, and security utilities into a standalone package. Zero runtime dependencies — pure TypeScript types + a tiny pub/sub array + regex utilities. **Full design spec: AI-CONCEPTS.md §12.**
 
-- [ ] Create `@jz92/ai-core` npm package (Nx library or standalone)
-- [ ] Extract from `ai-provider/types.ts`: `ProviderConfig`, `AIRequestOptions`, `AIResponse`, `AIEvent` → into `ai-core`
-- [ ] Add new embedding contracts: `EmbeddingProviderConfig`, `EmbeddingRequest`, `EmbeddingResponse`, `EmbeddingBatchResponse`
-- [ ] `ai-provider` imports from `ai-core` (not the other way — dependency rule: downward only)
-- [ ] `EmbeddingResponse` carries `model` + `dimensions` fields — non-negotiable for pgvector store integrity
-- [ ] Publish `@jz92/ai-core` to npm before building #5b
+**Four files, built now:**
+- [ ] `types.ts` — all contracts: `CompletionRequest/Response`, `EmbeddingRequest/Response/BatchResponse`, `VectorEntry/Query/SearchResult`, `TraceContext`, `CacheContext`, `AIErrorCode`, `AIProviderName`, `EmbeddingProviderName`, `AIEnvironment`
+- [ ] `events.ts` — event bus (`emit`, `onEvent`, `clearEvents`) + full discriminated `PlatformEvent` union covering `ai-provider`, `vector`, `retrieval`, `guardrails`, `agents`. `BaseEvent` carries `traceId`, `correlationId`, `userId`, `sessionId`, `source`, `type`, `timestamp`, `durationMs`, `env`, `cache`, `packageVersion`
+- [ ] `security.ts` — `redact()` (PII: email, credit card, UK postcode/phone/NHS); `detectInjection()` + `assertSafeInput()` (prompt injection guard); `scrubSecrets()` (API keys/bearer tokens from event payloads)
+- [ ] `index.ts` — re-exports everything
+
+**Three files, deferred (designed, slots in cleanly when needed):**
+- [ ] `cost.ts` — estimate cost from `CompletionSuccessEvent`/`EmbeddingSuccessEvent` using provider pricing table. Add when per-user/per-trace cost attribution is needed. Event schema already carries the data.
+- [ ] `sanitise.ts` — strip dangerous content from model responses. Add when a domain reports a bad-output class the guardrails don't catch.
+- [ ] `validation.ts` — `isValidTraceId`, `isValidUserId`, `assertNonEmpty`. Add when a second package needs the same logic.
+
+**Migration in `ai-provider`:**
+- [ ] `types.ts` → import from `@jz92/ai-core`; re-export old names (`AIRequestOptions`, `AIResponse`) for backwards compatibility
+- [ ] `observability.ts` → replace `emitEvent`/`onAIEvent` with `emit`/`onEvent` from `ai-core`; re-export `onAIEvent` for backwards compatibility
+- [ ] All `generateStructured`/`generatePlainText` calls → accept `TraceContext` fields (`traceId`, `userId`, `sessionId`) alongside existing options
+- [ ] Apply `assertSafeInput()` from `ai-core/security` before every model call
+- [ ] Apply `scrubSecrets()` before emitting any event
+
+**The test that ai-core is right:**
+```bash
+cat ai-core/package.json | jq '.dependencies'
+# Must return null or {} — any runtime dep means something leaked
+```
+
+- [ ] Publish `@jz92/ai-core@1.0.0` to npm before starting #5b
 
 ### 5b. Embeddings in @jz92/ai-provider  `[was #5 · med effort · HIGH value · the hinge]`
 Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architecture: AI-CONCEPTS.md §9 + §11.**
