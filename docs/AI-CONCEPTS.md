@@ -141,3 +141,159 @@ Not either/or — they compose. Options when orchestration is required:
 **The interview-grade insight:** embeddings are the ONE capability in `ai-provider` that *deliberately breaks* the env-aware-routing pattern (same provider both envs). That's not an inconsistency to apologize for — it's a *correct* design response to a constraint completions don't have. Being able to explain *why* embeddings route differently from completions signals you understand the tools deeply enough to know when a pattern shouldn't be applied uniformly.
 
 **Voyage model note:** Anthropic recommends Voyage for embeddings (Anthropic has no embeddings API of its own). `voyage-3` / `voyage-3-lite` are the general-purpose choices; there are domain-tuned variants (code, finance, law) if retrieval on specialised text ever needs it.
+
+---
+
+## 8. Platform vs domain — where AI capabilities live in an org
+
+In a company where engineering is organised into domains, AI capability splits across a **platform layer** and **domain layers** — and RAG itself splits across both.
+
+**Platform layer (one team owns it, every domain uses it):**
+- The **LLM gateway** — routing, caching, retries, timeouts, observability, model access. This is exactly what `ai-provider` is, at org scale. Often called an "AI platform" or "LLM gateway" team.
+- Org-wide concerns that no single domain should each solve: API-key management, cost attribution per team, rate limiting, audit logging, model-version governance, compliance.
+- RAG's *plumbing*: embedding model access (via the gateway, same reasoning as completions), the vector database as managed infra (one pgvector/Pinecone cluster with per-domain isolation, not one DB per domain), and often a shared retrieval *library* (reusable embed → search → assemble-prompt code that domains configure).
+
+**Domain layer (each domain owns its own):**
+- The **corpus** — what's in that domain's retrieval store.
+- Chunking/indexing strategy and the **quality gate** (what counts as a good example is domain judgement).
+- Retrieval tuning: top-k, similarity thresholds, filters.
+- Prompt templates for the domain's use cases.
+- **Evals** — judging output quality requires domain knowledge, so it can't be centralised.
+
+**The one-liner:** *domains own their RAG; the platform owns what all RAGs stand on.* Generic capability → platform. Knowledge + judgement → domain.
+
+**Known failure mode of "RAG per domain":** knowledge silos. A question spanning two domains ("customers whose *orders* suggest a *preference*" crosses Orders and Preferences) has nowhere to go if every store is an island. Mature answers: federated retrieval (query multiple domain stores) or a deliberately shared corpus for cross-cutting knowledge. Not a day-one problem, but the architecture's known weakness — worth naming before someone else does.
+
+**Caveat:** the exact platform/domain line varies by org — some platform teams offer full "RAG as a service" (domains just upload docs); others provide only the gateway. The stable principle is the split itself, not where precisely the line sits.
+
+**Portfolio mapping (say this in interviews):** `ai-provider` IS the platform layer; the #6 plan (RAG in the app, calling the provider; evals alongside) IS the domain layer. The portfolio rehearses the org-scale architecture at portfolio scale — same boundaries, same reasoning, smaller blast radius.
+
+---
+
+## 9. The concrete RAG + gateway architecture (execution plan for #5/#6)
+
+Four layers, bottom-up (which is also the build order):
+
+**Model layer:** Anthropic / Ollama for completions (env-routed); Voyage for embeddings in BOTH envs (one vector space — see §7).
+
+**Platform layer — `@jz92/ai-provider` (the gateway):**
+- Two capabilities: completions (exists) + embeddings (#5: `generateEmbedding()` / `generateEmbeddingBatch()`, config-routed via `resolveEmbeddingProvider()`, `AI_EMBED_PROVIDER` to switch).
+- Both share the same `execute()` spine — cache, retry, timeout, observability — with embedding-aware usage handling.
+- **The gateway knows NOTHING about RAG.** No chunking, retrieval, or prompt assembly. Contract: "text in → completion or vector out, robustly." That discipline is what keeps it platform-shaped.
+
+**Vector infra:** one shared Postgres+pgvector instance, isolated by per-domain table (`preference_examples`, `nl2mongo_examples`). Every row: `{embedding, input, output, model, model_version, created_at}` — the model/version columns are §7's Option-C upgrade path bought for two columns now instead of a migration later.
+
+**Domain layer — `portfolio-lab`:** a `rag/` module per domain, each owning its corpus, quality gate, retrieval tuning (top-k, thresholds), and prompt assembly. Per-request flow: embed input (via gateway) → search own table → assemble few-shot → generate (via gateway) → if output passes the quality gate, write back to the table. The write-back loop IS the self-evolving store. Domains never touch each other's tables.
+
+**Between the layers — a shared retrieval helper:** the generic `embed → search → format-as-few-shot` plumbing both domains would otherwise duplicate (`lib/retrieval`, configured per domain: which table, which top-k). This mirrors the org-scale "platform retrieval library." Right-sizing rule: write it once inside the first domain, extract when the second domain needs it — don't pre-build.
+
+**Evals:** per domain, fixed test set + scoring script, run in CI, never in the request path. The safety mechanism that makes the write-back loop safe.
+
+**Build order (dependencies dictate it):** gateway embeddings (#5) → pgvector schema + retrieval helper → first domain's RAG (Preference Parser — clearest value) → its eval harness → then decide *with eval evidence* whether NL2Mongo gets RAG or whether good few-shot already suffices there.
+
+**The one-liner + the boundary test:** the gateway exposes capabilities, the domains own knowledge, and the seam between them is two function calls (`generateEmbedding`, `generateStructured`). The test that the layering is right: **if adding a third domain ever requires editing `ai-provider`, the boundary has leaked.**
+
+---
+
+## 10. Testing AI systems — the three-layer model
+
+**The core tension:** you can't assert on LLM output the way you assert on deterministic code. The output of a model call isn't a fixed value — it's a probability distribution. "Write a test that checks the LLM returned the right thing" is the wrong frame entirely. The right frame: test different things at different layers, each layer asking a different question.
+
+---
+
+### Layer 1 — Test the plumbing, not the model (unit / integration tests)
+
+**Question it answers:** "Does my code around the model work correctly?"
+
+Not testing what the LLM *said* — testing that:
+- The right provider was called (env-aware routing)
+- The cache hit/missed correctly
+- Errors are typed and surfaced correctly
+- The Zod schema validates (or rejects) the output shape
+- The normaliser/whitelist drops hallucinated values
+- Input guards reject bad inputs before hitting the model
+
+**Key insight:** all of this is fully deterministic and testable without calling the model at all. Your 48 smoke tests already do this. The `normalise()` whitelist filter is a Layer 1 test target — if "Meat" slips through, that's a bug in *your code*, not the model, and it's testable with a fixed input/output pair.
+
+**What belongs here:**
+```typescript
+// Normaliser test — fully deterministic, no model call
+const result = normalise({ dietary: [{ name: "Meat", optedIn: true, confident: true }], ... })
+expect(result.dietary).toHaveLength(0) // "Meat" not on whitelist → dropped
+```
+
+---
+
+### Layer 2 — Evals (not unit tests — a different discipline entirely)
+
+**Question it answers:** "Is the model output better or worse than before?"
+
+Evals are NOT traditional tests. They don't pass or fail on a boolean. They *score* output quality across a fixed dataset, then you compare scores across runs:
+
+```
+input:    "I love Nike and hate synthetic fabrics"
+expected: { brands: [{ name: "Nike", optedIn: true }], style: [] }
+actual:   <whatever the model returned this run>
+score:    exact_match | partial_credit | semantic_similarity
+```
+
+**When you run evals:**
+- Before and after changing the system prompt — did quality improve?
+- Before and after adding RAG — did retrieval help?
+- On a schedule — is the model degrading as Anthropic updates it?
+- When you suspect a regression (like the "test you meat preference" hallucination)
+
+**The key distinction from unit tests:** evals answer "is this *better or worse than baseline*?" not "is this *correct*?" That's a different question, and it's the right question for LLM output. Your eval harness in milestone #6 is exactly this layer.
+
+**Eval dataset design:**
+- Fixed, curated test cases — inputs with expected outputs (or expected *properties* of outputs)
+- Include edge cases, known-bad inputs, and regression cases (every real bug you find becomes a test case)
+- The "test you meat preference" case → expected: `isEmpty: true`, score 0 if anything is returned
+- Scores trend over time; a drop signals a regression worth investigating
+
+**Scoring strategies (pick the right one for the task):**
+- `exact_match` — output matches expected exactly. Only works for highly constrained structured extraction.
+- `partial_credit` — correct items / total items. Better for preference extraction where partial hits are still useful.
+- `semantic_similarity` — embedding distance between actual and expected. Good for free-text outputs.
+- `LLM-as-judge` — use a second model call to score the first. Powerful but adds cost and latency; use for subjective quality.
+
+---
+
+### Layer 3 — Guardrails in code (deterministic fences around the model)
+
+**Question it answers:** "Did the model's output pass the minimum bar to be usable?"
+
+Guardrails don't test the LLM — they *constrain* its output at runtime. They run in the request path (unlike evals which run offline). Examples from your own code:
+
+- **Zod schema** — structural shape guaranteed; output that doesn't match is rejected before it reaches the consumer
+- **Whitelist normaliser** — items not on the whitelist are dropped regardless of model confidence
+- **`isEmpty` check** — all arrays empty after normalisation → prompt user to rephrase, don't save
+- **`confident` field** — low-confidence items surfaced to the UI for confirmation rather than silently applied
+- **`maxInputTokens`** — budget guard before the call; over-length input → 400, not a model error
+
+**The guardrail gap your "meat" case revealed:** `confident: false` is captured per-item but nothing in code currently *filters* or *flags* low-confidence items in a way that changes behaviour. A tighter guardrail: if the model returns an item as low-confidence AND it's a weak semantic match to the input, drop it — don't return it at all. This is a Layer 3 fix, not a model fix.
+
+---
+
+### How the three layers work together
+
+```
+User input
+   ↓
+Layer 3 (guardrails)    — input validation, token budget, runs in request path
+   ↓
+Model call              — the only non-deterministic step
+   ↓
+Layer 3 (guardrails)    — Zod validation, whitelist normaliser, isEmpty, confidence filter
+   ↓
+Response to consumer
+
+Offline / CI:
+Layer 1 (unit tests)    — plumbing, normaliser, error typing, routing — 48 smoke tests
+Layer 2 (evals)         — score output quality on fixed dataset, compare to baseline
+```
+
+**The interview answer to "how do you test AI systems?"**
+> "Three layers: unit tests for the deterministic plumbing around the model (routing, caching, error typing, guardrails); evals to score output quality across a fixed dataset and detect regressions across prompt or model changes; and runtime guardrails — Zod, whitelists, confidence filters — that constrain model output in the request path. The key insight is that none of these test what the model *said* — they test whether my code handles the model's output correctly, whether quality improved or degraded, and whether the output meets a minimum bar to be usable. You never write a test that asserts on LLM output verbatim."
+
+**The failure mode to name in interviews:** teams that only do Layer 1 (unit tests) assume the model is a black box that "just works" and have no visibility into quality degradation over time. Teams that skip Layer 3 (guardrails) expose model hallucinations directly to users. Teams that skip Layer 2 (evals) can't tell whether a prompt change helped or hurt. All three layers are necessary; they answer different questions.

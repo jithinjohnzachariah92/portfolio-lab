@@ -86,7 +86,7 @@ export default function PreferencesPage() {
               <textarea
                 value={naturalInput}
                 onChange={(e) => setNaturalInput(e.target.value)}
-                placeholder='Type in your preferences, we will parse it for you!'
+                placeholder='Type in your preferences, we will parse it as per our preferences categories'
                 className={styles.textarea}
               />
               <button
@@ -95,7 +95,7 @@ export default function PreferencesPage() {
                 disabled={parsing || !naturalInput.trim()}
               >
                 <span>✨</span>
-                {parsing ? "Parsing..." : "Submit Preferences"}
+                {parsing ? "Parsing..." : "Type your Preferences"}
               </button>
             </div>
 

@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { generateStructured, AIProviderError } from "@jz92/ai-provider";
 
-// ---- Vocabulary whitelist ----
 const VALID_PREFERENCES = {
   dietary:    ["Vegetarian", "Vegan", "Gluten-free", "Organic", "Keto", "Dairy-free"],
   style:      ["Minimalist", "Casual", "Formal", "Sporty", "Vintage", "Boho", "Modern", "Classic"],
@@ -10,7 +9,6 @@ const VALID_PREFERENCES = {
   categories: ["Fashion", "Home", "Electronics", "Beauty", "Sports", "Books", "Toys", "Food & Grocery"],
 } as const;
 
-// ---- Zod schema (unchanged) ----
 const PreferenceItemSchema = z.object({
   name:      z.string(),
   optedIn:   z.boolean(),
@@ -27,10 +25,18 @@ const PreferencesSchema = z.object({
 
 export type ParsedPreferences = z.infer<typeof PreferencesSchema>;
 
-// ---- Stable system prompt ----
-// This is the cached prefix — identical on every call.
-// In production Anthropic caches this server-side, reducing input costs by ~90%.
-// Locally it loads into the Ollama model context once per session.
+// ── Output-quality metadata ────────────────────────────────────────────────
+// Surfaces what happened after extraction so the route (and the UI) can act.
+export type ParseQuality = {
+  // Items the model was uncertain about — returned to the consumer so the UI
+  // can highlight them for user confirmation rather than silently applying them.
+  lowConfidenceItems: Array<{ category: string; name: string }>;
+  // True when every category is empty after normalisation — either the input
+  // had no recognisable preferences, or extraction found nothing valid.
+  // The UI should prompt the user to rephrase rather than saving empty prefs.
+  isEmpty: boolean;
+};
+
 const SYSTEM_PROMPT = `You are a preference extraction assistant for a retail customer database.
 
 Extract customer preferences from the natural language input and return valid JSON only.
@@ -54,36 +60,25 @@ Common preferences:
   * Brands: Nike, Adidas, Puma, Tommy Hilfiger, H&M, Zara, Gucci, Calvin Klein
   * Categories: Fashion, Home, Electronics, Beauty, Sports, Books, Toys, Food & Grocery`;
 
-// ---- Whitelist normaliser (unchanged) ----
-function normalise(raw: ParsedPreferences): ParsedPreferences {
+const normalise = (raw: ParsedPreferences): ParsedPreferences => {
   const dropped: string[] = [];
 
-  const result = {
-    categories: raw.categories.filter(i => {
-      const valid = (VALID_PREFERENCES.categories as readonly string[]).includes(i.name);
-      if (!valid) dropped.push(`categories:${i.name}`);
+  const filterCategory = <K extends keyof typeof VALID_PREFERENCES>(
+    items: typeof raw[K],
+    key: K
+  ) =>
+    items.filter((i) => {
+      const valid = (VALID_PREFERENCES[key] as readonly string[]).includes(i.name);
+      if (!valid) dropped.push(`${key}:${i.name}`);
       return valid;
-    }),
-    dietary: raw.dietary.filter(i => {
-      const valid = (VALID_PREFERENCES.dietary as readonly string[]).includes(i.name);
-      if (!valid) dropped.push(`dietary:${i.name}`);
-      return valid;
-    }),
-    events: raw.events.filter(i => {
-      const valid = (VALID_PREFERENCES.events as readonly string[]).includes(i.name);
-      if (!valid) dropped.push(`events:${i.name}`);
-      return valid;
-    }),
-    style: raw.style.filter(i => {
-      const valid = (VALID_PREFERENCES.style as readonly string[]).includes(i.name);
-      if (!valid) dropped.push(`style:${i.name}`);
-      return valid;
-    }),
-    brands: raw.brands.filter(i => {
-      const valid = (VALID_PREFERENCES.brands as readonly string[]).includes(i.name);
-      if (!valid) dropped.push(`brands:${i.name}`);
-      return valid;
-    }),
+    });
+
+  const result: ParsedPreferences = {
+    categories: filterCategory(raw.categories, "categories"),
+    dietary:    filterCategory(raw.dietary,    "dietary"),
+    events:     filterCategory(raw.events,     "events"),
+    style:      filterCategory(raw.style,      "style"),
+    brands:     filterCategory(raw.brands,     "brands"),
   };
 
   if (dropped.length > 0) {
@@ -91,47 +86,54 @@ function normalise(raw: ParsedPreferences): ParsedPreferences {
   }
 
   return result;
-}
+};
 
-// ---- Main export ----
-//
-// What changed vs the original:
-//   REMOVED  — Anthropic client instantiation
-//   REMOVED  — manual retry loop (gateway handles transient errors automatically)
-//   REMOVED  — cache_control header (gateway sets this in production automatically)
-//   REMOVED  — tool_use boilerplate (generateStructured uses generateText+Output internally)
-//   ADDED    — cacheKey: repeat identical inputs skip the API entirely
-//   ADDED    — AIProviderError typed catch with error code surfacing
-//
-// What did NOT change:
-//   — Zod schema (identical)
-//   — SYSTEM_PROMPT content (identical)
-//   — normalise() function (identical)
-//   — Return type { preferences, fallback } (identical — nothing else in the app breaks)
-//
-// Works locally via Ollama ($0), production via configured cloud provider.
+const getQuality = (prefs: ParsedPreferences): ParseQuality => {
+  const lowConfidenceItems: ParseQuality["lowConfidenceItems"] = [];
 
-export async function parsePreferencesWithClaude(
+  for (const [category, items] of Object.entries(prefs) as [keyof ParsedPreferences, typeof prefs[keyof ParsedPreferences]][]) {
+    for (const item of items) {
+      if (!item.confident) {
+        lowConfidenceItems.push({ category, name: item.name });
+      }
+    }
+  }
+
+  const isEmpty = Object.values(prefs).every((items) => items.length === 0);
+
+  return { lowConfidenceItems, isEmpty };
+};
+
+// ── Success / failure return types ─────────────────────────────────────────
+// errorCode travels up to the route so it can map to the right HTTP status
+// and message — without the route needing to re-catch or re-inspect errors.
+export type ParseResult =
+  | { success: true;  preferences: ParsedPreferences; quality: ParseQuality }
+  | { success: false; errorCode: string; errorMessage: string };
+
+export const parsePreferencesWithClaude = async (
   input: string
-): Promise<{ preferences: ParsedPreferences; fallback: false } | { preferences: null; fallback: true }> {
+): Promise<ParseResult> => {
   try {
     const result = await generateStructured({
-      systemPrompt: SYSTEM_PROMPT,
-      prompt: input,
-      schema: PreferencesSchema,
-      cacheKey: `preferences:${input}`,  // repeat identical inputs skip the API
+      systemPrompt:   SYSTEM_PROMPT,
+      prompt:         input,
+      schema:         PreferencesSchema,
+      cacheKey:       `preferences:${input}`,
       maxInputTokens: 4000,
     });
 
     const normalised = normalise(result.data);
-    return { preferences: normalised, fallback: false };
+    const quality    = getQuality(normalised);
+
+    return { success: true, preferences: normalised, quality };
 
   } catch (err) {
     if (err instanceof AIProviderError) {
       console.error(`[parsePreferences] ${err.code}:`, err.message);
-    } else {
-      console.error("[parsePreferences] Unexpected error:", err);
+      return { success: false, errorCode: err.code, errorMessage: err.message };
     }
-    return { preferences: null, fallback: true };
+    console.error("[parsePreferences] Unexpected error:", err);
+    return { success: false, errorCode: "UNKNOWN", errorMessage: String(err) };
   }
-}
+};

@@ -76,14 +76,19 @@ Same migration already done for the Preference Parser (direct SDK → ai-provide
 - [ ] **Hardening — explicitly deferred**, not scoped this pass: input validation · typed errors beyond ai-provider's · timeouts/retries tuning · output-quality guards. Pick up as its own pass.
 - [ ] **H&M empty-result carried over from #2** — confirm whether it's a genuine data question (no customer opted into H&M) or a real accuracy issue. Worth checking with a direct DB query (`db.customers.findOne({"preferences.brands.name": "H&M"})`) before assuming either way.
 
-### 4. Preference Parser — harden for better results  `[was #5 · med effort · do with #3]`
-Same category as #3's hardening — do the patterns back-to-back while fresh.
+### 4. Preference Parser — harden for better results  `[✅ done · was #5]`
+Same category as #3's hardening — done back-to-back while the pattern was fresh.
 
-- [ ] Apply same hardening checklist as #3
-- [ ] Prime candidate for RAG later (few-shot retrieval of similar past extractions) → feeds #6
+- [x] **Input validation (route level):** whitespace-only inputs trimmed before length check; `MIN_INPUT_LENGTH=3` / `MAX_INPUT_LENGTH=2000` constants return clean 400s before spending any tokens — over-length inputs no longer fall through to the token-budget guard deep inside `ai-provider`
+- [x] **Error typing:** `ParseResult` discriminated union — error code travels from service to route without re-catching; `errorResponse()` maps each `AIProviderError` code to the right HTTP status (`TOKEN_BUDGET`→400, `RATE_LIMIT`→429, `TIMEOUT`→503, `AUTH_ERROR`/`BILLING_ERROR`→500). Previously every failure returned 200 with `fallback: true`.
+- [x] **Output-quality guards:** `ParseQuality` type (`lowConfidenceItems`, `isEmpty`) computed post-normalisation; `isEmpty` guard prompts user to rephrase rather than silently saving empty prefs; `lowConfidenceItems` + `hasLowConfidence` surfaced in response for UI-side confirmation flow
+- [x] **`handleGetPreferences` hardened too:** `isValidObjectId()` regex guard before `Customer.findById` (malformed ObjectId → clean 400, not a Mongoose CastError propagating to 500); `buildDefaultPreferences()` extracted as named const; consistent `success` field on all error responses; `CastError` distinguished in catch
+- [x] `normalise()` refactored to `filterCategory` helper — same logic, no repetition; all functions converted to `const` arrow style
+- [ ] *(deferred)* UI-side confirmation flow for `lowConfidenceItems` — the field is surfaced in the response but nothing renders it yet. Pick up when building the preferences UI.
+- [ ] *(noted)* Prime candidate for RAG (#6) — few-shot retrieval of similar past extractions will improve consistency of low-confidence extractions.
 
 ### 5. Embeddings in ai-provider  `[was #6 prereq · med effort · HIGH value · the hinge]`
-Prerequisite for ALL RAG work. Build the capability immediately before consuming it in #6.
+Prerequisite for ALL RAG work. Build the capability immediately before consuming it in #6. **Full architecture: AI-CONCEPTS.md §9.**
 
 - [ ] Add `generateEmbedding()` + `generateEmbeddingBatch()` as first-class capabilities (baked in, not a plug-in abstraction)
 - [ ] Config-routed via `resolveEmbeddingProvider()` (env: `AI_EMBED_PROVIDER`, `AI_EMBED_MODEL`) — switching providers is config, not code
@@ -97,13 +102,17 @@ Prerequisite for ALL RAG work. Build the capability immediately before consuming
 - Voyage isn't first-party in Vercel AI SDK — check community provider vs direct REST when building (verify against actual ecosystem).
 
 ### 6. RAG + eval layer + self-evolving store  `[was #6 · HIGH effort · HIGH value · the big one]`
-**Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. Needs #5 done first.
+**Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. Needs #5 done first. **Full architecture: AI-CONCEPTS.md §9.**
 
-- [ ] Stand up pgvector (right-sized: no new managed service vs Pinecone/Weaviate)
-- [ ] Build RAG retrieval for Preference Parser (retrieve similar past extractions) — start here, RAG's value (consistency) is clearest
-- [ ] Build RAG retrieval for NL2Mongo (retrieve schema docs / example queries) — only if evals show it beats good few-shot
-- [ ] Build an **eval harness** — turn "I think this is better" into "scored X% higher on a test set". Prioritised gap; makes #6 real.
+Build order (dependencies dictate it):
+- [ ] Stand up pgvector — one shared Postgres instance, **per-domain tables** (`preference_examples`, `nl2mongo_examples`). Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version columns are the cheap Option-C upgrade path.
+- [ ] Build the retrieval flow for the Preference Parser domain (`rag/preferences`): embed input (via gateway) → search own table → assemble few-shot → generate (via gateway) → quality-gated write-back. Start here — RAG's value (consistency) is clearest. Write the `embed → search → format` plumbing inline first.
+- [ ] Build the **eval harness** for that domain — fixed test set + scoring script, runs in CI, never in the request path. Turn "I think this is better" into "scored X% higher". This is what makes the write-back loop safe to run.
+- [ ] Extract the shared retrieval helper (`lib/retrieval`, configured per domain: table, top-k) — only when the second domain needs it, not before.
+- [ ] NL2Mongo domain (`rag/nl2mongo`) — **only if evals show it beats good few-shot** for query generation.
 - [ ] **Skip** LangChain / LlamaIndex — hand-build (keeps the "I understand the plumbing" story).
+
+**Boundary test that the layering is right:** if adding a third domain ever requires editing `ai-provider`, the boundary has leaked. Gateway = capabilities; domains = knowledge; the seam = two function calls.
 
 **Layer placement:** embeddings → in `ai-provider` (#5); RAG wiring → in the app using it; evals → standalone harness. Rule: reusable-across-apps → package; app-specific → app.
 
