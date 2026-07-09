@@ -1,10 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
+import { generateStructured } from "@jz92/ai-provider";
 import { connectDB } from "@shared/db";
 import { Customer } from "@shared/models";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 const SCHEMA_CONTEXT = `
 You are a MongoDB query generator for an M&S customer database.
@@ -29,7 +26,7 @@ The collection is called "customers" and has this schema:
   }
 }
 
-Given a natural language question, return ONLY a valid JSON object with this structure:
+Given a natural language question, return a JSON object with this structure:
 {
   "filter": {},
   "projection": {},
@@ -37,17 +34,20 @@ Given a natural language question, return ONLY a valid JSON object with this str
   "limit": 10
 }
 
-No explanation. No markdown. No code blocks. Just the raw JSON object.
 Always return an empty projection {} so all fields are included in results.
 Important: field values are case sensitive. Always use Title Case for preference names e.g. "Vegetarian" not "vegetarian", "Christmas" not "christmas".
 `;
 
-export interface GeneratedQuery {
-  filter?: Record<string, unknown>;
-  projection?: Record<string, unknown>;
-  sort?: Record<string, 1 | -1>;
-  limit?: number;
-}
+// Zod schema mirrors GeneratedQuery exactly — this is what makes the output
+// structurally guaranteed instead of hand-parsed from free text.
+const generatedQuerySchema = z.object({
+  filter: z.record(z.string(), z.unknown()).optional(),
+  projection: z.record(z.string(), z.unknown()).optional(),
+  sort: z.record(z.string(), z.union([z.literal(1), z.literal(-1)])).optional(),
+  limit: z.number().optional(),
+});
+
+export type GeneratedQuery = z.infer<typeof generatedQuerySchema>;
 
 export interface NaturalLanguageQueryResult {
   question: string;
@@ -56,45 +56,26 @@ export interface NaturalLanguageQueryResult {
   count: number;
 }
 
-/**
- * Translate a natural-language question into a MongoDB query with Claude,
- * execute it against the customers collection, and return the results.
- *
- * Throws if Claude returns something that isn't valid JSON.
- */
-export async function runNaturalLanguageQuery(
-  question: string
-): Promise<NaturalLanguageQueryResult> {
-  // Step 1: Ask Claude to generate a MongoDB query
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1000,
-    messages: [
-      {
-        role: "user",
-        content: `${SCHEMA_CONTEXT}\n\nQuestion: ${question}`,
-      },
-    ],
+export const runNaturalLanguageQuery = async (
+  question: string,
+): Promise<NaturalLanguageQueryResult> => {
+  // Step 1: Ask the model to generate a MongoDB query — structured, not free text.
+  // Zod validates the shape; no more manual JSON.parse or markdown-fence stripping.
+  // cacheKey means an identical question within the TTL skips the model entirely.
+  const { data: parsedQuery } = await generateStructured({
+    systemPrompt: SCHEMA_CONTEXT,
+    prompt: `Question: ${question}`,
+    schema: generatedQuerySchema,
+    cacheKey: `nl2mongo:${question}`,
   });
-
-  const rawQuery =
-    response.content[0].type === "text" ? response.content[0].text : "";
-
-  // Step 2: Parse the query
-  let parsedQuery: GeneratedQuery;
-  try {
-    parsedQuery = JSON.parse(rawQuery);
-  } catch {
-    throw new Error(`Failed to parse query from Claude: ${rawQuery}`);
-  }
 
   console.log("Generated MongoDB Query:", parsedQuery);
 
-  // Step 3: Execute against MongoDB
+  // Step 2: Execute against MongoDB
   await connectDB();
-  const results = await Customer.find(parsedQuery.filter || {})
-    .sort(parsedQuery.sort || {})
-    .limit(parsedQuery.limit || 10);
+  const results = await Customer.find(parsedQuery.filter ?? {})
+    .sort(parsedQuery.sort ?? {})
+    .limit(parsedQuery.limit ?? 10);
 
   return {
     question,
@@ -102,4 +83,4 @@ export async function runNaturalLanguageQuery(
     results,
     count: results.length,
   };
-}
+};

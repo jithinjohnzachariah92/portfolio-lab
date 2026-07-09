@@ -65,12 +65,16 @@ No dependency on anything else. Good momentum builder.
 - [ ] *(optional polish, not blocking)* drop the `<label>` for a truer search-box look; simplify the now-redundant mobile grid rule.
 - [ ] *(carry to #3)* the `list customerids who like H&M` test returned 0 results — worth checking during NL2Mongo hardening whether the generated query (`$elemMatch` on `preferences.brands` + `optedIn: true`) matches the actual schema, or if it's a correct empty result.
 
-### 3. NL2Mongo → ai-provider migration + API hardening  `[was #2 · med effort · proven playbook]`
+### 3. NL2Mongo → ai-provider migration + API hardening  `[migration ✅ · hardening deferred · was #2]`
 Same migration already done for the Preference Parser (direct SDK → ai-provider). Inherits #1's observability for free.
 
-- [ ] Migrate NL2Mongo off direct Anthropic SDK onto `@jz92/ai-provider`
-- [ ] Define what "harden" means (pick): input validation · typed errors · timeouts/retries · output-quality guards
-- [ ] Wire observability through `instrumentation.ts` (same pattern as Preference Parser)
+- [x] Migrated off direct Anthropic SDK (`anthropic.messages.create` + manual `JSON.parse`) onto `@jz92/ai-provider`'s `generateStructured`
+- [x] Zod schema (`generatedQuerySchema`) mirrors the original `GeneratedQuery` type — output shape now structurally guaranteed instead of hand-parsed from free text (removes the markdown-fence/preamble fragility class entirely)
+- [x] `GeneratedQuery` type now inferred from the Zod schema (`z.infer`) — one source of truth instead of two
+- [x] Added `cacheKey: nl2mongo:${question}` — identical repeat questions now skip the model via the app-cache proven in #1
+- [x] Inherited for free: env-aware routing, smart retry, timeouts, full observability events
+- [ ] **Hardening — explicitly deferred**, not scoped this pass: input validation · typed errors beyond ai-provider's · timeouts/retries tuning · output-quality guards. Pick up as its own pass.
+- [ ] **H&M empty-result carried over from #2** — confirm whether it's a genuine data question (no customer opted into H&M) or a real accuracy issue. Worth checking with a direct DB query (`db.customers.findOne({"preferences.brands.name": "H&M"})`) before assuming either way.
 
 ### 4. Preference Parser — harden for better results  `[was #5 · med effort · do with #3]`
 Same category as #3's hardening — do the patterns back-to-back while fresh.
