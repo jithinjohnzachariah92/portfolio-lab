@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "evals": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts",
+    "evals:update-baseline": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts --update-baseline",
+    "evals:ci": "NODE_ENV=production npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts --ci"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
-    "@jz92/ai-provider": "^0.8.0",
+    "@jz92/ai-provider": "^0.8.1",
     "@primer/css": "^22.3.0",
     "@primer/react": "^38.29.0",
     "ai": "^7.0.3",
@@ -27,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "nx": "^23.0.0",

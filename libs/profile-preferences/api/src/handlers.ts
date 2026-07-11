@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AVAILABLE_PREFERENCES } from "@profile-preferences/utils";
 import { ICustomerPreferences } from "@profile-preferences/types";
-import { parsePreferencesWithClaude } from "./parseService";
+import { inferPreferences } from "./parseService";
 import { saveCustomerPreference } from "./customerService";
 import { Customer } from "@shared/models";
 import { connectDB } from "@shared/db";
+import { randomUUID } from "crypto";
 
 // ── Input constraints ──────────────────────────────────────────────────────
 // Keep these in sync with maxInputTokens in parseService (4000 tokens ≈ 16000 chars).
@@ -50,6 +51,7 @@ const errorResponse = (errorCode: string) => {
 
 export const handleParsePreferences = async (req: NextRequest) => {
   try {
+    const traceId = randomUUID()
     const { input } = await req.json();
 
     // ── Input validation ─────────────────────────────────────────────────
@@ -77,7 +79,7 @@ export const handleParsePreferences = async (req: NextRequest) => {
     }
 
     // ── Parse ────────────────────────────────────────────────────────────
-    const result = await parsePreferencesWithClaude(trimmed);
+    const result = await inferPreferences(trimmed, { traceId });
 
     if (!result.success) {
       return errorResponse(result.errorCode);

@@ -25,6 +25,7 @@
 11. [The @jz92 platform vision — a composable TypeScript AI platform](#11-the-jz92-platform-vision--a-composable-typescript-ai-platform)
 12. [@jz92/ai-core — full design spec](#12-jz92ai-core--full-design-spec)
 13. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
+14. [RAG production guardrails — token growth, quality, deduplication](#14-rag-production-guardrails--token-growth-quality-deduplication)
 
 ---
 
@@ -719,3 +720,185 @@ If you switch from Anthropic to OpenAI or Groq and your costs change unexpectedl
 
 **Interview framing:**
 > "Token caching is provider-specific — Anthropic requires explicit markers, OpenAI does it automatically, Ollama and Groq don't support it. My gateway abstracts this: `usePromptCache: true` only enables the markers for Anthropic in production; for other providers the flag is a no-op or irrelevant. On top of that I have my own app-level `BoundedCache` that's provider-agnostic — it caches the final result regardless of which model produced it, so a cache hit means zero tokens and zero API call, not just cheaper tokens."
+
+---
+
+## 14. RAG production guardrails — token growth, quality, deduplication
+
+Three failure modes to know and mitigate as a RAG store grows. Currently deferred (store is small, TOP_K=3 already bounds token consumption), but worth understanding before an interview and worth implementing before real user traffic scales.
+
+---
+
+### The token growth question — why it's bounded but not zero
+
+A common misconception: "as the store grows, token consumption grows unboundedly." Not true with a fixed TOP_K.
+
+```
+0 examples in store  → base system prompt only     (~315 tokens)
+1 example retrieved  → base + 1 example            (~402 tokens)
+2 examples retrieved → base + 2 examples           (~467 tokens)
+3+ examples in store → base + 3 examples           (~537 tokens) ← ceiling
+```
+
+Once the store has ≥ TOP_K relevant examples, token consumption is **flat** regardless of store size. 3,000 examples in the store costs the same as 3. The ceiling is `base_prompt_tokens + (TOP_K × avg_example_tokens)`.
+
+**The real risk:** example *size*, not example *count*. If inputs get longer or outputs more complex, each stored example grows and the ceiling rises. `top_k=3` at 200 tokens/example = 600 tokens overhead. Still manageable — but worth watching and capping.
+
+---
+
+### Guardrail 1 — Token-budget the injected examples
+
+Don't just count examples — count tokens. Hard-cap the few-shot context regardless of how many examples are retrieved:
+
+```typescript
+const MAX_EXAMPLE_TOKENS = 300  // hard ceiling on RAG context overhead
+
+const formatExamplesWithBudget = (
+  results: { input: string; output: string }[],
+  maxTokens: number
+): string => {
+  const formatted: string[] = []
+  let estimatedTokens = 0
+
+  for (const r of results) {
+    const example = `Example ${formatted.length + 1}:\nInput: "${r.input}"\nOutput: ${r.output}`
+    const estimate = Math.ceil(example.length / 4)  // ~4 chars per token
+    if (estimatedTokens + estimate > maxTokens) break
+    formatted.push(example)
+    estimatedTokens += estimate
+  }
+
+  return formatted.length === 0 ? '' :
+    `\nHere are some examples:\n\n${formatted.join('\n\n')}\n\nUse these as reference.`
+}
+```
+
+This makes the token ceiling explicit and configurable rather than implicit and dependent on example size.
+
+---
+
+### Guardrail 2 — Similarity score threshold
+
+Right now all top-K results are injected regardless of their score. A score of 0.3 means "not very similar" — injecting a weakly-related example can confuse the model more than help it. Only inject examples that are actually similar:
+
+```typescript
+const MIN_SCORE = 0.7  // tune based on your store's score distribution
+
+const relevant = results.filter(r => r.score >= MIN_SCORE)
+if (relevant.length === 0) return ''  // novel input → zero-shot, no injection
+```
+
+**Why this matters:** a genuinely novel input (no similar past examples) should get zero-shot treatment. Injecting the "least-bad" match from a dissimilar store is worse than injecting nothing — it anchors the model on the wrong examples.
+
+**How to tune the threshold:** after building up 50+ examples, look at your score distribution. If most relevant matches score 0.8+ and weak matches score 0.5-0.6, set threshold at 0.7. If your inputs are more diverse, lower it. Evals tell you which threshold gives the best extraction accuracy.
+
+---
+
+### Guardrail 3 — Store deduplication
+
+As users submit similar inputs repeatedly, the store accumulates near-duplicate examples that waste retrieval slots. If 80% of stored examples are variations of "I love Nike", retrieval always returns those 3 and misses the diversity needed for other inputs.
+
+Before inserting, check if a near-identical example already exists:
+
+```typescript
+// In store.ts — before insertOne
+const DEDUP_THRESHOLD = 0.95  // above this = near-duplicate, skip
+
+const existing = await collection.aggregate([
+  {
+    $vectorSearch: {
+      index: VECTOR_INDEX_NAME,
+      path: 'embedding',
+      queryVector: embedding,
+      numCandidates: 5,
+      limit: 1,
+    }
+  },
+  { $project: { score: { $meta: 'vectorSearchScore' } } }
+]).toArray()
+
+if (existing[0]?.score > DEDUP_THRESHOLD) {
+  console.log('[rag/store] Near-duplicate found (score: ' + existing[0].score.toFixed(3) + '), skipping')
+  return
+}
+
+// Proceed with insertOne
+```
+
+This keeps the store diverse — each stored example represents genuinely different input territory, so retrieval returns varied examples that cover the input space rather than clustering around the most common queries.
+
+---
+
+### How these three interact
+
+```
+New parse request
+  ↓
+retrieve() — with MIN_SCORE threshold
+  → only injects actually-similar examples
+  → novel inputs get zero-shot (no injection)
+  ↓
+formatExamplesWithBudget() — with token cap
+  → never exceeds MAX_EXAMPLE_TOKENS regardless of example size
+  ↓
+model call
+  ↓
+storeExample() — with deduplication check
+  → only stores if sufficiently different from existing examples
+  → keeps store diverse, retrieval quality high over time
+```
+
+**The self-improving store stays self-improving (not self-corrupting) with all three:**
+- Quality gate on input (score threshold) — don't inject noise
+- Quality gate on output (deduplication) — don't store redundancy
+- Cost gate (token budget) — don't let overhead creep up silently
+
+---
+
+### The full four-layer retrieval stack (long-shot future)
+
+Once the semantic cache and guardrails are all in place, the retrieval system has four distinct layers — each a progressively more expensive fallback:
+
+```
+User input
+  ↓
+Layer 0: BoundedCache (exact text match)
+  → HIT:  return cached LLM output immediately — zero Voyage, zero LLM
+  → MISS: proceed ↓
+
+Layer 1: Semantic cache (Atlas score ≥ 0.95)
+  → HIT:  return stored output directly — zero LLM call, just a vector search
+  → MISS: proceed ↓
+
+Layer 2: RAG few-shot (Atlas score 0.7–0.95)
+  → found: inject top-K as few-shot examples, call LLM with enriched prompt
+  → not found: proceed ↓
+
+Layer 3: Zero-shot (Atlas score < 0.7 or empty store)
+  → call LLM with base system prompt only — full cost, baseline quality
+```
+
+**Cost profile per layer:**
+- Layer 0: free (memory lookup)
+- Layer 1: ~4 Voyage tokens (embed query) + Atlas search — no LLM
+- Layer 2: ~4 Voyage tokens + Atlas search + full LLM call
+- Layer 3: full LLM call only (no Voyage if store is empty)
+
+**Hit rate grows with the store** — Layer 0 catches exact repeats, Layer 1 catches near-identical meaning, Layer 2 catches similar inputs. As the store fills with real user data, more requests terminate at earlier (cheaper) layers. The system gets cheaper and faster the more it's used — the same property that makes it self-improving also makes it self-optimising on cost.
+
+**The `inputType` cache key fix** — worth doing before implementing the semantic cache:
+```typescript
+// Current (bug): same text, different inputType → same cache key → wrong vector returned
+`embed:${provider}:${model}:${text}`
+
+// Fixed: inputType is part of the key — query and document vectors are distinct
+`embed:${provider}:${model}:${inputType}:${text}`
+```
+
+---
+
+### Interview framing
+
+> "I bounded RAG token consumption with a fixed TOP_K so the ceiling is known regardless of store size. The production hardening I'd add next: a similarity score threshold so novel inputs get zero-shot treatment instead of injecting weakly-related examples; token-budgeting the few-shot context so example size growth doesn't silently raise the ceiling; and store deduplication so the store stays diverse rather than clustering around common inputs. Together these keep the system self-improving rather than self-corrupting."
+
+> "The longer-term optimisation is treating the vector store as a semantic cache — if Atlas returns a score ≥ 0.95, the stored output IS the answer and I bypass the LLM entirely. Combined with the app-level exact cache, this gives four layers: exact cache → semantic cache → few-shot RAG → zero-shot. The system gets cheaper and faster the more it's used, because more requests terminate at earlier layers as the store fills with real user data."

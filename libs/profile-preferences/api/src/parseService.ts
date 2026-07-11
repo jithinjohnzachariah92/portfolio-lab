@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { generateStructured, AIProviderError } from "@jz92/ai-provider";
+import { retrieveExamples } from './rag/retrieve'
+import { storeExample } from './rag/store'
 
 const VALID_PREFERENCES = {
   dietary:    ["Vegetarian", "Vegan", "Gluten-free", "Organic", "Keto", "Dairy-free"],
@@ -111,29 +113,49 @@ export type ParseResult =
   | { success: true;  preferences: ParsedPreferences; quality: ParseQuality }
   | { success: false; errorCode: string; errorMessage: string };
 
-export const parsePreferencesWithClaude = async (
-  input: string
+export const inferPreferences = async (
+  input: string,
+  context?: { traceId?: string; userId?: string }
 ): Promise<ParseResult> => {
   try {
+    // ── RAG: retrieve similar past extractions ─────────────────────────────
+    // Embed the input, search Atlas for similar examples, get few-shot text.
+    // Returns empty string if store is empty or retrieval fails — graceful.
+    const fewShotExamples = await retrieveExamples(input, context?.traceId)
+
+    // Inject retrieved examples into the system prompt
+    const systemPromptWithExamples = fewShotExamples
+      ? `${SYSTEM_PROMPT}\n${fewShotExamples}`
+      : SYSTEM_PROMPT
+
     const result = await generateStructured({
-      systemPrompt:   SYSTEM_PROMPT,
+      systemPrompt:   systemPromptWithExamples,   // ← enriched with examples
       prompt:         input,
       schema:         PreferencesSchema,
       cacheKey:       `preferences:${input}`,
       maxInputTokens: 4000,
-    });
+      ...context,
+    })
 
-    const normalised = normalise(result.data);
-    const quality    = getQuality(normalised);
+    const normalised = normalise(result.data)
+    const quality    = getQuality(normalised)
 
-    return { success: true, preferences: normalised, quality };
+    // ── RAG: store good results for future retrieval ───────────────────────
+    // Quality gate: only store if Zod passed, not empty, no low confidence.
+    // This is what makes the store self-improving rather than self-corrupting.
+    if (!quality.isEmpty && quality.lowConfidenceItems.length === 0) {
+      // Fire and forget — never block the response on a store operation
+      storeExample(input, normalised, context?.traceId).catch(() => {})
+    }
+
+    return { success: true, preferences: normalised, quality }
 
   } catch (err) {
     if (err instanceof AIProviderError) {
-      console.error(`[parsePreferences] ${err.code}:`, err.message);
-      return { success: false, errorCode: err.code, errorMessage: err.message };
+      console.error(`[parsePreferences] ${err.code}:`, err.message)
+      return { success: false, errorCode: err.code, errorMessage: err.message }
     }
-    console.error("[parsePreferences] Unexpected error:", err);
-    return { success: false, errorCode: "UNKNOWN", errorMessage: String(err) };
+    console.error("[parsePreferences] Unexpected error:", err)
+    return { success: false, errorCode: "UNKNOWN", errorMessage: String(err) }
   }
-};
+}

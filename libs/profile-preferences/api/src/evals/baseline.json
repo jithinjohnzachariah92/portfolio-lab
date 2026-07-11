@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-07-11T16:42:34.893Z",
+  "totalCases": 10,
+  "accuracyScore": 1,
+  "accuracyPerCase": {
+    "tc-01": 1,
+    "tc-02": 1,
+    "tc-03": 1,
+    "tc-04": 1,
+    "tc-05": 1,
+    "tc-06": 1,
+    "tc-07": 1,
+    "tc-08": 1,
+    "tc-09": 1,
+    "tc-10": 1
+  },
+  "consistencyScore": 1,
+  "hallucinationRate": 0,
+  "emptyRate": 0,
+  "caseResults": [
+    {
+      "id": "tc-01",
+      "input": "I love Nike and Adidas",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 8704
+    },
+    {
+      "id": "tc-02",
+      "input": "I hate synthetic fabrics and avoid Zara",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 3132
+    },
+    {
+      "id": "tc-03",
+      "input": "I'm vegetarian and gluten-free",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 3998
+    },
+    {
+      "id": "tc-04",
+      "input": "I prefer casual and minimalist styles",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 3505
+    },
+    {
+      "id": "tc-05",
+      "input": "I always shop during Christmas and Black Friday",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 3435
+    },
+    {
+      "id": "tc-06",
+      "input": "I'm vegan, love Nike, prefer casual style",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 4998
+    },
+    {
+      "id": "tc-07",
+      "input": "I like comfortable clothes",
+      "passed": false,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": true,
+      "emptyCorrect": false,
+      "durationMs": 2189
+    },
+    {
+      "id": "tc-08",
+      "input": "test",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": true,
+      "shouldBeEmpty": true,
+      "emptyCorrect": true,
+      "durationMs": 953
+    },
+    {
+      "id": "tc-09",
+      "input": "i love NIKE and casual STYLES",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 3940
+    },
+    {
+      "id": "tc-10",
+      "input": "I don't like formal or sporty styles",
+      "passed": true,
+      "accuracyScore": 1,
+      "hallucinated": [],
+      "isEmpty": false,
+      "shouldBeEmpty": false,
+      "emptyCorrect": true,
+      "durationMs": 2781
+    }
+  ],
+  "failed": [
+    "tc-07"
+  ]
+}

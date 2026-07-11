@@ -171,7 +171,39 @@ Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architec
 - **Baked in + config-routed** — not plug-your-own-embedder. Consumers are own apps with one provider; premature abstraction otherwise.
 - **`model` + `dimensions` in response** — written to pgvector alongside each vector; catches mismatches before they corrupt the store.
 
-### 6. RAG + eval layer + self-evolving store  `[was #6 · HIGH effort · HIGH value · the big one]`
+### 6. RAG + eval layer + self-evolving store  `[RAG loop live ✅ · evals pending · was #6]`
+**Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. **Full architecture: AI-CONCEPTS.md §9.**
+
+**Done:**
+- [x] Atlas Vector Search index created (`preference_examples_vector_idx`, 1024 dims, cosine similarity)
+- [x] `rag/db.ts` — collection accessor using shared `connectDB()`, `VectorEntry` shape, constants
+- [x] `rag/store.ts` — quality-gated write: embed with `inputType: 'document'`, dimension validation, fire-and-forget (never blocks the parse response)
+- [x] `rag/retrieve.ts` — embed with `inputType: 'query'`, `$vectorSearch` aggregation, formats top-K as few-shot examples for the system prompt
+- [x] `parseService.ts` — retrieve before model call (enriched system prompt), store after good result (quality gate: `!isEmpty && lowConfidenceItems.length === 0`)
+- [x] **Self-evolving loop proven in real time:** store grows with each good parse, retrieval finds semantically similar examples, token count grows as examples are injected (402 → 467 → 532 tokens), top similarity scores 0.705 → 0.787 → 0.901 as store fills
+
+**Confirmed working:**
+```
+[rag/retrieve] Found 3 similar examples (top score: 0.901)
+tokens in: 532  ← few-shot examples injected into system prompt
+```
+
+**Still to build:**
+- [ ] **Eval harness** — the safety mechanism. Fixed test set + scoring to prove RAG improves consistency rather than degrading it. Without this, "better" is a vibe not a fact.
+- [ ] NL2Mongo RAG — only if evals show it beats good few-shot for query generation
+- [ ] Extract `rag/` into `@jz92/retrieval` (P2) when a second domain needs the same pattern
+
+**Deferred hardening (implement after current milestones — see AI-CONCEPTS.md §14):**
+- [ ] Score threshold in `retrieve.ts` — only inject examples above `MIN_SCORE` (e.g. 0.7); novel inputs get zero-shot treatment
+- [ ] Token-budget the injected examples — `MAX_EXAMPLE_TOKENS` ceiling so example size growth doesn't silently raise token overhead
+- [ ] Store deduplication in `store.ts` — check similarity before insert (`DEDUP_THRESHOLD: 0.95`); keeps store diverse, retrieval quality high
+
+**Long-shot future (significant optimisations, not blocking):**
+- [ ] **Semantic cache** — if Atlas returns score ≥ 0.95, return stored output directly without calling the LLM at all. Treat the vector store as a semantic cache on top of the model. Hit rate grows as the store fills with real user data. Four layers: exact cache (BoundedCache) → semantic cache (0.95+) → few-shot RAG (0.7-0.95) → zero-shot (<0.7).
+- [ ] **Embedding cache TTL tuning** — embeddings are stable (vector for "I love Nike" doesn't change unless you change the model). Consider longer TTL (`AI_EMBED_CACHE_TTL_MS=3600000`, 1hr) vs completions (5 mins). Also fix `inputType` in cache key (`embed:${provider}:${model}:${inputType}:${text}`) — current key doesn't distinguish query vs document vectors for same text.
+- [ ] **Redis/Upstash for cross-session embedding cache** — `BoundedCache` is in-memory, resets on deploy. Popular embedding inputs (common preference phrases) would benefit from a persistent cross-session cache. Upgrade path already designed in `cache.ts` comments.
+
+
 **Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. Needs #5 done first. **Full architecture: AI-CONCEPTS.md §9.**
 
 Build order (dependencies dictate it):
