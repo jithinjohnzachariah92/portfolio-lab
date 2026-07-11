@@ -87,7 +87,22 @@ Same category as #3's hardening — done back-to-back while the pattern was fres
 - [ ] *(deferred)* UI-side confirmation flow for `lowConfidenceItems` — the field is surfaced in the response but nothing renders it yet. Pick up when building the preferences UI.
 - [ ] *(noted)* Prime candidate for RAG (#6) — few-shot retrieval of similar past extractions will improve consistency of low-confidence extractions.
 
-### 5a. Extract @jz92/ai-core  `[new · low-med effort · foundation for everything · do first]`
+### 5a. Extract @jz92/ai-core  `[✅ done · v0.1.0 published]`
+Published from `ai-platform` Nx monorepo (`packages/ai-core`). Zero runtime dependencies (tslib only). **Full design spec: AI-CONCEPTS.md §12.**
+
+**Shipped:**
+- [x] `types.ts` — `AIProviderName`, `EmbeddingProviderName`, `AIEnvironment`, `AIErrorCode`, `TraceContext`, `CacheContext`, `Schema<T>`, `CompletionRequest/Response`, `EmbeddingRequest/BatchRequest/Response/BatchResponse`, `VectorEntry/Query/SearchResult`
+- [x] `events.ts` — `PlatformEvent` discriminated union (11 event types across 5 sources); `emit`, `onEvent`, `clearSubscribers` bus
+- [x] `security.ts` — `redact` (PII: email, credit card, UK postcode/phone/NHS), `redactFields`, `detectInjection`, `assertSafeInput`, `scrubSecrets`, `scrubObject`
+- [x] Published to npm as `@jz92/ai-core@0.1.0`
+- [x] `ai-platform` Nx monorepo initialised + pushed to GitHub (`jithinjohnzachariah92/ai-platform`)
+
+**Deferred (designed, slots in cleanly):**
+- [ ] `cost.ts` — cost estimation from events
+- [ ] `sanitise.ts` — output sanitisation
+- [ ] `validation.ts` — shared validation utilities
+
+
 Extract contracts, event bus, and security utilities into a standalone package. Zero runtime dependencies — pure TypeScript types + a tiny pub/sub array + regex utilities. **Full design spec: AI-CONCEPTS.md §12.**
 
 **Four files, built now:**
@@ -116,7 +131,25 @@ cat ai-core/package.json | jq '.dependencies'
 
 - [ ] Publish `@jz92/ai-core@1.0.0` to npm before starting #5b
 
-### 5b. Embeddings in @jz92/ai-provider  `[was #5 · med effort · HIGH value · the hinge]`
+### 5b. Embeddings in @jz92/ai-provider  `[✅ done · v0.7.0 published · was #5]`
+Migrated from standalone repo into `ai-platform` Nx monorepo (`packages/ai-provider`). Wired to `@jz92/ai-core`. **Full architecture: AI-CONCEPTS.md §9 + §11.**
+
+- [x] Migrated into `packages/ai-provider` in `ai-platform` Nx workspace
+- [x] `types.ts` — replaced local type definitions with imports from `@jz92/ai-core`; backwards-compatible re-exports so `portfolio-lab` consumers need no import changes
+- [x] `gateway.ts` — wired `assertSafeInput` (prompt injection guard) and `scrubSecrets` (credential scrubbing from error messages) from `@jz92/ai-core/security`
+- [x] `errors.ts` — `override` modifier added to `cause` property (strict TypeScript compliance)
+- [x] 48 smoke tests passing in Nx workspace
+- [x] Published as `@jz92/ai-provider@0.7.0` to npm
+- [x] Standalone `ai-provider` repo superseded — archive when ready
+
+**Still to do in a follow-on (embeddings capability):**
+- [ ] `generateEmbedding()` + `generateEmbeddingBatch()` — the actual embedding capability (Voyage + OpenAI + Ollama, config-routed). This was the original #5b scope; the migration took priority. Pick up as #5c.
+- [ ] `resolveEmbeddingProvider()` — Voyage default, `AI_EMBED_PROVIDER` to switch
+- [ ] Embedding-aware usage in events (`dimensions`, `inputTokens`, no `outputTokens`)
+- [ ] Cache key includes provider + model: `embed:${provider}:${model}:${text}`
+- [ ] Tests proving each observable state
+
+
 Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architecture: AI-CONCEPTS.md §9 + §11.**
 
 - [ ] Add `generateEmbedding()` + `generateEmbeddingBatch()` behind `ai-core` interfaces

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
-    "@jz92/ai-provider": "^0.6.2",
+    "@jz92/ai-provider": "^0.7.0",
     "@primer/css": "^22.3.0",
     "@primer/react": "^38.29.0",
     "ai": "^7.0.3",
