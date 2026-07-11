@@ -24,6 +24,7 @@
 ### Platform vision
 11. [The @jz92 platform vision — a composable TypeScript AI platform](#11-the-jz92-platform-vision--a-composable-typescript-ai-platform)
 12. [@jz92/ai-core — full design spec](#12-jz92ai-core--full-design-spec)
+13. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
 
 ---
 
@@ -669,3 +670,52 @@ cat ai-core/package.json | jq '.dependencies'
 # Should return: null (or just {})
 # If any runtime dependency appears, something leaked.
 ```
+
+---
+
+## 13. Token/prompt caching — provider-specific, not universal
+
+A common gotcha when switching providers: token caching behaviour varies significantly by provider. `usePromptCache: true` in `ai-provider` means different things (or nothing) depending on which provider is underneath.
+
+**Provider map:**
+
+| Provider | Caching support | How it works | Control | Cost saving |
+|---|---|---|---|---|
+| **Anthropic** | ✅ Yes — most mature | Mark system prompt with `cache_control: { type: 'ephemeral' }` — Anthropic caches the transformer state after processing it | Explicit — you control what's marked | ~90% cheaper on cache reads |
+| **OpenAI** | ✅ Yes — automatic | Completely automatic — OpenAI detects repeated prefixes and caches them internally. `cached_tokens` appears in usage when it fires | None — you can't force or prevent it | ~50% cheaper on cached tokens |
+| **Google Gemini** | ✅ Yes — explicit | "Context Caching" — you create a named cache object via their API, reference it by ID. Configurable TTL (up to hours) | Explicit + storage model — you pay a small fee per cached token per hour | Significant on long contexts |
+| **Ollama** | ❌ No | Local inference, no API cost anyway. Standard transformer KV cache exists internally but isn't exposed as a usage metric | N/A | N/A (free already) |
+| **Groq** | ❌ No (currently) | Optimises for raw inference speed via custom hardware — caching not a current focus | N/A | N/A |
+| **Mistral** | ❌ No (currently) | No prompt caching support | N/A | N/A |
+
+**Why your `ai-provider` already handles this correctly:**
+
+`usePromptCache` is set to `true` only for Anthropic in production:
+```typescript
+usePromptCache: provider === 'anthropic' && !isTest
+```
+- **Anthropic production** → `true` → `buildMessages()` adds `cacheControl` markers → Anthropic caches the system prompt
+- **OpenAI** → `false` → no markers needed, OpenAI caches automatically anyway
+- **Ollama** → `false` → no caching, no API cost, irrelevant
+- **Groq/Mistral** → `false` → no caching support, flag silently does nothing
+
+The abstraction layer handles the difference — the consumer just sets `systemPrompt` and `ai-provider` does the right thing per provider.
+
+**The two cache layers in `ai-provider` — a clear distinction:**
+
+| | `BoundedCache` (your app cache) | Provider token cache |
+|---|---|---|
+| What it caches | The **result** (preferences object, Mongo query, vector) | The **computation** of the system prompt |
+| Hit means | Model never called — zero tokens, zero cost | Model called, but system prompt tokens are cheaper |
+| Measured by | `getStats()` hit/miss counters | `cacheReadTokens` / `cacheCreationTokens` in usage |
+| Keyed on | Your `cacheKey` string | The content of the system prompt itself |
+| Saves | 100% of cost + latency | ~90% of system prompt token cost (Anthropic) |
+| Lives | Your process memory (resets on deploy) | Provider's servers (survives your deploys) |
+| Provider-specific? | No — works for all providers | Yes — Anthropic only (in your current setup) |
+
+**The practical gotcha:**
+
+If you switch from Anthropic to OpenAI or Groq and your costs change unexpectedly — check whether your system prompts were relying on Anthropic's prompt caching. On OpenAI, caching is automatic but less aggressive; on Groq, there's no caching at all. The `usePromptCache` flag gives you no signal about this because it silently becomes a no-op for non-Anthropic providers.
+
+**Interview framing:**
+> "Token caching is provider-specific — Anthropic requires explicit markers, OpenAI does it automatically, Ollama and Groq don't support it. My gateway abstracts this: `usePromptCache: true` only enables the markers for Anthropic in production; for other providers the flag is a no-op or irrelevant. On top of that I have my own app-level `BoundedCache` that's provider-agnostic — it caches the final result regardless of which model produced it, so a cache hit means zero tokens and zero API call, not just cheaper tokens."
