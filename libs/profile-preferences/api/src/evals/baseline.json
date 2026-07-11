@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-11T16:42:34.893Z",
+  "timestamp": "2026-07-11T16:49:53.900Z",
   "totalCases": 10,
   "accuracyScore": 1,
   "accuracyPerCase": {
@@ -27,7 +27,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 8704
+      "durationMs": 4799
     },
     {
       "id": "tc-02",
@@ -38,7 +38,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 3132
+      "durationMs": 2988
     },
     {
       "id": "tc-03",
@@ -49,7 +49,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 3998
+      "durationMs": 3995
     },
     {
       "id": "tc-04",
@@ -60,7 +60,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 3505
+      "durationMs": 2651
     },
     {
       "id": "tc-05",
@@ -71,7 +71,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 3435
+      "durationMs": 3942
     },
     {
       "id": "tc-06",
@@ -82,7 +82,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 4998
+      "durationMs": 5069
     },
     {
       "id": "tc-07",
@@ -93,7 +93,7 @@
       "isEmpty": false,
       "shouldBeEmpty": true,
       "emptyCorrect": false,
-      "durationMs": 2189
+      "durationMs": 3003
     },
     {
       "id": "tc-08",
@@ -104,7 +104,7 @@
       "isEmpty": true,
       "shouldBeEmpty": true,
       "emptyCorrect": true,
-      "durationMs": 953
+      "durationMs": 931
     },
     {
       "id": "tc-09",
@@ -115,7 +115,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 3940
+      "durationMs": 3895
     },
     {
       "id": "tc-10",
@@ -126,7 +126,7 @@
       "isEmpty": false,
       "shouldBeEmpty": false,
       "emptyCorrect": true,
-      "durationMs": 2781
+      "durationMs": 4019
     }
   ],
   "failed": [

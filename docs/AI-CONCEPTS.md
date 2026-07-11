@@ -20,12 +20,13 @@
 8. [Platform vs domain — where AI capabilities live in an org](#8-platform-vs-domain--where-ai-capabilities-live-in-an-org)
 9. [The concrete RAG + gateway architecture (execution plan for #5/#6)](#9-the-concrete-rag--gateway-architecture-execution-plan-for-56)
 10. [Testing AI systems — the three-layer model](#10-testing-ai-systems--the-three-layer-model)
+11. [How to write evals — general principles](#15-how-to-write-evals--general-principles)
 
 ### Platform vision
-11. [The @jz92 platform vision — a composable TypeScript AI platform](#11-the-jz92-platform-vision--a-composable-typescript-ai-platform)
-12. [@jz92/ai-core — full design spec](#12-jz92ai-core--full-design-spec)
-13. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
-14. [RAG production guardrails — token growth, quality, deduplication](#14-rag-production-guardrails--token-growth-quality-deduplication)
+12. [The @jz92 platform vision — a composable TypeScript AI platform](#11-the-jz92-platform-vision--a-composable-typescript-ai-platform)
+13. [@jz92/ai-core — full design spec](#12-jz92ai-core--full-design-spec)
+14. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
+15. [RAG production guardrails — token growth, quality, deduplication](#14-rag-production-guardrails--token-growth-quality-deduplication)
 
 ---
 
@@ -378,7 +379,125 @@ Packages only depend downward. `ai-provider` never imports from `retrieval`. `ve
 
 ---
 
-## 12. @jz92/ai-core — full design spec
+## 15. How to write evals — general principles
+
+Understanding evals deeply is what separates "used RAG" from "built a production RAG system." Every principle below comes from building the Preference Parser eval harness.
+
+---
+
+### The core principle: an eval tests a claim, not a behaviour
+
+Before writing any test case, state a **claim**:
+
+> "Given input X, a correctly working system MUST produce Y"
+
+Every eval is a claim. If you can't state the claim clearly, you can't write the test.
+
+**Bad claim (too vague):** "The parser should work well on dietary inputs"
+**Good claim (testable):** "Given 'I'm vegetarian and gluten-free', the parser must extract Vegetarian:true AND Gluten-free:true"
+
+---
+
+### The five questions to answer before writing each test case
+
+1. **What is the input?** The exact string — not a category. Realistic: what would a real user actually type?
+2. **What MUST be in the output?** The minimum correct extraction. Partial is fine — only specify what you're testing.
+3. **What must NOT be in the output?** Either nothing specific (leave unspecified), or `shouldBeEmpty: true` for inputs that should extract nothing.
+4. **What failure mode does this probe?** Every case needs a reason. If you can't answer "what would break if this case didn't exist?" — it's probably redundant.
+5. **Is this case stable?** Would the expected output change if you improve the system? If yes, it's too brittle. A good expected output is a floor, not a ceiling.
+
+---
+
+### The four types of test case (every eval set needs all four)
+
+**Type 1 — Happy path:** obvious, explicit input. If these fail, something is fundamentally broken.
+```
+"I love Nike" → brands: [Nike: true]
+```
+
+**Type 2 — Negative mentions:** tests `optedIn: false`. Models often get this wrong — they extract the item but flip the direction.
+```
+"I hate Zara" → brands: [Zara: false]
+"I don't like formal styles" → style: [Formal: false]
+```
+
+**Type 3 — Hallucination probes:** tests what the model must NOT extract. Input has no whitelisted items — correct output is empty. **Most important type for RAG systems.**
+```
+"I like comfortable clothes" → shouldBeEmpty: true
+"I enjoy shopping" → shouldBeEmpty: true
+```
+
+**Type 4 — Edge cases:** robustness on unusual but realistic inputs.
+```
+"test" → shouldBeEmpty: true
+"i love NIKE" → brands: [Nike: true]  (case sensitivity)
+"I love Nike but hate Zara" → brands: [Nike: true, Zara: false]  (mixed)
+```
+
+---
+
+### The three rules for `expected`
+
+**Rule 1 — Only specify what you're claiming.** If the case tests brands, only put `brands` in `expected`. Extra correct extractions shouldn't fail the case.
+
+**Rule 2 — The expected output must be provably correct.** Not just plausible — certain. If a domain expert wouldn't sign off on it, don't write it.
+
+**Rule 3 — Expected outputs must be stable.** The expected output for "I love Nike" → Nike:true should be correct regardless of how good the parser gets. If your expected output would change when the system improves, it's measuring your current implementation, not a real requirement.
+
+---
+
+### The RAG-specific principle: test hallucination probes hardest
+
+For a self-evolving RAG system, the most dangerous failure is: model extracts something wrong → passes the quality gate → gets stored as an example → poisons future retrievals. Hallucination probes (`shouldBeEmpty: true` cases) are the last line of defence before bad examples enter the store.
+
+**The signal:** if a hallucination probe starts failing (model extracts from a should-be-empty input), it's not just an accuracy problem — it's a store contamination risk. This is exactly what `tc-07` revealed: "I like comfortable clothes" started extracting `Casual` after RAG injected weakly-related examples (score 0.629). The eval caught it; the score threshold guardrail (deferred) would prevent it.
+
+---
+
+### The practical checklist before writing a new test case
+
+```
+□ Can I state the claim in one sentence?
+□ Is the input realistic (something a real user would type)?
+□ Is the expected output provably correct (not just plausible)?
+□ What failure mode does this probe? (happy path / negative / hallucination / edge)
+□ Would expected still be correct if the parser got much better?
+□ Is this different enough from existing cases to add coverage?
+□ If shouldBeEmpty: true — am I certain nothing should be extracted?
+```
+
+If any answer is uncertain, don't write the case yet. An uncertain test case gives false signal — worse than no test.
+
+---
+
+### The meta-principle: evals are a conversation with the domain
+
+`tc-07` — "I like comfortable clothes" → should it extract `Casual`? The eval doesn't answer that. It surfaces it for a human to decide. Good evals encode domain knowledge ("what is correct behaviour, for this product, for these users?"). Writing an eval is a collaborative act between engineer (what can the system do?) and domain expert (what should it do?).
+
+**The test cases you write are a verifiable specification of correct behaviour** — anyone can read them, challenge them, and update them when the domain understanding changes. That's what makes evals a living document, not a one-time artifact.
+
+---
+
+### Why the system prompt change on Day 7 is caught by evals
+
+The system prompt is code. Changing it can break the parser's behaviour on inputs you didn't manually test — especially with RAG, where a bad prompt change could also corrupt the store (bad extractions pass the quality gate, get stored, get retrieved as examples). The CI gate prevents this:
+
+```
+Developer changes system prompt ("infer from context" instead of "only explicit mentions")
+  ↓
+CI runs npm run evals:ci
+  ↓
+tc-07: model now extracts 5 preferences from "comfortable clothes"
+tc-08: model extracts from "test"
+Accuracy: 0.650  (< 0.800 threshold)
+Empty rate: 0.300 (> 0.200 threshold)
+  ↓
+❌ EVAL GATE FAILED → PR blocked → regression caught before prod
+  ↓
+Developer refines prompt → evals pass → PR merges safely
+```
+
+**The eval is the test suite for your prompt.** Just as unit tests catch code regressions, evals catch prompt regressions. For a self-evolving RAG system, this is non-negotiable — one bad prompt change, if undetected, could poison the store gradually across thousands of user interactions.
 
 `ai-core` v1 ships four files, zero runtime dependencies (not even `zod` — pure TypeScript types and a tiny pub/sub array). Every other `@jz92/*` package imports from here; nothing imports *into* here.
 
