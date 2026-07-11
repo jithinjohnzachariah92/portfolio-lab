@@ -142,12 +142,18 @@ Migrated from standalone repo into `ai-platform` Nx monorepo (`packages/ai-provi
 - [x] Published as `@jz92/ai-provider@0.7.0` to npm
 - [x] Standalone `ai-provider` repo superseded — archive when ready
 
-**Still to do in a follow-on (embeddings capability):**
-- [ ] `generateEmbedding()` + `generateEmbeddingBatch()` — the actual embedding capability (Voyage + OpenAI + Ollama, config-routed). This was the original #5b scope; the migration took priority. Pick up as #5c.
-- [ ] `resolveEmbeddingProvider()` — Voyage default, `AI_EMBED_PROVIDER` to switch
-- [ ] Embedding-aware usage in events (`dimensions`, `inputTokens`, no `outputTokens`)
-- [ ] Cache key includes provider + model: `embed:${provider}:${model}:${text}`
-- [ ] Tests proving each observable state
+### 5c. Embeddings capability in @jz92/ai-provider  `[✅ done · v0.8.0 published]`
+
+- [x] `embeddingProvider.ts` — `resolveEmbeddingProvider()`: Voyage default in ALL envs (dimension consistency), OpenAI + Ollama wired, `AI_EMBED_PROVIDER` / `AI_EMBED_MODEL` to switch. No env-switching unlike completions — one vector space is non-negotiable.
+- [x] `embeddingClient.ts` — `buildEmbeddingModel()`: Voyage via `@ai-sdk/voyage`, OpenAI via `@ai-sdk/openai`, Ollama via OpenAI-compatible endpoint at localhost. `inputType: 'query' | 'document'` passed via `providerOptions.voyage`.
+- [x] `embeddingGateway.ts` — `generateEmbedding()` + `generateEmbeddingBatch()`: cache key includes provider + model (`embed:${provider}:${model}:${text}`), dimension validation after every call, `assertSafeInput` injection guard, `embedding.success` / `embedding.failure` / `cache.hit` events emitted via `@jz92/ai-core`
+- [x] `@jz92/ai-core@0.1.1` — `traceId` made optional in `TraceContext` (non-breaking fix); `SCHEMA_VALIDATION` added to `AIErrorCode`
+- [x] 53 smoke tests passing (4 new embedding tests + guarded Voyage live-call test)
+- [x] Published `@jz92/ai-core@0.1.1` + `@jz92/ai-provider@0.8.0`
+- [x] Voyage live-call test guarded behind `VOYAGE_API_KEY` — run in CI to fully close
+
+**This unblocks:** `@jz92/vector` (P1), RAG (#6), and the self-evolving store.
+
 
 
 Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architecture: AI-CONCEPTS.md §9 + §11.**
