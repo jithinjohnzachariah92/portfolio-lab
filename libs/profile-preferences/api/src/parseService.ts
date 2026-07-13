@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { generateStructured, AIProviderError } from "@jz92/ai-provider";
-import { retrieveExamples } from './rag/retrieve'
-import { storeExample } from './rag/store'
+import { preferenceRetriever, preferencesQualityGate, getStoreOptions } from './rag/retriever.js'
+
 
 const VALID_PREFERENCES = {
   dietary:    ["Vegetarian", "Vegan", "Gluten-free", "Organic", "Keto", "Dairy-free"],
@@ -90,7 +90,7 @@ const normalise = (raw: ParsedPreferences): ParsedPreferences => {
   return result;
 };
 
-const getQuality = (prefs: ParsedPreferences): ParseQuality => {
+export const getQuality = (prefs: ParsedPreferences): ParseQuality => {
   const lowConfidenceItems: ParseQuality["lowConfidenceItems"] = [];
 
   for (const [category, items] of Object.entries(prefs) as [keyof ParsedPreferences, typeof prefs[keyof ParsedPreferences]][]) {
@@ -119,33 +119,30 @@ export const inferPreferences = async (
 ): Promise<ParseResult> => {
   try {
     // ── RAG: retrieve similar past extractions ─────────────────────────────
-    // Embed the input, search Atlas for similar examples, get few-shot text.
-    // Returns empty string if store is empty or retrieval fails — graceful.
-    const fewShotExamples = await retrieveExamples(input, context?.traceId)
+    const { fewShotText } = await preferenceRetriever.retrieve(input, context?.traceId)
 
-    // Inject retrieved examples into the system prompt
-    const systemPromptWithExamples = fewShotExamples
-      ? `${SYSTEM_PROMPT}\n${fewShotExamples}`
+    const systemPromptWithExamples = fewShotText
+      ? `${SYSTEM_PROMPT}\n${fewShotText}`
       : SYSTEM_PROMPT
 
     const result = await generateStructured({
-      systemPrompt:   systemPromptWithExamples,   // ← enriched with examples
+      systemPrompt:   systemPromptWithExamples,
       prompt:         input,
       schema:         PreferencesSchema,
       cacheKey:       `preferences:${input}`,
       maxInputTokens: 4000,
-      ...context,
+      traceId:        context?.traceId ?? '',
+      userId:         context?.userId,
     })
 
     const normalised = normalise(result.data)
     const quality    = getQuality(normalised)
 
     // ── RAG: store good results for future retrieval ───────────────────────
-    // Quality gate: only store if Zod passed, not empty, no low confidence.
-    // This is what makes the store self-improving rather than self-corrupting.
-    if (!quality.isEmpty && quality.lowConfidenceItems.length === 0) {
-      // Fire and forget — never block the response on a store operation
-      storeExample(input, normalised, context?.traceId).catch(() => {})
+    if (preferencesQualityGate(normalised)) {
+      preferenceRetriever
+        .store(input, normalised, preferencesQualityGate, getStoreOptions(), context?.traceId)
+        .catch(() => {})   // fire-and-forget, but store() already never throws internally
     }
 
     return { success: true, preferences: normalised, quality }
