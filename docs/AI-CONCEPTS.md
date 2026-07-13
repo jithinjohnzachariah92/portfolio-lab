@@ -27,6 +27,7 @@
 13. [@jz92/ai-core — full design spec](#12-jz92ai-core--full-design-spec)
 14. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
 15. [RAG production guardrails — token growth, quality, deduplication](#14-rag-production-guardrails--token-growth-quality-deduplication)
+16. [The entry/exit observability discipline for platform packages](#16-the-entryexit-observability-discipline-for-platform-packages)
 
 ---
 
@@ -1021,3 +1022,63 @@ Layer 3: Zero-shot (Atlas score < 0.7 or empty store)
 > "I bounded RAG token consumption with a fixed TOP_K so the ceiling is known regardless of store size. The production hardening I'd add next: a similarity score threshold so novel inputs get zero-shot treatment instead of injecting weakly-related examples; token-budgeting the few-shot context so example size growth doesn't silently raise the ceiling; and store deduplication so the store stays diverse rather than clustering around common inputs. Together these keep the system self-improving rather than self-corrupting."
 
 > "The longer-term optimisation is treating the vector store as a semantic cache — if Atlas returns a score ≥ 0.95, the stored output IS the answer and I bypass the LLM entirely. Combined with the app-level exact cache, this gives four layers: exact cache → semantic cache → few-shot RAG → zero-shot. The system gets cheaper and faster the more it's used, because more requests terminate at earlier layers as the store fills with real user data."
+
+---
+
+## 16. The entry/exit observability discipline for platform packages
+
+Every `@jz92/*` package that performs I/O (network call, DB call) must emit an event on both success and failure at each public function's boundary, and every event must carry `durationMs`. This is the rule that makes `ai-core`'s event bus actually useful rather than aspirational.
+
+### The two kinds of latency a subscriber needs
+
+**Layer-level latency** — how long did *this specific operation* take. `ai-provider`'s `embedding.success` event covers just the Voyage call. `@jz92/vector`'s `vector.search.success` covers just the Atlas call. These answer "is this specific dependency slow?"
+
+**Composite latency** — how long did the *whole* higher-level operation take, including everything it called underneath. `@jz92/retrieval`'s `retrieval.completed` event covers the full round-trip: embed + search + format. This answers "why did this request feel slow?" — and the gap between the sum of the layer-level events and the composite number is the package's own overhead, made visible rather than hidden.
+
+```
+embedding.success       120ms   (ai-provider — just the Voyage call)
+vector.search.success    45ms   (vector — just the Atlas call)
+retrieval.completed     180ms   (retrieval — embed + search + format, composite)
+                         ↑
+              15ms of retrieval's own formatting overhead, now visible
+```
+
+One `traceId` ties all three together — a subscriber can query "everything for trace X" and see the full waterfall, drilling from the composite number down into which layer actually cost the time.
+
+### The rule, concretely
+
+For every exported function that does I/O:
+```typescript
+export const search = async (query: VectorQuery, traceId?: string): Promise<VectorSearchResult[]> => {
+  const start = Date.now()
+  try {
+    const results = await /* actual Atlas call */
+    emit({
+      source: 'vector', type: 'search.success', traceId,
+      durationMs: Date.now() - start,
+      resultCount: results.length,
+      topScore: results[0]?.score,
+    })
+    return results
+  } catch (err) {
+    emit({
+      source: 'vector', type: 'search.failure', traceId,
+      durationMs: Date.now() - start,
+      error: { code: ..., message: ... },
+    })
+    throw err
+  }
+}
+```
+
+No exceptions for "this call is probably fast" — the discipline is the point. A function that skips this because it seems trivial today is the one that becomes a mystery bottleneck later with no data to diagnose it.
+
+### Why this matters beyond debugging: it's the data source for the live visualizer
+
+The long-shot plan (P2.5 in the roadmap) is a webpage showing the architecture with real-time pulses moving between boxes as actual requests flow through the system — plus a live log stream, viewable from a separate browser tab while using the app. That feature is **purely additive** on top of this discipline: a relay subscriber (`onEvent` → broadcast out of the process), a transport (Server-Sent Events), and a rendering page that pulses the matching box per `event.source`/`event.type` and can follow one `traceId` lighting up boxes in sequence.
+
+None of that requires touching `ai-core`, `ai-provider`, `vector`, or `retrieval` again — the event schema (`traceId`, `durationMs`, `timestamp`, `source`, `type`) already carries everything a visualizer needs. **This is the payoff of building the observability layer correctly the first time**: an ambitious-sounding future feature becomes "wire up SSE and a canvas" rather than "go back and instrument four packages."
+
+### The test that this discipline is being followed
+
+> For any package in the platform, can you point at every exported function that does I/O and name the two events (success/failure) it emits? If a function does I/O and you can't name its events, the discipline has a gap — and that gap is exactly where the live visualizer would show a dark, silent box while a request is actually flowing through it.

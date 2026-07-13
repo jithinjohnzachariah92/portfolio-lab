@@ -171,7 +171,7 @@ Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architec
 - **Baked in + config-routed** — not plug-your-own-embedder. Consumers are own apps with one provider; premature abstraction otherwise.
 - **`model` + `dimensions` in response** — written to pgvector alongside each vector; catches mismatches before they corrupt the store.
 
-### 6. RAG + eval layer + self-evolving store  `[RAG loop live ✅ · evals pending · was #6]`
+### 6. RAG + eval layer + self-evolving store  `[✅ done · was #6]`
 **Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. **Full architecture: AI-CONCEPTS.md §9.**
 
 **Done:**
@@ -180,7 +180,16 @@ Prerequisite for ALL RAG work. Needs `ai-core` (#5a) done first. **Full architec
 - [x] `rag/store.ts` — quality-gated write: embed with `inputType: 'document'`, dimension validation, fire-and-forget (never blocks the parse response)
 - [x] `rag/retrieve.ts` — embed with `inputType: 'query'`, `$vectorSearch` aggregation, formats top-K as few-shot examples for the system prompt
 - [x] `parseService.ts` — retrieve before model call (enriched system prompt), store after good result (quality gate: `!isEmpty && lowConfidenceItems.length === 0`)
-- [x] **Self-evolving loop proven in real time:** store grows with each good parse, retrieval finds semantically similar examples, token count grows as examples are injected (402 → 467 → 532 tokens), top similarity scores 0.705 → 0.787 → 0.901 as store fills
+- [x] **Eval harness built and run:**
+  - `evals/testCases.ts` — 10 fixed cases covering positive/negative/ambiguous/multi-category/edge
+  - `evals/scoring.ts` — 4 metrics: accuracy, consistency, hallucination rate, empty rate
+  - `evals/run.ts` — manual + CI gate modes, baseline comparison, threshold enforcement
+  - `npm run evals` / `evals:update-baseline` / `evals:ci`
+- [x] **RAG improvement measured and proven:**
+  - Baseline (zero-shot, small store): accuracy 0.733, consistency 0.667
+  - With RAG (store seeded by eval run): accuracy 1.000, consistency 1.000
+  - App-cache hit rate grew 6.5% → 47.3% during consistency runs
+- [x] **`tc-07` finding** — "I like comfortable clothes" → model extracted Casual (score 0.629, weakly related examples injected). Confirms score threshold guardrail is needed. Evals doing their job.
 
 **Confirmed working:**
 ```
@@ -202,35 +211,6 @@ tokens in: 532  ← few-shot examples injected into system prompt
 - [ ] **Semantic cache** — if Atlas returns score ≥ 0.95, return stored output directly without calling the LLM at all. Treat the vector store as a semantic cache on top of the model. Hit rate grows as the store fills with real user data. Four layers: exact cache (BoundedCache) → semantic cache (0.95+) → few-shot RAG (0.7-0.95) → zero-shot (<0.7).
 - [ ] **Embedding cache TTL tuning** — embeddings are stable (vector for "I love Nike" doesn't change unless you change the model). Consider longer TTL (`AI_EMBED_CACHE_TTL_MS=3600000`, 1hr) vs completions (5 mins). Also fix `inputType` in cache key (`embed:${provider}:${model}:${inputType}:${text}`) — current key doesn't distinguish query vs document vectors for same text.
 - [ ] **Redis/Upstash for cross-session embedding cache** — `BoundedCache` is in-memory, resets on deploy. Popular embedding inputs (common preference phrases) would benefit from a persistent cross-session cache. Upgrade path already designed in `cache.ts` comments.
-
-
-**Not "build our own models."** Retrieval + prompting + evals; model stays Anthropic/Ollama. Needs #5 done first. **Full architecture: AI-CONCEPTS.md §9.**
-
-Build order (dependencies dictate it):
-- [ ] Stand up pgvector — one shared Postgres instance, **per-domain tables** (`preference_examples`, `nl2mongo_examples`). Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version columns are the cheap Option-C upgrade path.
-- [ ] Build the retrieval flow for the Preference Parser domain (`rag/preferences`): embed input (via gateway) → search own table → assemble few-shot → generate (via gateway) → quality-gated write-back. Start here — RAG's value (consistency) is clearest. Write the `embed → search → format` plumbing inline first.
-- [ ] Build the **eval harness** for that domain — fixed test set + scoring script, runs in CI, never in the request path. Turn "I think this is better" into "scored X% higher". This is what makes the write-back loop safe to run.
-- [ ] Extract the shared retrieval helper (`lib/retrieval`, configured per domain: table, top-k) — only when the second domain needs it, not before.
-- [ ] NL2Mongo domain (`rag/nl2mongo`) — **only if evals show it beats good few-shot** for query generation.
-- [ ] **Skip** LangChain / LlamaIndex — hand-build (keeps the "I understand the plumbing" story).
-
-**Boundary test that the layering is right:** if adding a third domain ever requires editing `ai-provider`, the boundary has leaked. Gateway = capabilities; domains = knowledge; the seam = two function calls.
-
-**Layer placement:** embeddings → in `ai-provider` (#5); RAG wiring → in the app using it; evals → standalone harness. Rule: reusable-across-apps → package; app-specific → app.
-
-**The real goal — "self-evolving parsing" (learns from usage, no training):**
-```
-user interacts → parser produces validated output
-  → embed input, store {embedding, input, GOOD output} in pgvector
-next similar input → retrieve closest past examples → inject as few-shot
-  → model (unchanged) generates grounded in accumulated experience
-  → store this too → store grows → retrieval keeps improving
-```
-- Memory lives in pgvector, NOT model weights. This is RAG, not fine-tuning.
-- **Critical caveat — quality gate on what enters the store.** Only store *good* interactions (Zod passed AND confirmed good). Blindly storing everything → retrieves past mistakes → "self-corrupting" not "self-evolving".
-- **This is why evals are non-negotiable** — the safety mechanism proving the growing store improves, not degrades, parsing.
-- **Honest limit:** improves consistency on inputs *similar to past ones*; does NOT make the model better at genuinely novel inputs (that needs real fine-tuning).
-- **Portfolio narrative:** "a learning system that improves from real usage without training."
 
 ### 7. Receipt scan → orders → inferred preferences  `[was #8 · HIGH effort · builds on #5+#6; adds vision]`
 Upload/scan a receipt → parsed into orders collection against the user → on profile-preferences load, show preferences *inferred* from past shopping.
@@ -266,19 +246,46 @@ The long-shot vision: a composable TypeScript AI platform where each package is 
 
 Build order is strictly downward — each package only depends on packages above it in this list.
 
-### P1. @jz92/vector  `[after #5b · provider-agnostic vector stores]`
-- [ ] `VectorStore` interface in `ai-core` (insert, search, delete)
-- [ ] pgvector implementation (right-sized first — no new managed service)
-- [ ] Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version cols are the dimension-consistency insurance
-- [ ] Per-domain table isolation (no cross-domain vector reads)
-- [ ] Pinecone / Weaviate adapters deferred until scale demands it
+### P1. @jz92/vector  `[building now · provider-agnostic vector stores]`
+Infrastructure-agnostic — never imports `@shared/db` or knows about MongoDB specifically. Accepts a `getCollection()` function from the caller; operates on whatever collection it's handed.
 
-### P2. @jz92/retrieval  `[after P1 · chunking, retrieval, reranking]`
-- [ ] Chunking strategies (fixed-size, sentence, semantic)
-- [ ] Similarity search (top-k, threshold filtering)
-- [ ] Quality-gated write-back (only good outputs enter the store — the self-evolving store mechanism)
+- [ ] `VectorStore` interface in `ai-core` (insert, search, delete) — generic over output type `T`
+- [ ] Atlas implementation first (right-sized — the infra you already have; Pinecone/Weaviate adapters deferred until scale demands it)
+- [ ] Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version cols are the dimension-consistency insurance
+- [ ] Per-domain collection isolation (no cross-domain vector reads) — caller supplies collection name, package never hardcodes one
+- [ ] **Observability at every entry/exit:** `insert()` and `search()` emit `vector.insert.success/failure` and `vector.search.success/failure` via `ai-core`'s event bus — every event carries `durationMs`, `traceId`, result metadata (count, topScore for search)
+- [ ] `console.log` calls from the current `rag/db.ts`/`store.ts`/`retrieve.ts` implementation get replaced by `emit()` calls — same information, structured and traceable instead of just printed
+
+### P2. @jz92/retrieval  `[building now · the generic RAG pattern]`
+Domain-agnostic retrieval engine. Takes a `VectorStore`, a `formatExample` callback, a `qualityGate` predicate, and a `topK` — everything domain-specific is injected, nothing is hardcoded.
+
+- [ ] `retrieve(input, traceId)` — embed (via `ai-provider`) → search (via `@jz92/vector`) → format as few-shot text. Emits `retrieval.completed` with the **composite** durationMs (full round-trip: embed + search + format) — not just its own overhead, so a subscriber can see where time actually went
+- [ ] `store(input, output, qualityGate, traceId)` — check gate → embed (document) → insert. Emits `retrieval.store.completed` or `retrieval.store.skipped` (with reason) via the event bus
+- [ ] Config per domain: `{ collectionName, vectorIndexName, topK, formatExample }` — validated against BOTH known consumers (Preference Parser's `ParsedPreferences` shape, NL2Mongo's `GeneratedQuery` shape) before finalizing the interface, not designed blind against one
+- [ ] Text-only for now — `input: string`. Image/multimodal input (for #7 receipt scanning) is an explicit future extension, not built into v1
+- [ ] Quality-gated write-back (only good outputs enter the store — the self-evolving store mechanism, generalised)
 - [ ] Reranking (cross-encoder or LLM-as-judge) — deferred, add when retrieval quality plateaus
-- [ ] `lib/retrieval` written in-app first, extracted here when second domain needs it (right-sizing)
+
+**Migration order:** design the generic package first (validate shape against 3 consumers on paper) → build it → migrate `portfolio-lab`'s working `libs/profile-preferences/api/src/rag/` to consume it → confirm evals still pass (accuracy/consistency unchanged) → then wire NL2Mongo and receipt scanning as they come online.
+
+**Consumers landing on this package (in order):**
+1. Preference Parser (already built inline — migration target)
+2. NL2Mongo (once RAG is justified by evals — #6 note)
+3. Receipt scanning (#7 — needs the image-input extension first)
+
+### P2.5. Live observability streaming page  `[after all 3 consumers integrated · long-shot]`
+A webpage showing the architecture diagram with real-time pulses traversing each functional box as live requests flow through the system — plus a log stream. Opens in a separate tab from the Preference Parser page; watching one triggers visible activity in the other.
+
+**What must exist first (in place by P1/P2):** every package (`ai-provider`, `vector`, `retrieval`) emits entry/exit events with `traceId`, `durationMs`, and enough detail to reconstruct the full request waterfall — this is the data source. No new instrumentation needed by the time this milestone starts, assuming P1/P2 hold the observability discipline.
+
+**What's actually new here (the real build):**
+- [ ] **A relay subscriber** — a long-lived process/module that calls `onEvent()` once and forwards every event out of the Node.js process (today's event bus is in-process only; a browser tab cannot subscribe to it directly)
+- [ ] **A transport** — Server-Sent Events (SSE) from a `/api/events/stream` route; simplest fit for one-directional server→browser push. WebSockets are the alternative if bidirectional ever matters
+- [ ] **The visualizer page** — renders the architecture (gateway, vector, retrieval, quality gate, etc. as boxes), animates a brief pulse on the matching box for each incoming event using `event.source`/`event.type`; a single `traceId` can be followed lighting up boxes in sequence, showing one request's real path end to end
+- [ ] **A log panel** alongside the diagram — raw event stream, human-readable, filterable by `traceId`/`source`
+- [ ] **Revisit `ai-provider`'s current observability** before this milestone starts — confirm its `AIEvent` type has fully migrated to `ai-core`'s `PlatformEvent` schema (traceId, durationMs, consistent `source`/`type` naming) so the visualizer doesn't need special-case handling for one package's events looking different from the others
+
+**Why this is genuinely achievable, not just aspirational:** the event schema already carries everything needed (`timestamp` for ordering, `traceId` for request-path reconstruction, `durationMs` for pulse duration/intensity). This milestone is purely additive infrastructure on top of P1/P2 — no redesign of `ai-core`, `ai-provider`, `vector`, or `retrieval` required if the observability discipline holds through those builds.
 
 ### P3. @jz92/prompts  `[after P2 · prompt registry]`
 - [ ] Named, versioned prompt templates
