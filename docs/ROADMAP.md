@@ -246,30 +246,36 @@ The long-shot vision: a composable TypeScript AI platform where each package is 
 
 Build order is strictly downward — each package only depends on packages above it in this list.
 
-### P1. @jz92/vector  `[building now · provider-agnostic vector stores]`
+### P1. @jz92/vector  `[✅ done · v0.1.0 published]`
 Infrastructure-agnostic — never imports `@shared/db` or knows about MongoDB specifically. Accepts a `getCollection()` function from the caller; operates on whatever collection it's handed.
 
-- [ ] `VectorStore` interface in `ai-core` (insert, search, delete) — generic over output type `T`
-- [ ] Atlas implementation first (right-sized — the infra you already have; Pinecone/Weaviate adapters deferred until scale demands it)
-- [ ] Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version cols are the dimension-consistency insurance
-- [ ] Per-domain collection isolation (no cross-domain vector reads) — caller supplies collection name, package never hardcodes one
-- [ ] **Observability at every entry/exit:** `insert()` and `search()` emit `vector.insert.success/failure` and `vector.search.success/failure` via `ai-core`'s event bus — every event carries `durationMs`, `traceId`, result metadata (count, topScore for search)
-- [ ] `console.log` calls from the current `rag/db.ts`/`store.ts`/`retrieve.ts` implementation get replaced by `emit()` calls — same information, structured and traceable instead of just printed
+- [x] `VectorStore` interface in `ai-core` (insert, search, delete) — generic over output type `T`
+- [x] Atlas implementation (`createAtlasVectorStore`) — right-sized, no new managed service
+- [x] Row shape: `{embedding, input, output, model, model_version, created_at}` — model/version cols are the dimension-consistency insurance
+- [x] Per-domain collection isolation (caller supplies collection name, package never hardcodes one)
+- [x] **Full entry/exit observability:** `insert.success/failure`, `search.success/empty/failure`, `delete.success/failure` — every event carries `durationMs`, `traceId`, result metadata
+- [x] 15 smoke tests — fake `AtlasCollection`, no real DB needed; covers success/failure paths, score threshold filtering
+- [x] Pinecone / Weaviate adapters deferred until scale demands it — same package, new sibling file, no breaking change
 
-### P2. @jz92/retrieval  `[building now · the generic RAG pattern]`
-Domain-agnostic retrieval engine. Takes a `VectorStore`, a `formatExample` callback, a `qualityGate` predicate, and a `topK` — everything domain-specific is injected, nothing is hardcoded.
+### P2. @jz92/retrieval  `[✅ done · v0.1.0 published]`
+Domain-agnostic retrieval engine. Takes a `VectorStore`, an injected `embed` function, a `formatExample` callback, a `qualityGate` predicate, and a `topK` — everything domain-specific is injected, nothing is hardcoded.
 
-- [ ] `retrieve(input, traceId)` — embed (via `ai-provider`) → search (via `@jz92/vector`) → format as few-shot text. Emits `retrieval.completed` with the **composite** durationMs (full round-trip: embed + search + format) — not just its own overhead, so a subscriber can see where time actually went
-- [ ] `store(input, output, qualityGate, traceId)` — check gate → embed (document) → insert. Emits `retrieval.store.completed` or `retrieval.store.skipped` (with reason) via the event bus
-- [ ] Config per domain: `{ collectionName, vectorIndexName, topK, formatExample }` — validated against BOTH known consumers (Preference Parser's `ParsedPreferences` shape, NL2Mongo's `GeneratedQuery` shape) before finalizing the interface, not designed blind against one
-- [ ] Text-only for now — `input: string`. Image/multimodal input (for #7 receipt scanning) is an explicit future extension, not built into v1
-- [ ] Quality-gated write-back (only good outputs enter the store — the self-evolving store mechanism, generalised)
-- [ ] Reranking (cross-encoder or LLM-as-judge) — deferred, add when retrieval quality plateaus
+- [x] `retrieve(input, traceId)` — embed (injected `embed` fn) → search (via `@jz92/vector`) → format as few-shot text. Emits `retrieved` with composite durationMs
+- [x] `store(input, output, qualityGate, options, traceId)` — check gate → embed (document) → insert. Emits `quality.gate.passed/failed` and `store.success/failure`
+- [x] **`embed` injected, not hard-imported from `ai-provider`** — zero dependency on `ai-provider`, fully testable in isolation with a fake embedder
+- [x] Guardrails included from day one, defaulted to no-op: `minScore` (score threshold), `maxExampleTokens` (token budget) — config change to tune, not a code change
+- [x] Config shape validated against Preference Parser (`ParsedPreferences`) AND NL2Mongo (`GeneratedQuery`) output types before finalizing the interface
+- [x] Text-only for now — image/multimodal input (#7 receipt scanning) is an explicit future extension
+- [x] 19 smoke tests — fake `embed` + fake `VectorStore`; covers both guardrails, quality gate pass/fail, fire-and-forget failure handling
+- [x] Reranking (cross-encoder or LLM-as-judge) — deferred, add when retrieval quality plateaus
 
-**Migration order:** design the generic package first (validate shape against 3 consumers on paper) → build it → migrate `portfolio-lab`'s working `libs/profile-preferences/api/src/rag/` to consume it → confirm evals still pass (accuracy/consistency unchanged) → then wire NL2Mongo and receipt scanning as they come online.
+**Migration completed and proven:**
+- [x] `portfolio-lab`'s inline `rag/db.ts` + `rag/store.ts` + `rag/retrieve.ts` replaced with `rag/retriever.ts` wiring `@jz92/vector` + `@jz92/retrieval`
+- [x] **Eval parity confirmed against real Atlas + real Voyage** (not just smoke test fakes): accuracy 1.000, consistency 1.000, hallucination 0.000, empty rate 0.000 — identical to pre-migration baseline. `tc-07` fails identically (known gap, unrelated to migration).
+- [x] `ai-core` extended along the way: `VectorStore` interface, `VectorSearchFailureEvent`/`VectorInsertFailureEvent`/`VectorDeleteEvent`, `RetrievalStoreEvent` — all following the entry/exit discipline from AI-CONCEPTS.md §16
 
-**Consumers landing on this package (in order):**
-1. Preference Parser (already built inline — migration target)
+**Consumers landing on this package next:**
+1. ~~Preference Parser~~ — done, migrated, proven
 2. NL2Mongo (once RAG is justified by evals — #6 note)
 3. Receipt scanning (#7 — needs the image-input extension first)
 
@@ -286,6 +292,32 @@ A webpage showing the architecture diagram with real-time pulses traversing each
 - [ ] **Revisit `ai-provider`'s current observability** before this milestone starts — confirm its `AIEvent` type has fully migrated to `ai-core`'s `PlatformEvent` schema (traceId, durationMs, consistent `source`/`type` naming) so the visualizer doesn't need special-case handling for one package's events looking different from the others
 
 **Why this is genuinely achievable, not just aspirational:** the event schema already carries everything needed (`timestamp` for ordering, `traceId` for request-path reconstruction, `durationMs` for pulse duration/intensity). This milestone is purely additive infrastructure on top of P1/P2 — no redesign of `ai-core`, `ai-provider`, `vector`, or `retrieval` required if the observability discipline holds through those builds.
+
+### ai-core + ai-provider bug fixes — event bus + traceId propagation  `[✅ done, verified end-to-end]`
+
+**Bug 1 — `ai-core` event bus module-instance isolation.** `emit`/`onEvent` used a plain module-level `subscribers` array. Next.js (Turbopack/webpack) can load `ai-core` in separate bundle contexts for different parts of the app (e.g. `instrumentation.ts`'s runtime vs an API route) — each getting its own module instance with its own empty `subscribers` array. Proven concretely: a manual `emit()` call from inside an API route never reached the subscriber registered in `instrumentation.ts`, even though both imported the same published package.
+
+**Fix:** `subscribers` moved to `globalThis` (keyed `__jz92AiCoreSubscribers__`), same defensive pattern `ai-provider`'s `onAIEvent` already used for exactly this class of bug. Every bundle context shares one process-wide `globalThis`, guaranteeing a true singleton bus regardless of how the bundler splits modules.
+
+**Bug 2 — `ai-provider` gateway reading the wrong field.** Found while verifying bug 1's fix: `gateway.ts`'s `generateStructured`/`generatePlainText` read `options.correlationId` for events, but every caller (including `parseService.ts`) passes `traceId`. Since nothing ever populated `correlationId`, completion events emitted with an empty trace — breaking the unified trace exactly at the LLM-call step.
+
+**Fix:** `gateway.ts` now reads `options.traceId` at both call sites, threaded through `execute()` (param renamed for clarity). `AIEvent.correlationId` field itself unchanged — only the value flowing into it corrected.
+
+- [x] `ai-core/events.ts` — rewritten to use `globalThis`; 21 tests pass unchanged
+- [x] `ai-provider/gateway.ts` — reads `traceId` correctly; 53 tests updated + passing
+- [x] Bumped and published: `ai-core@0.1.6`, `ai-provider@0.8.3`
+- [x] Pulled into `vector`, `retrieval`, `portfolio-lab`
+- [x] **Verified end-to-end in production dev server:** one complete request trace, every layer sharing the same `traceId` — `ai-provider.embedding.success` (604ms, dims:1024) → `vector.search.success` (151ms, score:1.000) → `retrieval.retrieved` (755ms, count:3) → `ai-provider.completion.success` (4394ms) → `retrieval.quality.gate.passed` → `ai-provider.cache.hit` → `vector.insert.success` (47ms) → `retrieval.store.success` (47ms)
+
+**Known tradeoffs of the `globalThis` fix (accepted deliberately, not blindly):**
+- Doesn't fix the root cause (bundler creating multiple module instances) — targeted workaround for this one piece of state, same as `ai-provider` already accepted for `onAIEvent`
+- Reintroduces global-mutable-state hazards: collision risk with other code writing the same key (mitigated by a namespaced key), and any code in-process can mutate subscribers directly, bypassing `emit`/`onEvent`
+- Test parallelization caveat: if tests ever run concurrently within one process, `clearSubscribers()` in one test could wipe another's subscribers mid-run (not an issue today — smoke tests run sequentially)
+- Does NOT provide cross-invocation persistence in serverless — `globalThis` only survives within one running process; Vercel functions can still cold-start fresh between requests
+
+**Deferred enhancement — named/identified subscribers:** currently `onEvent(subscriber)` takes an anonymous function; multiple subscribers coexist correctly (array, not single-slot — deliberate, since `ai-provider`'s single-slot `onAIEvent` silently replaces any previous handler, a real pre-existing limitation there). Future improvement: `onEvent(id: string, subscriber)` so subscribers carry identity — useful for debugging ("who's currently subscribed?") and replacing a specific subscriber by name. Not needed today.
+
+
 
 ### P3. @jz92/prompts  `[after P2 · prompt registry]`
 - [ ] Named, versioned prompt templates

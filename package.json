@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
-    "@jz92/ai-provider": "^0.8.1",
+    "@jz92/ai-core": "^0.1.6",
+    "@jz92/ai-provider": "^0.8.3",
     "@jz92/retrieval": "^0.1.0",
     "@jz92/vector": "^0.1.0",
     "@primer/css": "^22.3.0",

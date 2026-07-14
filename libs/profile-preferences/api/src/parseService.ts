@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { generateStructured, AIProviderError } from "@jz92/ai-provider";
-import { preferenceRetriever, preferencesQualityGate, getStoreOptions } from './rag/retriever.js'
+import { preferenceRetriever, preferencesQualityGate, getStoreOptions } from './rag/retriever';
 
 
 const VALID_PREFERENCES = {
