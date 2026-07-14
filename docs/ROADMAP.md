@@ -319,7 +319,22 @@ A webpage showing the architecture diagram with real-time pulses traversing each
 
 
 
-### P3. @jz92/prompts  `[after P2 · prompt registry]`
+### @jz92/telemetry  `[✅ done · v0.1.2 published · new platform package]`
+Built during the observability debugging session — a consumer of `ai-core`'s event bus that formats a per-request trace summary, replacing what would otherwise be ad-hoc console logging duplicated in every app.
+
+- [x] `attachTraceSummary(config?)` — subscribes to `ai-core`'s `onEvent` once, buffers events by `traceId` (`globalThis`-backed, same singleton pattern as `ai-core`'s own fix — applied proactively this time, not discovered the hard way)
+- [x] `printTraceSummary(traceId)` — prints a formatted box: total wall time + per-stage breakdown, composite events (`retrieval.retrieved`, `retrieval.store.success`) shown with their known sub-components (`embed text`, `vector search`, `vector insert`) as nested/indented rows
+- [x] Percentage math computed only over top-level (non-composite-child) rows — avoids the double-counting bug where a naive flat sum would exceed 100% because a parent's duration already includes its children's
+- [x] `STAGE_HIERARCHY` covers all current platform event types; extensible via `labels` config for future event sources (e.g. `@jz92/agents`) without forking the package
+- [x] Stale-buffer pruning (default 5min) — traces that never get `printTraceSummary`'d (e.g. an error path) don't leak memory
+- [x] Double-attach guard — calling `attachTraceSummary()` twice doesn't duplicate the subscription
+- [x] 13 smoke tests — buffering, cleanup, double-attach, unknown-traceId safety, custom labels, and specifically the nested-grouping + percentage-isolation math
+- [x] Wired into `portfolio-lab`: `instrumentation.ts` calls `attachTraceSummary()` once; the parse route calls `printTraceSummary(traceId)` after `inferPreferences` resolves
+- [x] **Verified in production logs** — nested box correctly showing `retrieval` (1492ms, 28%) with `embed text`/`vector search` children, `llm completion` (3750ms, 72%), summing to 100% at the top level
+
+**Where this sits in the platform stack:** a fifth package alongside `ai-core`/`ai-provider`/`vector`/`retrieval` — not a P-numbered milestone since it emerged from the observability debugging work rather than the original planned sequence, but genuinely reusable across any app in the monorepo going forward.
+
+
 - [ ] Named, versioned prompt templates
 - [ ] Variable interpolation
 - [ ] Few-shot example injection (consumed by `retrieval` for RAG prompt assembly)
