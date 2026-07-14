@@ -6,6 +6,7 @@ import { saveCustomerPreference } from "./customerService";
 import { Customer } from "@shared/models";
 import { connectDB } from "@shared/db";
 import { randomUUID } from "crypto";
+import { printTraceSummary } from "node_modules/@jz92/telemetry/dist/lib/traceSummary";
 
 // ── Input constraints ──────────────────────────────────────────────────────
 // Keep these in sync with maxInputTokens in parseService (4000 tokens ≈ 16000 chars).
@@ -21,44 +22,66 @@ const errorResponse = (errorCode: string) => {
   switch (errorCode) {
     case "TOKEN_BUDGET":
       return NextResponse.json(
-        { success: false, fallback: true, message: "Your input is too long. Please shorten it and try again." },
-        { status: 400 }
+        {
+          success: false,
+          fallback: true,
+          message: "Your input is too long. Please shorten it and try again.",
+        },
+        { status: 400 },
       );
     case "RATE_LIMIT":
       return NextResponse.json(
-        { success: false, fallback: true, message: "We're busy right now. Please try again in a moment." },
-        { status: 429 }
+        {
+          success: false,
+          fallback: true,
+          message: "We're busy right now. Please try again in a moment.",
+        },
+        { status: 429 },
       );
     case "AUTH_ERROR":
     case "BILLING_ERROR":
       // Ops problem — not the user's fault; hide the detail
       return NextResponse.json(
-        { success: false, fallback: true, message: "Something went wrong on our end. Please select your preferences manually." },
-        { status: 500 }
+        {
+          success: false,
+          fallback: true,
+          message:
+            "Something went wrong on our end. Please select your preferences manually.",
+        },
+        { status: 500 },
       );
     case "TIMEOUT":
       return NextResponse.json(
-        { success: false, fallback: true, message: "This took too long. Please try again." },
-        { status: 503 }
+        {
+          success: false,
+          fallback: true,
+          message: "This took too long. Please try again.",
+        },
+        { status: 503 },
       );
     default:
       return NextResponse.json(
-        { success: false, fallback: true, message: "We couldn't understand your preferences. Please select them manually." },
-        { status: 500 }
+        {
+          success: false,
+          fallback: true,
+          message:
+            "We couldn't understand your preferences. Please select them manually.",
+        },
+        { status: 500 },
       );
   }
 };
 
 export const handleParsePreferences = async (req: NextRequest) => {
   try {
-    const traceId = randomUUID()
+    const traceId = randomUUID();
     const { input } = await req.json();
 
     // ── Input validation ─────────────────────────────────────────────────
     if (!input || typeof input !== "string") {
       return NextResponse.json(
         { success: false, error: "Input is required and must be a string." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -66,21 +89,29 @@ export const handleParsePreferences = async (req: NextRequest) => {
 
     if (trimmed.length < MIN_INPUT_LENGTH) {
       return NextResponse.json(
-        { success: false, error: "Input is too short. Please describe your preferences in a few words." },
-        { status: 400 }
+        {
+          success: false,
+          error:
+            "Input is too short. Please describe your preferences in a few words.",
+        },
+        { status: 400 },
       );
     }
 
     if (trimmed.length > MAX_INPUT_LENGTH) {
       return NextResponse.json(
-        { success: false, error: `Input is too long. Please keep it under ${MAX_INPUT_LENGTH} characters.` },
-        { status: 400 }
+        {
+          success: false,
+          error: `Input is too long. Please keep it under ${MAX_INPUT_LENGTH} characters.`,
+        },
+        { status: 400 },
       );
     }
 
     // ── Parse ────────────────────────────────────────────────────────────
     const result = await inferPreferences(trimmed, { traceId });
-
+    printTraceSummary(traceId);
+    
     if (!result.success) {
       return errorResponse(result.errorCode);
     }
@@ -94,7 +125,8 @@ export const handleParsePreferences = async (req: NextRequest) => {
       return NextResponse.json({
         success: false,
         fallback: true,
-        message: "We couldn't find any recognisable preferences in your input. Try mentioning specific brands, styles, or dietary needs.",
+        message:
+          "We couldn't find any recognisable preferences in your input. Try mentioning specific brands, styles, or dietary needs.",
       });
     }
 
@@ -102,21 +134,25 @@ export const handleParsePreferences = async (req: NextRequest) => {
     // Returned as a separate field so the UI can highlight uncertain items
     // (e.g. show them greyed-out with a "Did you mean X?" prompt).
     return NextResponse.json({
-      success:             true,
-      fallback:            false,
+      success: true,
+      fallback: false,
       preferences,
-      lowConfidenceItems:  quality.lowConfidenceItems,
-      hasLowConfidence:    quality.lowConfidenceItems.length > 0,
+      lowConfidenceItems: quality.lowConfidenceItems,
+      hasLowConfidence: quality.lowConfidenceItems.length > 0,
     });
-
   } catch (error) {
     console.error("[handleParsePreferences] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, fallback: true, message: "Something went wrong. Please select your preferences manually." },
-      { status: 500 }
+      {
+        success: false,
+        fallback: true,
+        message:
+          "Something went wrong. Please select your preferences manually.",
+      },
+      { status: 500 },
     );
   }
-}
+};
 
 export async function handleSavePreference(req: NextRequest) {
   try {
@@ -125,7 +161,7 @@ export async function handleSavePreference(req: NextRequest) {
     if (!customerId || !preferenceType || !items) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -142,23 +178,35 @@ export async function handleSavePreference(req: NextRequest) {
         error: "Failed to save preferences",
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const isValidCustomerId = (id: string): boolean => UUID_REGEX.test(id);
 
 // ── Default preferences factory ────────────────────────────────────────────
 // Extracted so it's testable and not duplicated if a second call site needs it.
 const buildDefaultPreferences = (): ICustomerPreferences => ({
-  categories: AVAILABLE_PREFERENCES.categories.map((name) => ({ name, optedIn: false })),
-  dietary:    AVAILABLE_PREFERENCES.dietary.map((name)    => ({ name, optedIn: false })),
-  events:     AVAILABLE_PREFERENCES.events.map((name)     => ({ name, optedIn: false })),
-  style:      AVAILABLE_PREFERENCES.style.map((name)      => ({ name, optedIn: false })),
-  brands:     AVAILABLE_PREFERENCES.brands.map((name)     => ({ name, optedIn: false })),
+  categories: AVAILABLE_PREFERENCES.categories.map((name) => ({
+    name,
+    optedIn: false,
+  })),
+  dietary: AVAILABLE_PREFERENCES.dietary.map((name) => ({
+    name,
+    optedIn: false,
+  })),
+  events: AVAILABLE_PREFERENCES.events.map((name) => ({
+    name,
+    optedIn: false,
+  })),
+  style: AVAILABLE_PREFERENCES.style.map((name) => ({ name, optedIn: false })),
+  brands: AVAILABLE_PREFERENCES.brands.map((name) => ({
+    name,
+    optedIn: false,
+  })),
 });
 
 // ── Merge saved prefs with the full available list ─────────────────────────
@@ -167,17 +215,16 @@ const buildDefaultPreferences = (): ICustomerPreferences => ({
 // automatically appear as optedIn: false for existing customers.
 const mergeWithAvailable = (
   category: keyof typeof AVAILABLE_PREFERENCES,
-  saved: { name: string; optedIn: boolean }[] | undefined
+  saved: { name: string; optedIn: boolean }[] | undefined,
 ) => {
   const savedMap = new Map(
-    (saved ?? []).map((item) => [item.name.toLowerCase(), item.optedIn])
+    (saved ?? []).map((item) => [item.name.toLowerCase(), item.optedIn]),
   );
   return AVAILABLE_PREFERENCES[category].map((name) => ({
     name,
     optedIn: savedMap.get(name.toLowerCase()) ?? false,
   }));
 };
-
 
 export const handleGetPreferences = async (req: NextRequest) => {
   try {
@@ -187,7 +234,7 @@ export const handleGetPreferences = async (req: NextRequest) => {
     if (!customerId) {
       return NextResponse.json(
         { success: false, error: "Missing customerId." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -196,7 +243,7 @@ export const handleGetPreferences = async (req: NextRequest) => {
     if (!isValidCustomerId(customerId)) {
       return NextResponse.json(
         { success: false, error: "Invalid customerId format." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -208,26 +255,28 @@ export const handleGetPreferences = async (req: NextRequest) => {
     // isNew signals to the UI that these are defaults, not saved values.
     if (!customer) {
       return NextResponse.json({
-        success:     true,
+        success: true,
         preferences: buildDefaultPreferences(),
-        isNew:       true,
+        isNew: true,
       });
     }
 
     const preferences: ICustomerPreferences = {
-      categories: mergeWithAvailable("categories", customer.preferences?.categories),
-      dietary:    mergeWithAvailable("dietary",    customer.preferences?.dietary),
-      events:     mergeWithAvailable("events",     customer.preferences?.events),
-      style:      mergeWithAvailable("style",      customer.preferences?.style),
-      brands:     mergeWithAvailable("brands",     customer.preferences?.brands),
+      categories: mergeWithAvailable(
+        "categories",
+        customer.preferences?.categories,
+      ),
+      dietary: mergeWithAvailable("dietary", customer.preferences?.dietary),
+      events: mergeWithAvailable("events", customer.preferences?.events),
+      style: mergeWithAvailable("style", customer.preferences?.style),
+      brands: mergeWithAvailable("brands", customer.preferences?.brands),
     };
 
     return NextResponse.json({
-      success:     true,
+      success: true,
       preferences,
-      isNew:       false,
+      isNew: false,
     });
-
   } catch (error) {
     // Distinguish error types so the consumer gets a meaningful status:
     // CastError  → 400 (bad input that slipped past the regex, shouldn't happen)
@@ -236,14 +285,17 @@ export const handleGetPreferences = async (req: NextRequest) => {
       console.error("[handleGetPreferences] Invalid ObjectId:", error.message);
       return NextResponse.json(
         { success: false, error: "Invalid customerId format." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     console.error("[handleGetPreferences] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch preferences. Please try again." },
-      { status: 500 }
+      {
+        success: false,
+        error: "Failed to fetch preferences. Please try again.",
+      },
+      { status: 500 },
     );
   }
 };
