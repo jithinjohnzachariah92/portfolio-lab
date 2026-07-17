@@ -358,7 +358,21 @@ A webpage showing the architecture diagram with real-time pulses traversing each
 - [ ] **A log panel** alongside the diagram — raw event stream, human-readable, filterable by `traceId`/`source`
 - [ ] **Revisit `ai-provider`'s current observability** before this milestone starts — confirm its `AIEvent` type has fully migrated to `ai-core`'s `PlatformEvent` schema (traceId, durationMs, consistent `source`/`type` naming) so the visualizer doesn't need special-case handling for one package's events looking different from the others
 
-**Why this is genuinely achievable, not just aspirational:** the event schema already carries everything needed (`timestamp` for ordering, `traceId` for request-path reconstruction, `durationMs` for pulse duration/intensity). This milestone is purely additive infrastructure on top of P1/P2 — no redesign of `ai-core`, `ai-provider`, `vector`, or `retrieval` required if the observability discipline holds through those builds.
+**Confirmed (2026-07-17): concurrent, multi-domain faceted display is already fully supported by the current data model — no further changes needed before building this.** Worked through the scenario explicitly: two tabs, one triggering NL2Mongo, one triggering Preference Parser, at the same moment.
+- **`traceId`** (already threaded through every call, every package) — groups events into one request's pulse animation; two concurrent requests never cross-contaminate since each has its own ID
+- **`domain`** on `retrieval.*` events (added this session — see bug-fix log below) + **`table`** on `vector.*` events (already existed, since each domain uses a different Atlas collection) — lets the UI facet/color/label pulses by which domain triggered them
+- The visualizer's actual job, given this: subscribe to the stream → bucket incoming events by `traceId` → animate each bucket's boxes in `timestamp` order → color/label using that trace's `domain`/`table` values. Multiple pulses move through the *same* shared diagram simultaneously, independently, correctly attributed — a natural consequence of the existing fields, not new architecture.
+- **Open UI decision for whenever this gets built** (not an architecture question, purely a UX one): one shared diagram with color-coded concurrent pulses, vs. entirely separate diagrams per domain side-by-side. The event data supports either equally well.
+
+**Why this is genuinely achievable, not just aspirational:** the event schema already carries everything needed (`timestamp` for ordering, `traceId` for request-path reconstruction, `durationMs` for pulse duration/intensity, `domain`/`table` for faceting). This milestone is purely additive infrastructure on top of P1/P2 — no redesign of `ai-core`, `ai-provider`, `vector`, or `retrieval` required if the observability discipline holds through those builds.
+
+### ai-core + @jz92/retrieval — domain attribution fix  `[✅ done]`
+
+**The gap:** `@jz92/retrieval` is shared by multiple consumers (Preference Parser, NL2Mongo) that emit identically-shaped `retrieval.retrieved`/`store.success` events — nothing distinguished which consumer's call produced a given event. (`@jz92/vector`'s events already avoided this problem via the existing `table` field, since each domain uses a different Atlas collection; `@jz92/ai-provider`'s events don't need it either, since `traceId` correlation back to the originating route already resolves the ambiguity one hop removed — `domain` was added only where a genuine, otherwise-unresolved gap existed, not uniformly across all three packages.)
+
+- [x] `ai-core`: `domain: string` added as a required field to `RetrievalEvent` and `RetrievalStoreEvent` — published as `ai-core@0.2.1`
+- [x] `@jz92/retrieval`: `RetrieverConfig<T>` gains a required `domain` field, stamped onto all 7 `emit()` calls in `retrieve()`/`store()` — published as `@jz92/retrieval@0.2.0`
+- [x] Both app-level retrievers updated: `preferenceRetriever` → `domain: 'preference-parser'`, `nl2mongoRetriever` → `domain: 'nl2mongo'`
 
 ### ai-core + ai-provider bug fixes — event bus + traceId propagation  `[✅ done, verified end-to-end]`
 

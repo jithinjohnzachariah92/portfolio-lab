@@ -29,6 +29,7 @@ const vectorStore = createAtlasVectorStore({
 })
 
 export const preferenceRetriever = createRetriever<ParsedPreferences>({
+  domain: 'preference-parser',
   vectorStore,
   embed: (text, inputType, traceId) =>
     generateEmbedding(text, { inputType, traceId }),
