@@ -25,7 +25,7 @@ export type ExtractedQuery = z.infer<typeof generatedQuerySchema>
 export interface GeneratedQuery {
   filter: Record<string, unknown>
   projection: Record<string, unknown>
-  sort: Record<string, unknown>
+  sort: Record<string, 1 | -1>   // was: Record<string, unknown>
   limit: number
 }
 

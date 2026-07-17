@@ -2,7 +2,11 @@ import { z } from "zod";
 import { generateStructured } from "@jz92/ai-provider";
 import { connectDB } from "@shared/db";
 import { Customer } from "@shared/models";
-import { nl2mongoRetriever, nl2mongoQualityGate, getStoreOptions } from './rag/retriever.js'
+import {
+  nl2mongoRetriever,
+  nl2mongoQualityGate,
+  getStoreOptions,
+} from "./rag/retriever"
 
 export const SCHEMA_CONTEXT = `
 You are a MongoDB query analyzer for an M&S customer database.
@@ -93,10 +97,10 @@ Two different kinds of "negative" questions — do not confuse them:
 
 const conditionSchema = z.object({
   type: z.enum(["equality", "elemMatch", "comparison", "absence"]),
-  field: z.string(),                                              // top-level field OR array path
-  name: z.string().optional(),                                    // for elemMatch / absence
-  optedIn: z.boolean().optional(),                                // for elemMatch
-  operator: z.enum(["$gt", "$lt", "$gte", "$lte"]).optional(),     // for comparison
+  field: z.string(), // top-level field OR array path
+  name: z.string().optional(), // for elemMatch / absence
+  optedIn: z.boolean().optional(), // for elemMatch
+  operator: z.enum(["$gt", "$lt", "$gte", "$lte"]).optional(), // for comparison
   value: z.union([z.string(), z.number(), z.boolean()]).optional(), // for equality / comparison
 });
 
@@ -132,7 +136,10 @@ export interface NaturalLanguageQueryResult {
 const BOOLEAN_FIELDS = new Set(["sparksMember", "profileComplete"]);
 const NUMBER_FIELDS = new Set(["totalOrders", "totalSpend"]);
 
-const coerceValue = (field: string, value: string | number | boolean | undefined): unknown => {
+const coerceValue = (
+  field: string,
+  value: string | number | boolean | undefined,
+): unknown => {
   if (value === undefined) return undefined;
 
   if (BOOLEAN_FIELDS.has(field)) {
@@ -180,7 +187,9 @@ const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
       }
       case "absence": {
         if (c.name !== undefined) {
-          conditions.push({ [c.field]: { $not: { $elemMatch: { name: c.name } } } });
+          conditions.push({
+            [c.field]: { $not: { $elemMatch: { name: c.name } } },
+          });
         }
         break;
       }
@@ -199,26 +208,35 @@ export const runNaturalLanguageQuery = async (
   context?: { traceId?: string; userId?: string },
 ): Promise<NaturalLanguageQueryResult> => {
   // ── RAG: retrieve similar past extractions ─────────────────────────────
-  const { fewShotText } = await nl2mongoRetriever.retrieve(question, context?.traceId)
+  const { fewShotText } = await nl2mongoRetriever.retrieve(
+    question,
+    context?.traceId,
+  );
 
   const enrichedSchemaContext = fewShotText
     ? `${SCHEMA_CONTEXT}\n${fewShotText}`
-    : SCHEMA_CONTEXT
+    : SCHEMA_CONTEXT;
 
   const { data: extracted } = await generateStructured({
     systemPrompt: enrichedSchemaContext,
     prompt: `Question: ${question}`,
     schema: generatedQuerySchema,
     cacheKey: `nl2mongo:${question}`,
-    traceId: context?.traceId ?? '',
+    traceId: context?.traceId ?? "",
     userId: context?.userId,
   });
 
   // ── RAG: store good extractions for future retrieval ───────────────────
   if (nl2mongoQualityGate(extracted)) {
     nl2mongoRetriever
-      .store(question, extracted, nl2mongoQualityGate, getStoreOptions(), context?.traceId)
-      .catch(() => {})
+      .store(
+        question,
+        extracted,
+        nl2mongoQualityGate,
+        getStoreOptions(),
+        context?.traceId,
+      )
+      .catch(() => {});
   }
 
   const filter = buildMongoFilter(extracted);
@@ -234,7 +252,7 @@ export const runNaturalLanguageQuery = async (
 
   await connectDB();
   const results = await Customer.find(generatedQuery.filter)
-    .sort(generatedQuery.sort)
+    .sort(generatedQuery.sort as Record<string, 1 | -1>)
     .limit(generatedQuery.limit);
 
   return {

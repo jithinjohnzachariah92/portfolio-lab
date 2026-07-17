@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+import { printTraceSummary } from "@jz92/telemetry";
 
 import { runNaturalLanguageQuery } from "./queryService";
 
@@ -13,7 +15,9 @@ export async function handleQuery(req: NextRequest) {
       );
     }
 
-    const data = await runNaturalLanguageQuery(question);
+    const traceId = randomUUID();
+    const data = await runNaturalLanguageQuery(question, { traceId });
+    printTraceSummary(traceId);
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
