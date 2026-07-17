@@ -1,0 +1,268 @@
+{
+  "timestamp": "2026-07-17T07:07:03.403Z",
+  "totalCases": 12,
+  "avgPrecision": 1,
+  "avgRecall": 1,
+  "emptyHandlingCorrect": 3,
+  "emptyHandlingTotal": 3,
+  "caseResults": [
+    {
+      "id": "nlm-01",
+      "input": "List customers who like Nike",
+      "llmFilter": {
+        "preferences.brands": {
+          "$elemMatch": {
+            "name": "Nike",
+            "optedIn": true
+          }
+        }
+      },
+      "llmCount": 6,
+      "groundTruthCount": 6,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3243
+    },
+    {
+      "id": "nlm-02",
+      "input": "Which customers have a dietary preference set?",
+      "llmFilter": {
+        "preferences.dietary": {
+          "$elemMatch": {
+            "optedIn": true
+          }
+        }
+      },
+      "llmCount": 8,
+      "groundTruthCount": 8,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3216
+    },
+    {
+      "id": "nlm-03",
+      "input": "List customers who are interested in Christmas",
+      "llmFilter": {
+        "preferences.events": {
+          "$elemMatch": {
+            "name": "Christmas",
+            "optedIn": true
+          }
+        }
+      },
+      "llmCount": 6,
+      "groundTruthCount": 6,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3549
+    },
+    {
+      "id": "nlm-04",
+      "input": "Which customers have any style preference?",
+      "llmFilter": {
+        "preferences.style": {
+          "$elemMatch": {
+            "optedIn": true
+          }
+        }
+      },
+      "llmCount": 10,
+      "groundTruthCount": 10,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3074
+    },
+    {
+      "id": "nlm-05",
+      "input": "List all Sparks members",
+      "llmFilter": {
+        "sparksMember": true
+      },
+      "llmCount": 0,
+      "groundTruthCount": 0,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": true,
+      "passed": true,
+      "durationMs": 2977
+    },
+    {
+      "id": "nlm-06",
+      "input": "Which customers have placed at least one order?",
+      "llmFilter": {
+        "totalOrders": {
+          "$gte": 1
+        }
+      },
+      "llmCount": 0,
+      "groundTruthCount": 0,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": true,
+      "passed": true,
+      "durationMs": 3232
+    },
+    {
+      "id": "nlm-07",
+      "input": "List customers who have explicitly said they dislike Nike",
+      "llmFilter": {
+        "preferences.brands": {
+          "$elemMatch": {
+            "name": "Nike",
+            "optedIn": false
+          }
+        }
+      },
+      "llmCount": 4,
+      "groundTruthCount": 4,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 2364
+    },
+    {
+      "id": "nlm-08",
+      "input": "List customers who have never expressed any opinion about Nike",
+      "llmFilter": {
+        "preferences.brands": {
+          "$not": {
+            "$elemMatch": {
+              "name": "Nike"
+            }
+          }
+        }
+      },
+      "llmCount": 4,
+      "groundTruthCount": 4,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3080
+    },
+    {
+      "id": "nlm-09",
+      "input": "List customers who like both Nike and Christmas",
+      "llmFilter": {
+        "$and": [
+          {
+            "preferences.brands": {
+              "$elemMatch": {
+                "name": "Nike",
+                "optedIn": true
+              }
+            }
+          },
+          {
+            "preferences.events": {
+              "$elemMatch": {
+                "name": "Christmas",
+                "optedIn": true
+              }
+            }
+          }
+        ]
+      },
+      "llmCount": 3,
+      "groundTruthCount": 3,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 4238
+    },
+    {
+      "id": "nlm-10",
+      "input": "List customers who like Nike or Adidas",
+      "llmFilter": {
+        "$or": [
+          {
+            "preferences.brands": {
+              "$elemMatch": {
+                "name": "Nike",
+                "optedIn": true
+              }
+            }
+          },
+          {
+            "preferences.brands": {
+              "$elemMatch": {
+                "name": "Adidas",
+                "optedIn": true
+              }
+            }
+          }
+        ]
+      },
+      "llmCount": 6,
+      "groundTruthCount": 6,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 4764
+    },
+    {
+      "id": "nlm-11",
+      "input": "List Sparks members who also like Nike",
+      "llmFilter": {
+        "$and": [
+          {
+            "sparksMember": true
+          },
+          {
+            "preferences.brands": {
+              "$elemMatch": {
+                "name": "Nike",
+                "optedIn": true
+              }
+            }
+          }
+        ]
+      },
+      "llmCount": 0,
+      "groundTruthCount": 0,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": true,
+      "passed": true,
+      "durationMs": 2936
+    },
+    {
+      "id": "nlm-12",
+      "input": "List customers who are not Sparks members but like Christmas",
+      "llmFilter": {
+        "$and": [
+          {
+            "sparksMember": false
+          },
+          {
+            "preferences.events": {
+              "$elemMatch": {
+                "name": "Christmas",
+                "optedIn": true
+              }
+            }
+          }
+        ]
+      },
+      "llmCount": 6,
+      "groundTruthCount": 6,
+      "precision": 1,
+      "recall": 1,
+      "correctEmptyHandling": null,
+      "passed": true,
+      "durationMs": 3797
+    }
+  ],
+  "failed": []
+}

@@ -9,7 +9,10 @@
     "lint": "next lint",
     "evals": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts",
     "evals:update-baseline": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts --update-baseline",
-    "evals:ci": "NODE_ENV=production npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts --ci"
+    "evals:ci": "NODE_ENV=production npx dotenv-cli -e .env.local -- npx tsx libs/profile-preferences/api/src/evals/run.ts --ci",
+    "admin-evals": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/admin/api/src/evals/run.ts",
+    "admin-evals:update-baseline": "NODE_ENV=development npx dotenv-cli -e .env.local -- npx tsx libs/admin/api/src/evals/run.ts --update-baseline",
+    "admin-evals:ci": "NODE_ENV=production npx dotenv-cli -e .env.local -- npx tsx libs/admin/api/src/evals/run.ts --ci"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",

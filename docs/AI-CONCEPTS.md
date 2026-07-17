@@ -28,6 +28,7 @@
 14. [Token/prompt caching — provider-specific, not universal](#13-tokenprompt-caching--provider-specific-not-universal)
 15. [RAG production guardrails — token growth, quality, deduplication](#14-rag-production-guardrails--token-growth-quality-deduplication)
 16. [The entry/exit observability discipline for platform packages](#16-the-entryexit-observability-discipline-for-platform-packages)
+17. [The universal eval template — and what's NOT fine-tuning](#17-the-universal-eval-template--and-whats-not-fine-tuning)
 
 ---
 
@@ -1082,3 +1083,70 @@ None of that requires touching `ai-core`, `ai-provider`, `vector`, or `retrieval
 ### The test that this discipline is being followed
 
 > For any package in the platform, can you point at every exported function that does I/O and name the two events (success/failure) it emits? If a function does I/O and you can't name its events, the discipline has a gap — and that gap is exactly where the live visualizer would show a dark, silent box while a request is actually flowing through it.
+
+---
+
+## 17. The universal eval template — and what's NOT fine-tuning
+
+Two things worth having crystal clear, surfaced while building the NL2Mongo eval set right after the Preference Parser's: (1) a repeatable template for writing eval cases in *any* domain, and (2) precise terminology for what "improving an AI system" actually means — most of it isn't fine-tuning.
+
+### First — terminology: what we actually did today is NOT fine-tuning
+
+**Fine-tuning** = updating the model's *weights* via additional training. The model becomes a genuinely different artifact. **Nothing in this platform's work has ever touched model weights.** Claude and Ollama are bit-for-bit identical before and after every fix described in this doc. Worth being precise about this distinction — "I fine-tuned a model" is a specific, different claim from everything below.
+
+**What "improving an AI system" actually decomposes into — five distinct, nameable levers:**
+
+| Lever | What it changes | Example from this platform |
+|---|---|---|
+| **Schema / structured-output design** | The *output contract* the model must conform to | NL2Mongo: `z.union` nested in `z.record` broke Ollama's structured output; a single discriminated array fixed it — before any prompt wording changed |
+| **Prompt engineering** | The instructions given alongside the input | Adding contrastive examples ("elemMatch+optedIn:false vs absence") to `SCHEMA_CONTEXT` |
+| **Evals** | The measurement — turns "I think it's better" into a number | `testCases.ts`/`scoring.ts`/`run.ts`, catching the `nlm-07`/`nlm-08` regression |
+| **Guardrails** | Deterministic code constraining what output is *allowed* to become, after generation | `coerceValue()` type validation, the `limit` cap — catch mistakes the model still makes |
+| **RAG** | Dynamically injecting *retrieved* examples into the prompt, per request | Few-shot examples pulled from real past good outputs, not hand-written once |
+
+**Most people conflate "make the AI better" with "fine-tune it."** Reaching for schema design, prompt engineering, evals, and guardrails *first* — solving a hard quality problem without touching weights — is the more sophisticated, more common-in-practice skill. Fine-tuning is expensive, slow to iterate, and usually the wrong first lever.
+
+### Second — the universal eval-case template
+
+Every eval case, regardless of domain, answers the same five questions:
+
+```
+1. What's the input?           realistic — exactly what a user would type
+2. What's the correct output?  provably correct, not guessed
+3. How do we check "correct"?  the scoring mechanism — THIS is what varies most by domain
+4. What failure mode does this probe?   why does this case exist at all
+5. Is the expected answer stable?       won't go stale as the system improves or data changes
+```
+
+**Comparing the two eval sets built on this platform shows the pattern concretely:**
+
+| | Preference Parser | NL2Mongo |
+|---|---|---|
+| Input | Free text ("I love Nike") | Free text ("List customers who like Nike") |
+| Expected output | A specific `ParsedPreferences` object | A Mongo filter that returns specific customer IDs |
+| Scoring mechanism | Exact-match against the expected object | **Live** precision/recall against the real DB at eval time |
+| Case types | happy-path / negative / hallucination-probe / edge-case | set / empty / negation-explicit / negation-absence / AND / OR / mixed |
+| Stability strategy | Expected output is small + self-contained → inherently stable | Ground-truth *filter* is stable; expected *counts* aren't → score live, never hardcode counts |
+
+**The one thing that genuinely differs by domain: how you keep "correct" from silently going stale.** When the expected output is small and self-contained (Preference Parser), hand-writing it once is stable forever. When correctness depends on external, changing state (NL2Mongo's live customer data, or anything touching a DB/API), hardcoding an expected count/result is a ticking time bomb — score live against a hand-written *ground-truth query/rule* instead, run at eval time, so the comparison stays valid no matter how the underlying data changes.
+
+**The four-type failure-mode taxonomy also generalizes, just relabeled per domain:**
+
+| Universal type | Preference Parser | NL2Mongo |
+|---|---|---|
+| Happy path | Clear positive mention | Basic set query |
+| Negative/negation | Explicit dislike (`optedIn:false`) | Needed **two** distinct negation types (`negation-explicit` + `negation-absence`) — some domains need finer granularity than others; this emerged from building the cases, not from planning upfront |
+| Hallucination/over-reach probe | "comfortable clothes" → should extract nothing | Empty-set cases — does the model correctly return nothing rather than everything |
+| Combinatorial/edge case | Case sensitivity, near-empty input | AND/OR combinations, mixed field types |
+
+### The template, as a checklist for the next domain
+
+1. **List the domain's real failure modes first** — before writing any cases, ask what could plausibly go wrong (over-extraction, under-extraction, wrong direction, malformed output, combinatorial confusion)
+2. **Write one case per failure mode minimum**, with real, verifiable ground truth — never a guessed expected answer
+3. **Decide the scoring mechanism based on what "correct" means here** — exact match for small self-contained outputs; live comparison against a system-of-record when correctness depends on external state
+4. **Run it — let real failures teach you new case types.** `nlm-08`'s absence-vs-explicit-negation distinction wasn't predicted upfront; it emerged from thinking through what "never expressed an opinion" really means as distinct from "explicitly said no." Good eval sets grow from contact with the domain.
+5. **Track a baseline, diff against it, never silently modify an existing case** — domain-agnostic, identical every time.
+
+### One operational trap worth remembering: the completion cache can mask whether a prompt fix worked
+
+While iterating on `SCHEMA_CONTEXT`, one eval run showed `nlm-08` unchanged across two consecutive iterations — appearing to be a genuine model-capability ceiling. It wasn't: `generateStructured`'s `cacheKey: nl2mongo:${question}` had served a **stale, pre-fix cached response** for that exact question string, since a prompt change doesn't invalidate an existing cache entry keyed only on the input text. The fix (a contrastive example) had actually worked immediately — the eval just wasn't seeing it. **When iterating on prompts, either clear the cache between iterations or vary the `cacheKey`** — otherwise a fix can look like a failure, or (worse, the inverse) a regression can look invisible.

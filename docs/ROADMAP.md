@@ -74,7 +74,30 @@ Same migration already done for the Preference Parser (direct SDK → ai-provide
 - [x] Added `cacheKey: nl2mongo:${question}` — identical repeat questions now skip the model via the app-cache proven in #1
 - [x] Inherited for free: env-aware routing, smart retry, timeouts, full observability events
 - [ ] **Hardening — explicitly deferred**, not scoped this pass: input validation · typed errors beyond ai-provider's · timeouts/retries tuning · output-quality guards. Pick up as its own pass.
-- [ ] **H&M empty-result carried over from #2** — confirm whether it's a genuine data question (no customer opted into H&M) or a real accuracy issue. Worth checking with a direct DB query (`db.customers.findOne({"preferences.brands.name": "H&M"})`) before assuming either way.
+- [x] **H&M empty-result carried over from #2 — resolved.** Confirmed via eval work below: not a data bug, was part of the broader empty-filter collapse fixed alongside the eval baseline work.
+
+**NL2Mongo eval harness built + a real production bug found and fixed (2026-07-16 session):**
+- [x] `evals/testCases.ts` — 12 cases against live 14-doc `customers` collection: baseline positives, empty-set (Sparks members / totalOrders>0 — both genuinely 0 in seed data), explicit negation (`optedIn:false`), absence negation (item never mentioned), AND/OR combinations, mixed field-type conditions (top-level bool + nested elemMatch)
+- [x] `evals/scoring.ts` — precision/recall computed **live** against real DB at eval time (LLM's filter with its own limit vs. ground-truth filter unlimited) — drift-proof by construction, never needs updating as data changes
+- [x] `evals/run.ts` — same manual/CI-gate/baseline-diff pattern as Preference Parser's harness
+
+**Bug found: `generateStructured` was returning `{filter: {}}` on almost every query — a total, previously-invisible failure, not a minor inaccuracy.** Root-caused methodically:
+  1. Ruled out "local model too weak" — Claude Sonnet in production produced the *identical* empty filter
+  2. Ruled out "prompt doesn't teach the task" — `generatePlainText` with the real `SCHEMA_CONTEXT` produced a perfect filter in free text
+  3. Isolated to: **`z.union([...])` nested inside `z.record(...)`** breaks Ollama's structured-output mode specifically — confirmed via a minimal flat-schema diagnostic that succeeded where the union-in-record schema failed
+  4. First restructure (flat conditions, but split across 4 parallel arrays by type) — partial improvement, still too much structural surface, model left arrays empty inconsistently
+  5. **Final fix: single unified `conditions` array, one flat object shape, discriminated by a `type` field** (`equality`/`elemMatch`/`comparison`/`absence`) — this is the shape that finally worked reliably. Filter assembly moved into deterministic code (`buildMongoFilter()`), not left to the LLM to produce Mongo syntax directly.
+  6. Added `coerceValue()` — validates equality/comparison values match the target field's real type (e.g. `sparksMember` must be boolean); prevents a Mongoose `CastError` crash when the model sends a mismatched type instead of silently breaking the request
+  7. Capped `limit` at `z.number().int().min(1).max(100)` — model was inventing absurd values (`1000000000000000`) trying to express "no limit"
+
+**Baseline progression (same live-scored eval set throughout):**
+```
+Original (broken, empty-filter collapse):  precision 0.283 / recall 0.485 / empty-handling 0/3
+After single-array restructure + prompt fixes:  precision 1.000 / recall 1.000 / empty-handling 3/3 — ALL 12 CASES PASS
+```
+- [x] Two real prompt-tuning regressions caught and fixed along the way (fixing the "any preference, no name" case briefly broke `nlm-07`/`nlm-08`'s negation handling — caught immediately by the eval re-run, fixed with an explicit contrastive example distinguishing `elemMatch`+`optedIn:false` from `absence`)
+- [x] **Caveat worth remembering:** `nlm-08` briefly *appeared* to be an unfixable model-capability ceiling (identical wrong output across two consecutive eval runs, even after the contrastive prompt fix was confirmed present in `SCHEMA_CONTEXT`). Root cause of that false read: `generateStructured`'s `cacheKey: nl2mongo:${question}` — the completion cache served the stale pre-fix response for that exact question string, since prompt changes don't invalidate an existing cache entry. **When iterating on prompts during eval runs, the completion cache can mask whether a fix actually worked** — a cleared cache (or a temporarily varied `cacheKey`) is needed to get a true read on each prompt iteration.
+- [x] Baseline locked at **1.000 / 1.000 / 3-3 — all 12 cases passing**
 
 ### 4. Preference Parser — harden for better results  `[✅ done · was #5]`
 Same category as #3's hardening — done back-to-back while the pattern was fresh.
@@ -207,6 +230,16 @@ tokens in: 532  ← few-shot examples injected into system prompt
 - [ ] Token-budget the injected examples — `MAX_EXAMPLE_TOKENS` ceiling so example size growth doesn't silently raise token overhead
 - [ ] Store deduplication in `store.ts` — check similarity before insert (`DEDUP_THRESHOLD: 0.95`); keeps store diverse, retrieval quality high
 
+**Parked enhancement — gate storage on user acceptance, not just model confidence (two related issues, one fix each):**
+
+*Issue A — store writes fire before the user ever sees the result.* Today: `parsePreferences` → automated quality gate (`!isEmpty && !lowConfidence`) → store → *then* return to the user. `savePreference` (the user's actual confirm/edit action) is a separate call that never touches the RAG store. So "good" is entirely self-reported by the model — never human-confirmed. `tc-07` is proof this isn't hypothetical: the model was confident about extracting `Casual` from "comfortable clothes," passed the automated gate, and would've been stored as a template for future users on a genuinely debatable extraction.
+- [ ] Move the `retriever.store(...)` call from `parsePreferences` to `savePreference` — store only fires once a human has actually confirmed the result, not on model self-assessment alone. Requires the original free-text input to travel from parse → save (not currently in `handleSavePreference`'s payload).
+
+*Issue B — even with user acceptance, unrelated manual edits would pollute the store.* If a user parses "I love Nike casual styles," then manually adds `Vegetarian: true` (never mentioned in the text) before saving, storing `(original text → final saved state)` would teach the store a false correlation — the input text said nothing about diet, but the stored example would claim it implied one. Retrieved later for a similar-sounding input, this could cause hallucination in the opposite direction (injecting a fabricated correlation the RAG loop was designed to prevent).
+- [ ] **Chosen approach (Option A — strict match):** only call `retriever.store(...)` if the user's final saved output is byte-for-byte identical to what the model proposed. Any edit at all (addition, removal, correction) means don't store — safest floor, given the store is still small and avoiding poison matters more than maximizing volume right now.
+- [ ] *(considered, not chosen yet)* Option B — field-level diff, store only the subset of categories/items the user didn't touch. More data captured, meaningfully more complex (needs per-category diffing). Revisit if Option A's strict-match rate turns out too low (few inputs ever qualify, starving the store of new examples) — that'd show up as a flat/slow-growing store size in evals, worth watching for rather than guessing at upfront.
+- [ ] *(considered, not chosen)* Option C — per-item provenance tagging (`model` / `user-added` / `user-removed`), only store still-`model`-tagged unedited items. Most precise, most implementation work — likely overkill unless Option B also proves insufficient.
+
 **Long-shot future (significant optimisations, not blocking):**
 - [ ] **Semantic cache** — if Atlas returns score ≥ 0.95, return stored output directly without calling the LLM at all. Treat the vector store as a semantic cache on top of the model. Hit rate grows as the store fills with real user data. Four layers: exact cache (BoundedCache) → semantic cache (0.95+) → few-shot RAG (0.7-0.95) → zero-shot (<0.7).
 - [ ] **Embedding cache TTL tuning** — embeddings are stable (vector for "I love Nike" doesn't change unless you change the model). Consider longer TTL (`AI_EMBED_CACHE_TTL_MS=3600000`, 1hr) vs completions (5 mins). Also fix `inputType` in cache key (`embed:${provider}:${model}:${inputType}:${text}`) — current key doesn't distinguish query vs document vectors for same text.
@@ -237,6 +270,38 @@ Rebuild NL2Mongo as a multi-step agent rather than a single RAG/extraction call.
 - [ ] Only adopt LangChain/LangGraph's default wrappers if a team is already standardized on that stack (consistency > my layer's rigor)
 
 > **On the original reasoning ("wider context windows will absorb RAG/orchestration, so build agents to prepare") — shaky, don't let it drive architecture:** (a) Wider context ≠ RAG obsolete — retrieval is about *relevance*, not just *fit*. (b) "Agents instead of RAG" is a category error — RAG gets context *in*; agents handle *flow*. (c) "Plumbing gets absorbed" taken seriously argues against `ai-provider` existing — contradicts the strategy. **Build agentically to close gap #2 — NOT because RAG is becoming obsolete.** An interviewer who knows the space will challenge the obsolescence claim.
+
+### 10. Preference correlation discovery + marketing insight  `[new · parked · a genuinely different capability from NL2Mongo]`
+**The idea:** discover non-obvious correlations across preference data — e.g. "customers who opted into Books are unusually likely to also opt into Mother's Day" — then use that to drive targeted marketing timing/segments. Surfaced while scoping NL2Mongo RAG; explicitly NOT built as part of that work, since it's a different problem needing a different architecture.
+
+**The key realization — this is NOT an LLM task at its core.** NL2Mongo translates one sentence into one query; it cannot discover a correlation nobody thought to ask about. Finding "Books buyers → Mother's Day" is **association-rule mining** (the "customers who bought X also bought Y" technique) — pure statistics over the preference arrays, computed once across the whole dataset. No model needs to "read" the data to find this.
+
+**Where the LLM's role actually, defensibly fits — three spots, all downstream of the stats:**
+1. **Explaining a computed correlation in plain English** — turn `lift(Books, Mother's Day) = 2.3, confidence = 71%` into a human-readable insight + suggested action. Low-risk, genuinely good use of a completion call.
+2. **Generating campaign copy** once a segment is identified — "write a marketing email for book-buying customers ahead of Mother's Day." Classic generative task, LLMs are good at this.
+3. **An NL2Mongo-style query layer ON TOP of a precomputed correlations collection** — "what correlates with Mother's Day?" → same NL→query pattern you already have, just pointed at `preference_correlations` instead of `customers` directly.
+
+**The architecture, if built:**
+```
+1. Scheduled job (cron) — association-rule mining across all preference
+   category pairs → writes to a new `preference_correlations` collection:
+   { itemA, itemB, support, confidence, lift, computedAt }
+   Pure aggregation/stats. No AI call.
+
+2. NL2Mongo-style layer on the NEW collection — reuses the existing
+   generateStructured + Zod pattern, just a different schema/collection target.
+
+3. LLM completion — takes top correlations → plain-English insight
+   + campaign suggestion.
+```
+
+- [ ] Association-rule mining job — compute support/confidence/lift across all preference-category pairs, write to `preference_correlations`
+- [ ] Decide computation trigger: scheduled cron vs on-demand vs triggered on data-volume threshold
+- [ ] NL query layer over the correlations collection (reuses existing NL2Mongo pattern, new target schema)
+- [ ] LLM summarization call: correlation numbers → plain-English marketing insight
+- [ ] Optional: campaign copy generation once a segment is identified
+
+**Explicitly does NOT touch:** `@jz92/vector`, `@jz92/retrieval`, or anything RAG-related — this is a separate data pipeline with an LLM layered on top for explanation/generation, not retrieval. Keep it that way; don't force-fit it into the RAG architecture.
 
 ---
 
@@ -274,13 +339,15 @@ Domain-agnostic retrieval engine. Takes a `VectorStore`, an injected `embed` fun
 - [x] **Eval parity confirmed against real Atlas + real Voyage** (not just smoke test fakes): accuracy 1.000, consistency 1.000, hallucination 0.000, empty rate 0.000 — identical to pre-migration baseline. `tc-07` fails identically (known gap, unrelated to migration).
 - [x] `ai-core` extended along the way: `VectorStore` interface, `VectorSearchFailureEvent`/`VectorInsertFailureEvent`/`VectorDeleteEvent`, `RetrievalStoreEvent` — all following the entry/exit discipline from AI-CONCEPTS.md §16
 
-**Consumers landing on this package next:**
+**Consumers landing on this package:**
 1. ~~Preference Parser~~ — done, migrated, proven
-2. NL2Mongo (once RAG is justified by evals — #6 note)
+2. ~~NL2Mongo~~ — **done, second consumer validated (2026-07-17)**. Notably wired in *after* prompt engineering alone had already gotten NL2Mongo's eval set to 100% precision/recall — RAG was added deliberately for architectural validation, not because evals demanded it (see #3's eval section for the full prompt-engineering journey that got there first). Result: RAG held at 1.000/1.000/3-3, zero regression, token counts growing as the store fills (856→1042 across the run) confirming real retrieval is happening. **This is the actual proof `@jz92/retrieval`'s generic config shape works** — validated against two structurally different domains (`ParsedPreferences` objects vs. `ExtractedQuery` condition arrays), not just designed on paper against one. One real implementation lesson: had to extract `libs/admin/api/src/types.ts` to break a circular import between `queryService.ts` and `rag/retriever.ts` (queryService needs the retriever, retriever needs queryService's types).
 3. Receipt scanning (#7 — needs the image-input extension first)
 
-### P2.5. Live observability streaming page  `[after all 3 consumers integrated · long-shot]`
+### P2.5. Live observability streaming page  `[after all 3 consumers integrated · long-shot · 2/3 done]`
 A webpage showing the architecture diagram with real-time pulses traversing each functional box as live requests flow through the system — plus a log stream. Opens in a separate tab from the Preference Parser page; watching one triggers visible activity in the other.
+
+**Consumer gate status:** Preference Parser ✅ · NL2Mongo ✅ · Receipt scanning (#7, needs image-input extension) — one remaining.
 
 **What must exist first (in place by P1/P2):** every package (`ai-provider`, `vector`, `retrieval`) emits entry/exit events with `traceId`, `durationMs`, and enough detail to reconstruct the full request waterfall — this is the data source. No new instrumentation needed by the time this milestone starts, assuming P1/P2 hold the observability discipline.
 
