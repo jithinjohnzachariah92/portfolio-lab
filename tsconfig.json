@@ -2,11 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,63 +20,34 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@shared/db": [
-        "libs/shared/db/src/index.ts"
-      ],
-      "@shared/models": [
-        "libs/shared/models/src/index.ts"
-      ],
-      "@shared/registry": [
-        "libs/shared/registry/src/index.ts"
-      ],
-      "@admin/api": [
-        "libs/admin/api/src/index.ts"
-      ],
-      "@admin/api/*": [
-        "libs/admin/api/src/*"
-      ],
-      "@admin/ui": [
-        "libs/admin/ui/src/index.ts"
-      ],
-      "@admin/ui/*": [
-        "libs/admin/ui/src/*"
-      ],
-      "@profile-preferences/api": [
-        "libs/profile-preferences/api/src/index.ts"
-      ],
-      "@profile-preferences/api/*": [
-        "libs/profile-preferences/api/src/*"
-      ],
+      "@/*": ["./src/*"],
+      "@shared/db": ["libs/shared/db/src/index.ts"],
+      "@shared/models": ["libs/shared/models/src/index.ts"],
+      "@shared/registry": ["libs/shared/registry/src/index.ts"],
+      "@admin/api": ["libs/admin/api/src/index.ts"],
+      "@admin/api/*": ["libs/admin/api/src/*"],
+      "@admin/ui": ["libs/admin/ui/src/index.ts"],
+      "@admin/ui/*": ["libs/admin/ui/src/*"],
+      "@profile-preferences/api": ["libs/profile-preferences/api/src/index.ts"],
+      "@profile-preferences/api/*": ["libs/profile-preferences/api/src/*"],
       "@profile-preferences/api/parseService": [
         "libs/profile-preferences/api/src/parseService"
       ],
       "@profile-preferences/api/customerService": [
         "libs/profile-preferences/api/src/customerService"
       ],
-      "@profile-preferences/ui": [
-        "libs/profile-preferences/ui/src/index.ts"
-      ],
-      "@profile-preferences/ui/*": [
-        "libs/profile-preferences/ui/src/*"
-      ],
+      "@profile-preferences/ui": ["libs/profile-preferences/ui/src/index.ts"],
+      "@profile-preferences/ui/*": ["libs/profile-preferences/ui/src/*"],
       "@profile-preferences/types": [
         "libs/profile-preferences/types/src/index.ts"
       ],
       "@profile-preferences/utils": [
         "libs/profile-preferences/utils/src/index.ts"
-      ]
+      ],
+      "@receipt-scanner/api": ["libs/receipt-scanner/api/src/index.ts"],
+      "@receipt-scanner/api/*": ["libs/receipt-scanner/api/src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
