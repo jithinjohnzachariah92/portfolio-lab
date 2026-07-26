@@ -45,7 +45,10 @@
         "libs/profile-preferences/utils/src/index.ts"
       ],
       "@receipt-scanner/api": ["libs/receipt-scanner/api/src/index.ts"],
-      "@receipt-scanner/api/*": ["libs/receipt-scanner/api/src/*"]
+      "@receipt-scanner/api/*": ["libs/receipt-scanner/api/src/*"],
+      "@receipt-scanner/ui": ["libs/receipt-scanner/ui/src/index.ts"],
+      "@receipt-scanner/ui/*": ["libs/receipt-scanner/ui/src/*"],
+      "@receipt-scanner/types": ["libs/receipt-scanner/types/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

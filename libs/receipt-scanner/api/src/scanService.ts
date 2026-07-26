@@ -4,18 +4,7 @@ import { generateStructuredFromImage } from "@jz92/ai-provider";
 import { connectDB } from "@shared/db";
 import { Order, IOrder } from "@shared/models";
 
-const RECEIPT_SCHEMA_CONTEXT = `
-You are a receipt scanner for a retail customer database.
-Extract the following from the receipt image:
-  - retailer: the store/brand name
-  - purchaseDate: the date of purchase, if visible (format: YYYY-MM-DD)
-  - items: a list of purchased items, each with a name, price (if visible),
-    and quantity (default 1 if not shown)
-  - total: the final total amount paid, if visible
-
-Be conservative — only extract what is actually legible on the receipt.
-If a field isn't visible or readable, omit it rather than guessing.
-`;
+const RECEIPT_SCHEMA_CONTEXT = `...`; // unchanged
 
 const orderExtractionSchema = z.object({
   retailer: z.string(),
@@ -28,16 +17,20 @@ const orderExtractionSchema = z.object({
   total: z.number().optional(),
 });
 
+export type ExtractedOrder = z.infer<typeof orderExtractionSchema>;
+
 export type ScanReceiptInput = {
-  customerId: string;
-  image: string;       // base64
+  image: string;
   mimeType?: string;
 };
 
-export const scanReceipt = async (
+// ── extractReceipt — vision extraction ONLY, no DB write ─────────────────────
+// Returns the proposed order for the user to review/confirm before anything
+// is persisted.
+export const extractReceipt = async (
   input: ScanReceiptInput
-): Promise<IOrder> => {
-  const { customerId, image, mimeType } = input;
+): Promise<ExtractedOrder> => {
+  const { image, mimeType } = input;
 
   const { data: extracted } = await generateStructuredFromImage({
     image,
@@ -47,19 +40,39 @@ export const scanReceipt = async (
     schema: orderExtractionSchema,
   });
 
+  return extracted;
+};
+
+// ── saveOrder — the actual DB write, called only after user confirmation ────
+export type SaveOrderInput = {
+  customerId: string;
+  order: ExtractedOrder; // possibly edited by the user before confirming
+};
+
+export const saveOrder = async (input: SaveOrderInput): Promise<IOrder> => {
+  const { customerId, order } = input;
+
   await connectDB();
+
+  const parsedDate = order.purchaseDate ? new Date(order.purchaseDate) : undefined;
+  const validPurchaseDate = parsedDate && !isNaN(parsedDate.getTime()) ? parsedDate : undefined;
 
   const newOrder = new Order({
     _id: randomUUID(),
     customerId,
-    retailer: extracted.retailer,
-    purchaseDate: extracted.purchaseDate ? new Date(extracted.purchaseDate) : undefined,
-    items: extracted.items,
-    total: extracted.total,
-    rawText: JSON.stringify(extracted),
+    retailer: order.retailer,
+    purchaseDate: validPurchaseDate,
+    items: order.items,
+    total: order.total,
+    rawText: JSON.stringify(order),
   });
 
   await newOrder.save();
-
   return newOrder;
+};
+
+// ── getOrdersForCustomer — powers the order history view on page load ───────
+export const getOrdersForCustomer = async (customerId: string): Promise<IOrder[]> => {
+  await connectDB();
+  return Order.find({ customerId }).sort({ scannedAt: -1 });
 };

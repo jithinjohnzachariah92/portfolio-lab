@@ -1,3 +1,3 @@
-export { handleScanReceipt } from "./handlers";
-export { scanReceipt } from "./scanService";
-export type { ScanReceiptInput } from "./scanService";
+export { handleExtractReceipt, handleSaveOrder, handleGetOrders } from "./handlers";
+export { extractReceipt, saveOrder, getOrdersForCustomer } from "./scanService";
+export type { ExtractedOrder, ScanReceiptInput, SaveOrderInput } from "./scanService";

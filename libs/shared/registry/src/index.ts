@@ -36,6 +36,14 @@ export const features: Feature[] = [
     icon: "⚙️",
     needsDb: true,
   },
+  {
+    slug: "receipt-scanner",
+    title: "Receipt Scanner",
+    description:
+      "Scan and analyze receipts using AI-powered optical character recognition and data extraction.",
+    icon: "🧾",
+    needsDb: false,
+  },
 ];
 
 export function getFeature(slug: string): Feature | undefined {

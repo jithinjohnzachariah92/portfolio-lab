@@ -30,6 +30,7 @@
 16. [The entry/exit observability discipline for platform packages](#16-the-entryexit-observability-discipline-for-platform-packages)
 17. [The universal eval template — and what's NOT fine-tuning](#17-the-universal-eval-template--and-whats-not-fine-tuning)
 18. [Vision capability (multimodal input) + a real reliability finding](#18-vision-capability-multimodal-input--a-real-reliability-finding)
+19. [Enterprise-grade multi-provider abstraction — what production adds on top of a working gateway](#19-enterprise-grade-multi-provider-abstraction--what-production-adds-on-top-of-a-working-gateway)
 
 ---
 
@@ -1188,3 +1189,81 @@ Compare this to `qwen2.5-coder:14b` (the local *text* model used everywhere else
 
 **Interview framing:**
 > "I validated the vision pipeline empirically against a real receipt photo, running it three times to check consistency — and found real, reproducible non-determinism in the local vision model's structured extraction that doesn't appear in the local text model. Rather than chase false consistency out of a known-smaller local model, I documented it as a dev-only limitation and treated the production model as the actual reliability guarantee — the same principle I'd already established for embedding provider consistency."
+
+### The decisive test: same receipt, local model vs. production model, through the real UI
+
+Once the full pipeline was wired end-to-end (upload → vision extraction → save → render), the same physical M&S receipt was scanned twice — once via `llava` (local), once via Claude Sonnet (`AI_VISION_PROVIDER=anthropic` override) — with a genuinely stark result:
+
+| Field | Actual receipt | `llava` (local) | Claude Sonnet (production) |
+|---|---|---|---|
+| Retailer | M&S | **"Sainsbury's"** (fabricated) | M&S ✅ |
+| Items | HP NAKED KAT, CHOC HZLNT PLLW, HP CHOC CRNCH | **"Fresh Basil 50g", "Fresh Beef Mince 500g"** (fabricated, don't exist on receipt) | All 3 items, exact names ✅ |
+| Total | £9.95 | £9.70 (wrong) | £9.95 ✅ |
+| Date | 3 Jun 2026 | 2021-09-30 (wrong) | 2026-06-03 ✅ |
+
+**This is qualitatively worse than the earlier run-to-run variance** (§ above) — that was noisy-but-recognizable OCR (item counts fluctuating, "M&S" garbling to "MS&S"). This is **outright fabrication**: a coherent, internally-consistent, completely invented receipt from a different real retailer, with plausible but entirely wrong item names and prices. Classic hallucination signature — confident and wrong, not uncertain and noisy.
+
+Claude Sonnet, given the identical image and identical code path, extracted every field correctly.
+
+**The one-line conclusion, now proven rather than inferred:** the vision *pipeline* (schema, message construction, route, UI) is fully correct and working — verified by Claude's perfect extraction through the exact same code. The failure is entirely in `llava`'s capability as a small, general-purpose local vision model on this specific task. **Local vision output in this platform should never be trusted or surfaced to a user without treating it as unverified** — a stronger stance than the earlier "documented variance," since variance implies imprecision while this result showed outright fabrication. Production (Claude) is not just the *more reliable* option here — for this task, it's the *only* trustworthy one.
+
+### Two real bugs found while debugging Gemini as a second vision provider
+
+**Bug 1 — `.output` accessed outside `execute()`'s protection.** Both `generateStructured` and `generateStructuredFromImage` accessed `result.output` (the schema-validated data) *after* `execute()` had already returned successfully. Since `Output.object`'s validation can throw lazily on `.output` access, a schema-validation failure threw raw and unwrapped — bypassing retry logic, `AIProviderError` classification, and the `request.failure` event entirely. Found via 6 isolated diagnostic scripts that each succeeded outside `ai-provider`, proving the bug was in the wrapper, not the AI SDK, schema, or Google's API. **Fixed:** `.output` is now accessed inside `execute()`'s protected callback in both functions — a genuine cross-provider risk that had been silently present in the completions path too, just never triggered by Anthropic/Ollama's output so far.
+
+**Bug 2 — Gemini's "thinking" tokens silently consume the entire output budget.** Gemini 2.5+ models return internal reasoning tokens that count against `maxOutputTokens` and can break `Output.object` parsing (`AI_NoObjectGeneratedError`) — a documented, known AI SDK issue (vercel/ai#14377). Raising the token budget made it *worse*, not better — more room to "think," never reaching the actual answer. **Fixed:** `providerOptions.google.thinkingConfig.thinkingBudget: 0` disables extended thinking for structured-output calls, applied conditionally (`config.provider === 'google'`), same pattern as Voyage's `inputType` provider option.
+
+**Honest remaining result:** even after both fixes, Gemini showed its own non-determinism (items array populated in isolated tests, empty on identical real app calls) — a different variance pattern from `llava`'s fabrication, but still real. **Decision: `anthropic` is the pinned default for vision** — the only provider with zero variance across every test this session.
+
+---
+
+## 19. Enterprise-grade multi-provider abstraction — what production adds on top of a working gateway
+
+This session's vision-provider debugging (Ollama's schema-shape limit, Gemini's thinking-token bug, `llava`'s outright fabrication) is a real case study in what a production-grade model abstraction needs beyond "swap the provider in config." The foundation already built here — one gateway per capability, a uniform typed response (`AIResponse<T>`), schema as the actual contract — is genuinely the right base. Enterprise systems add six things on top, each solving a failure mode this session hit for real, not hypothetically:
+
+**1. Capability metadata — declare what each provider can do, don't discover it by crashing.**
+```typescript
+type ProviderCapabilities = {
+  supportsVision: boolean
+  supportsStructuredOutput: 'full' | 'flat-only' | 'unreliable'
+  requiresThinkingDisabled?: boolean
+  maxSchemaComplexity?: 'simple' | 'nested'
+}
+```
+Encodes today's hard-won empirical knowledge (Ollama chokes on nested unions, Gemini needs thinking disabled) as data the gateway checks *before* calling, rather than tribal knowledge rediscovered by crash.
+
+**2. Automatic failover across a provider chain, not just manual switching.** Today, moving from `llava` to Claude required a human noticing the fabrication and changing an env var. Production systems retry a *different* provider on certain failure classes automatically (`['anthropic', 'google', 'ollama']`), escalating rather than just retrying the same provider — a real extension to `execute()`, which currently only retries the *same* provider on transient errors.
+
+**3. Confidence/provenance surfaced in the response contract, not hidden.** Since the same code path has now proven genuinely different reliability by provider, the contract should say so:
+```typescript
+type AIResponse<T> = {
+  data: T
+  usage?: {...}
+  provider: string
+  model: string
+  fromCache: boolean
+  confidence?: 'verified' | 'unverified'   // new
+}
+```
+Lets a consumer (a receipt-scanning UI, a financial-document pipeline) decide: unverified results get a visible badge or require human confirmation — the pattern regulated industries already require for AI-assisted decisions.
+
+**4. Eval suites run against every supported provider, not just whichever is currently configured — this is the big one, and it directly changes how `@jz92/evals` should be designed (see below).**
+
+**5. Per-request/per-tenant provider selection.** `resolveProvider()` currently reads global env vars — fine for one app. A platform serving multiple tenants/callers needs the *same* request path to route differently depending on the caller (tenant A gets Claude, tenant B gets the free tier) — `resolveProvider()` would need to accept a per-call override threaded from the request, not just read `process.env`.
+
+**6. Model version pinning + reproducibility.** For regulated/auditable contexts, "claude-sonnet-4-6" isn't precise enough since providers update models under the same name — pin exact dated snapshots and log which exact version handled each request (partially already true here via the `model` field on every event).
+
+### The direct implication for @jz92/evals — schema, model, and test cases must all be config, not fixture
+
+Point 4 above is the one that changes actual platform design, not just a nice-to-have. This session proved the **same class of bug (structured output breaking) manifests completely differently per provider** — Ollama fails on schema *shape* (union-in-record), Gemini fails on a *runtime configuration default* (thinking tokens), Claude didn't fail at all. **A single eval run against one provider cannot catch this** — the Preference Parser and NL2Mongo eval harnesses built earlier this session only ever ran against whichever provider `NODE_ENV` resolved to at the time.
+
+**The correct design for `@jz92/evals` (platform milestone P4), given this evidence:** the harness itself must be a platform capability, parameterized over three independent axes rather than hardcoded to one domain's setup:
+```typescript
+type EvalConfig<TInput, TOutput> = {
+  testCases: TestCase<TInput, TOutput>[]   // domain-specific, injected
+  schema: Schema<TOutput>                   // domain-specific, injected
+  providers: ProviderConfig[]                // run against ALL of these, not one
+  scoreFn: (actual: TOutput, expected: TOutput) => number
+}
+```
+Running the *same* test cases against *every* configured provider would have caught Gemini's thinking-token issue and Ollama's union-in-record collapse automatically, in CI, before either reached a real request — exactly the coverage a single-provider eval run structurally cannot provide. This reframes `@jz92/evals` from "a generalized version of the Preference Parser harness" to "a cross-provider regression suite the platform runs on every model/schema change" — a meaningfully bigger and more valuable scope, directly justified by three real bugs found this session across three different providers.

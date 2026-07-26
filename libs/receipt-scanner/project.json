@@ -1,0 +1,15 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/receipt-scanner",
+  "prefix": "lib",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/receipt-scanner/**/*.ts", "libs/receipt-scanner/**/*.tsx"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:receipt-scanner"]
+}

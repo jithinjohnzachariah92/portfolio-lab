@@ -245,14 +245,24 @@ tokens in: 532  ← few-shot examples injected into system prompt
 - [ ] **Embedding cache TTL tuning** — embeddings are stable (vector for "I love Nike" doesn't change unless you change the model). Consider longer TTL (`AI_EMBED_CACHE_TTL_MS=3600000`, 1hr) vs completions (5 mins). Also fix `inputType` in cache key (`embed:${provider}:${model}:${inputType}:${text}`) — current key doesn't distinguish query vs document vectors for same text.
 - [ ] **Redis/Upstash for cross-session embedding cache** — `BoundedCache` is in-memory, resets on deploy. Popular embedding inputs (common preference phrases) would benefit from a persistent cross-session cache. Upgrade path already designed in `cache.ts` comments.
 
-### 7. Receipt scan → orders → inferred preferences  `[was #8 · HIGH effort · builds on #5+#6; adds vision]`
+### 7. Receipt scan → orders → inferred preferences  `[was #8 · HIGH effort · builds on #5+#6; adds vision · IN PROGRESS, 2 of 3 pieces done]`
 Upload/scan a receipt → parsed into orders collection against the user → on profile-preferences load, show preferences *inferred* from past shopping.
 
-- [ ] **Vision/OCR:** receipt image → structured order data. New capability for `ai-provider` (multimodal input). Reuses env-aware routing.
-- [ ] Persist parsed orders to the orders collection, keyed to the user.
-- [ ] **Preference inference:** order history → likely preferences (always buys plant-based → probable vegetarian). Fuzzy-pattern LLM inference.
-- [ ] Surface inferred preferences on profile-preferences (clearly marked *inferred*, not user-declared — trust matters).
-- [ ] Feeds #6's self-evolving store: confirmed inferences become good examples.
+**Piece 1 — Vision/OCR + orders `[✅ done]`**
+- [x] **Vision capability added to `ai-provider`:** `generateStructuredFromImage` + `resolveVisionProvider()` — mirrors `resolveProvider()`'s exact pattern, Ollama+llava for dev / Claude Sonnet for production. Published as `ai-provider@0.9.0`.
+- [x] Two real bugs found + fixed during Google/Gemini testing (see AI-CONCEPTS.md §18/§19): `.output` accessed outside `execute()`'s try/catch (cross-provider risk, also affected `generateStructured`), and Gemini's thinking-tokens consuming the entire output budget (`thinkingConfig.thinkingBudget: 0` fix)
+- [x] **Vision provider pinned to Anthropic** — empirically proven the only zero-variance option across `llava` (fabricated a wrong retailer entirely), Gemini (residual item-extraction non-determinism even after both bugs fixed), and Claude (perfect on every test)
+- [x] `Order`/`IOrderItem` Mongoose model (`libs/shared/models/src/Order.ts`), following the existing `_id: String` convention — confirmed no `Customer` document creation exists anywhere in the codebase (customers are client-only via `getClientId()`/localStorage, no auth), so `Order.customerId` deliberately has no FK-style constraint
+- [x] **Flow split into extract → confirm → save** (not extract+save combined) per explicit product requirement — nothing persists until the user confirms the extraction in a modal popup. Three routes: `/api/extractReceipt`, `/api/saveOrder`, `/api/orders` (history fetch)
+- [x] `libs/receipt-scanner/` — new lib (api + ui), own page, own route, UI styled to match the Preferences page's card/button language
+- [x] Verified end-to-end with real receipts (M&S, Sainsbury's) — scan → confirm modal → save → correctly rendering in order history
+
+**Piece 2 — Preference inference `[not started — next up]`**
+- [ ] New inference service: read a customer's `Order` history → LLM infers likely preferences (conservative — only whitelist-matched categories/dietary signals, omit rather than guess, same philosophy as the receipt extraction prompt)
+- [ ] **Known data mismatch to design around:** `VALID_PREFERENCES.brands` is fashion-retail (Nike/Adidas/Zara/H&M); actual scanned receipts so far are M&S/Sainsbury's grocery items. Inference will mostly land on `categories` (`"Food & Grocery"` already in the whitelist) and `dietary` (only when item names explicitly signal it) — won't force a brand match that doesn't fit the data
+- [ ] `handleGetPreferences` returns TWO separate objects: `preferences` (user-declared, unchanged) and `inferredPreferences` (computed from orders) — computed on-the-fly per request (not precomputed/cached), per explicit decision
+- [ ] Frontend: `inferredPreferences` triggers a confirmation popup (reuse the modal pattern just built for receipt confirmation) — "we noticed you might like..." — user confirms → merges into saved preferences via existing `savePreference` path
+- [ ] Feeds #6's self-evolving store: confirmed inferences become good examples (deferred until inference itself works)
 
 ### 8. Product direction: CRM / campaign / email  `[was #4 · HIGH effort · product pivot · scope before building on it]`
 Reframes NL2Mongo's *purpose*. Moved later: the low-effort NL2Mongo work (#2, #3) is valuable regardless of the pivot, and the migration is plumbing (survives a schema change). Scope this only when ready for the high-effort product work.
@@ -421,11 +431,14 @@ Built during the observability debugging session — a consumer of `ai-core`'s e
 - [ ] Few-shot example injection (consumed by `retrieval` for RAG prompt assembly)
 - [ ] Prompt diffing — compare two versions of a prompt against the eval dataset
 
-### P4. @jz92/evals  `[parallel to P2 · golden tests + benchmarks]`
-- [ ] Golden test dataset format (input, expected output, scoring strategy)
+### P4. @jz92/evals  `[parallel to P2 · golden tests + benchmarks · scope upgraded]`
+**Re-scoped after the vision-provider debugging session (2026-07-2x): must run against every configured provider, not just whichever one `NODE_ENV` currently resolves to.** Concrete proof this matters — the SAME class of bug (structured output breaking) manifested completely differently per provider testing the receipt scanner: Ollama failed on schema *shape* (`z.union` nested in `z.record`), Gemini failed on a *runtime default* (thinking tokens consuming the whole output budget), Claude Sonnet never failed at all. A single-provider eval run structurally cannot catch this class of bug — see AI-CONCEPTS.md §19 for the full reasoning.
+
+- [ ] Golden test dataset format (input, expected output, scoring strategy) — domain-specific, injected, not hardcoded into the harness
+- [ ] **`providers: ProviderConfig[]`** — the harness runs the identical test cases against every configured provider, not one. This is the scope change: `EvalConfig<TInput, TOutput>` parameterizes over test cases, schema, AND provider list — all three axes independent and injectable, none hardcoded
 - [ ] Scoring strategies: exact_match, partial_credit, semantic_similarity, LLM-as-judge
-- [ ] CI runner — fails build if score drops below baseline
-- [ ] Regression test for every real bug found (e.g. "test you meat preference" → expected: isEmpty)
+- [ ] CI runner — fails build if score drops below baseline, **per provider** (a regression on Gemini specifically shouldn't be masked by Claude passing)
+- [ ] Regression test for every real bug found this session across every domain: "test you meat preference" (Preference Parser, hallucination), `nlm-08` absence-vs-negation (NL2Mongo), the Gemini thinking-token collapse and Ollama union-in-record collapse (vision) — each becomes a permanent cross-provider regression case
 - [ ] Benchmark across prompt versions and model changes
 
 ### P5. @jz92/tools  `[before agents · tool registry]`

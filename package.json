@@ -15,9 +15,10 @@
     "admin-evals:ci": "NODE_ENV=production npx dotenv-cli -e .env.local -- npx tsx libs/admin/api/src/evals/run.ts --ci"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.19",
     "@anthropic-ai/sdk": "^0.105.0",
     "@jz92/ai-core": "^0.2.1",
-    "@jz92/ai-provider": "^0.9.0",
+    "@jz92/ai-provider": "^0.9.3",
     "@jz92/retrieval": "^0.2.0",
     "@jz92/telemetry": "^0.1.2",
     "@jz92/vector": "^0.1.0",
@@ -35,13 +36,13 @@
     "@eslint/eslintrc": "^3",
     "@nx/next": "^23.0.0",
     "@nx/react": "^23.0.0",
-    "@types/node": "^20",
+    "@types/node": "20.19.43",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "nx": "^23.0.0",
-    "typescript": "^5"
+    "typescript": "5.9.3"
   }
 }
