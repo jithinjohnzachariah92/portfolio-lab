@@ -24,7 +24,7 @@ export const features: Feature[] = [
     slug: "admin",
     title: "Admin",
     description:
-      "Ask questions about customer data in plain English; Claude generates a MongoDB query and runs it live.",
+      "Scan a receipt and Claude reads it directly using vision — no OCR. Confirm the extracted items and total, and it's saved to your order history.",
     icon: "🔎",
     needsDb: true,
   },
@@ -32,7 +32,7 @@ export const features: Feature[] = [
     slug: "profile-preferences",
     title: "Profile Preferences",
     description:
-      "Configure shopping preferences with AI assistance, persisted per user to MongoDB.",
+      "Set preferences by typing naturally, or let Claude infer them from your saved receipts — either way, you confirm before anything is saved to your profile.",
     icon: "⚙️",
     needsDb: true,
   },
@@ -40,7 +40,7 @@ export const features: Feature[] = [
     slug: "receipt-scanner",
     title: "Receipt Scanner",
     description:
-      "Scan and analyze receipts using AI-powered optical character recognition and data extraction.",
+      "Scan a receipt and Claude reads it directly using vision — no OCR. Confirm the extracted items and total, and it's saved to your order history.",
     icon: "🧾",
     needsDb: false,
   },

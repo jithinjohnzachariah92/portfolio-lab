@@ -3,7 +3,11 @@ import { ICustomerPreferences, IPreferenceItem } from "@profile-preferences/type
 export const preferencesService = {
   async fetchPreferences(
     customerId: string
-  ): Promise<{ preferences: ICustomerPreferences; isNew: boolean }> {
+  ): Promise<{
+    preferences: ICustomerPreferences;
+    inferredPreferences: ICustomerPreferences | null;
+    isNew: boolean;
+  }> {
     const res = await fetch(`/api/getPreferences?customerId=${customerId}`);
     if (!res.ok) throw new Error("Failed to fetch preferences");
     return res.json();

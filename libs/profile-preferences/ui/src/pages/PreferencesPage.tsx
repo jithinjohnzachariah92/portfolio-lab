@@ -8,16 +8,30 @@ import {
   usePreferencesManager,
   useParsedPreferences,
 } from "..";
-import { IPreferenceItem, PreferenceType, PREFERENCE_TYPES } from "@profile-preferences/types";
+import {
+  IPreferenceItem,
+  PreferenceType,
+  PREFERENCE_TYPES,
+} from "@profile-preferences/types";
 import styles from "./PreferencesPage.module.css";
 
 export default function PreferencesPage() {
-  const { preferences, setPreferences, customerId, loading } = usePreferencesManager();
-  const { parsing, parseMessage, setParseMessage, parse } = useParsedPreferences();
+  const {
+    preferences,
+    setPreferences,
+    inferredPreferences,
+    customerId,
+    loading,
+  } = usePreferencesManager();
+  const { parsing, parseMessage, setParseMessage, parse } =
+    useParsedPreferences();
 
   const [naturalInput, setNaturalInput] = useState("");
   const [openModal, setOpenModal] = useState<PreferenceType | null>(null);
-  const [affectedCategories, setAffectedCategories] = useState<PreferenceType[]>([]);
+  const [affectedCategories, setAffectedCategories] = useState<
+    PreferenceType[]
+  >([]);
+  const [showInferredModal, setShowInferredModal] = useState(false);
   const [toast, setToast] = useState<{
     type: "success" | "error";
     text: string;
@@ -29,6 +43,22 @@ export default function PreferencesPage() {
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  useEffect(() => {
+    if (!loading && inferredPreferences) {
+      setShowInferredModal(true);
+    }
+  }, [loading, inferredPreferences]);
+
+  const inferredPanels = inferredPreferences
+    ? PREFERENCE_TYPES.filter(
+        (pref) => inferredPreferences[pref.type].length > 0,
+      ).map((pref) => ({
+        type: pref.type,
+        title: pref.title,
+        items: inferredPreferences[pref.type],
+      }))
+    : [];
 
   const handleParse = async () => {
     const result = await parse(naturalInput, preferences);
@@ -49,7 +79,10 @@ export default function PreferencesPage() {
     }
   };
 
-  const handleSaveSuccess = (type: PreferenceType, items: IPreferenceItem[]) => {
+  const handleSaveSuccess = (
+    type: PreferenceType,
+    items: IPreferenceItem[],
+  ) => {
     const updated = { ...preferences };
     updated[type] = items.map((item) => ({ ...item }));
     setPreferences(updated);
@@ -59,16 +92,16 @@ export default function PreferencesPage() {
     <div className={styles.main}>
       <div className={styles.header}>
         <h1 className={styles.title}>Preferences</h1>
-        <p className={styles.subtitle}>
-          Manage your shopping preferences
-        </p>
+        <p className={styles.subtitle}>Manage your shopping preferences</p>
       </div>
 
       {loading && (
         <div className={styles.container}>
           <div className={styles.inputSection}>
             <h2>Quick Input</h2>
-            <p style={{ color: "#666", marginBottom: "1rem" }}>Loading preferences...</p>
+            <p style={{ color: "#666", marginBottom: "1rem" }}>
+              Loading preferences...
+            </p>
             <SkeletonCard />
             <SkeletonCard />
           </div>
@@ -86,7 +119,7 @@ export default function PreferencesPage() {
               <textarea
                 value={naturalInput}
                 onChange={(e) => setNaturalInput(e.target.value)}
-                placeholder='Type in your preferences, we will parse it as per our preferences categories'
+                placeholder="Type in your preferences, we will parse it as per our preferences categories"
                 className={styles.textarea}
               />
               <button
@@ -104,19 +137,31 @@ export default function PreferencesPage() {
               <div className={styles.examples}>
                 <div
                   className={styles.example}
-                  onClick={() => setNaturalInput("I'm vegetarian and love minimalist fashion")}
+                  onClick={() =>
+                    setNaturalInput(
+                      "I'm vegetarian and love minimalist fashion",
+                    )
+                  }
                 >
                   "I'm vegetarian and love minimalist fashion"
                 </div>
                 <div
                   className={styles.example}
-                  onClick={() => setNaturalInput("Prefer Nike and Adidas, sporty style, avoid dairy")}
+                  onClick={() =>
+                    setNaturalInput(
+                      "Prefer Nike and Adidas, sporty style, avoid dairy",
+                    )
+                  }
                 >
                   "Prefer Nike and Adidas, sporty style, avoid dairy"
                 </div>
                 <div
                   className={styles.example}
-                  onClick={() => setNaturalInput("Love formal wear, Christmas shopping, Gucci brands")}
+                  onClick={() =>
+                    setNaturalInput(
+                      "Love formal wear, Christmas shopping, Gucci brands",
+                    )
+                  }
                 >
                   "Love formal wear, Christmas shopping, Gucci brands"
                 </div>
@@ -167,6 +212,25 @@ export default function PreferencesPage() {
                 text: "All preferences confirmed and saved!",
               });
             }
+          }}
+        />
+      )}
+
+      {/* ── New: inferred preferences from recent purchases ──────────────── */}
+      {showInferredModal && inferredPanels.length > 0 && (
+        <PreferenceModal
+          isOpen={showInferredModal}
+          panels={inferredPanels}
+          onClose={() => setShowInferredModal(false)}
+          onSaveSuccess={handleSaveSuccess}
+          customerId={customerId}
+          isMultiStep={inferredPanels.length > 1}
+          onAllConfirmed={() => {
+            setShowInferredModal(false);
+            setToast({
+              type: "success",
+              text: "Inferred preferences saved from your recent purchases!",
+            });
           }}
         />
       )}

@@ -7,6 +7,7 @@ import { Customer } from "@shared/models";
 import { connectDB } from "@shared/db";
 import { randomUUID } from "crypto";
 import { printTraceSummary } from "node_modules/@jz92/telemetry/dist/lib/traceSummary";
+import { inferPreferencesFromOrders } from "./inferenceService";
 
 // ── Input constraints ──────────────────────────────────────────────────────
 // Keep these in sync with maxInputTokens in parseService (4000 tokens ≈ 16000 chars).
@@ -230,7 +231,6 @@ export const handleGetPreferences = async (req: NextRequest) => {
   try {
     const customerId = req.nextUrl.searchParams.get("customerId");
 
-    // ── Input validation ───────────────────────────────────────────────────
     if (!customerId) {
       return NextResponse.json(
         { success: false, error: "Missing customerId." },
@@ -238,8 +238,6 @@ export const handleGetPreferences = async (req: NextRequest) => {
       );
     }
 
-    // Guard malformed ObjectIds before they reach Mongoose — findById throws
-    // a CastError on bad format rather than returning null cleanly.
     if (!isValidCustomerId(customerId)) {
       return NextResponse.json(
         { success: false, error: "Invalid customerId format." },
@@ -249,23 +247,32 @@ export const handleGetPreferences = async (req: NextRequest) => {
 
     await connectDB();
 
+    const traceId = randomUUID();
     const customer = await Customer.findById(customerId);
 
-    // New customer — return defaults rather than a 404.
-    // isNew signals to the UI that these are defaults, not saved values.
+    // ── Inference runs regardless of whether the customer doc exists ────────
+    // A customer could have scanned receipts before ever saving explicit
+    // preferences — inference shouldn't be gated on customer.preferences
+    // already existing.
+    const inferenceResult = await inferPreferencesFromOrders(customerId, traceId);
+    const inferredPreferences =
+      inferenceResult.success && !inferenceResult.isEmpty
+        ? inferenceResult.inferredPreferences
+        : null;
+
+    printTraceSummary(traceId);
+
     if (!customer) {
       return NextResponse.json({
         success: true,
         preferences: buildDefaultPreferences(),
+        inferredPreferences,
         isNew: true,
       });
     }
 
     const preferences: ICustomerPreferences = {
-      categories: mergeWithAvailable(
-        "categories",
-        customer.preferences?.categories,
-      ),
+      categories: mergeWithAvailable("categories", customer.preferences?.categories),
       dietary: mergeWithAvailable("dietary", customer.preferences?.dietary),
       events: mergeWithAvailable("events", customer.preferences?.events),
       style: mergeWithAvailable("style", customer.preferences?.style),
@@ -275,12 +282,10 @@ export const handleGetPreferences = async (req: NextRequest) => {
     return NextResponse.json({
       success: true,
       preferences,
+      inferredPreferences,
       isNew: false,
     });
   } catch (error) {
-    // Distinguish error types so the consumer gets a meaningful status:
-    // CastError  → 400 (bad input that slipped past the regex, shouldn't happen)
-    // Other      → 500 (genuine server/DB problem)
     if (error instanceof Error && error.name === "CastError") {
       console.error("[handleGetPreferences] Invalid ObjectId:", error.message);
       return NextResponse.json(
@@ -291,10 +296,7 @@ export const handleGetPreferences = async (req: NextRequest) => {
 
     console.error("[handleGetPreferences] Unexpected error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch preferences. Please try again.",
-      },
+      { success: false, error: "Failed to fetch preferences. Please try again." },
       { status: 500 },
     );
   }

@@ -38396,3 +38396,1585 @@ Unable to find local plugin [] Map(0) {}
 [plugin-worker] "@nx/next/plugin" (pid: 22716) loaded successfully
 [NX v23.0.0 Daemon Server] - 2026-07-26T09:16:53.614Z - Time taken for 'loadSpecifiedNxPlugins' 152.35062499996275ms
 [NX v23.0.0 Daemon Server] - 2026-07-26T09:16:53.614Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 151.96045800019056ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.350Z - [WATCHER]: libs/profile-preferences/api/src/parseService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.350Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.350Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/parseService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.350Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24668, socket: /private/tmp/plugin20610-136-7621535.051708.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24669, socket: /private/tmp/plugin20610-137-7621536.473333.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24670, socket: /private/tmp/plugin20610-138-7621536.876542.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 4.152374999597669ms[39m[22m
+DEBUG nx::native::watch::watcher: idle-window emitting events count=16
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@jz92.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/next.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@vercel.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.438Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/package-json" (pid: 24669) listening on /private/tmp/plugin20610-137-7621536.473333.sock
+[plugin-worker] "nx/core/project-json" (pid: 24670) listening on /private/tmp/plugin20610-138-7621536.876542.sock
+[plugin-worker] "@nx/next/plugin" (pid: 24668) listening on /private/tmp/plugin20610-136-7621535.051708.sock
+[1m[33mTime taken for 'plugin worker 24670 code loading' 98.826167ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24669 code loading' 98.8145ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24668 code loading' 98.674583ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24668)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24669)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24670)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.490Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 139.39883300010115ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.491Z - Time taken for 'start-plugin-worker:nx/core/package-json' 138.06883300002664ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.491Z - Time taken for 'start-plugin-worker:nx/core/project-json' 137.6828749999404ms
+[plugin-worker] "nx/core/package-json" (pid: 24669) connected
+[plugin-worker] "@nx/next/plugin" (pid: 24668) connected
+[plugin-worker] "nx/core/project-json" (pid: 24670) connected
+[plugin-worker] "nx/core/project-json" (pid: 24670) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 24669) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.560Z - Time taken for 'build-project-configs' 208.04495800007135ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.561Z - Time taken for 'createNodes:merge' 1.3224579999223351ms
+[plugin-worker] "@nx/next/plugin" (pid: 24668) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.663Z - Time taken for 'loadSpecifiedNxPlugins' 312.20170900039375ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:47:11.663Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 312.17491699941456ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=13
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/5.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/7.pack.gz_
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/9.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/0.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz.old
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/5.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/7.pack.gz
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/index.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/11.pack.gz_
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/0.pack.gz
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/11.pack.gz
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:48:11.701Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.613Z - [WATCHER]: libs/profile-preferences/api/src/parseService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.613Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.613Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/parseService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.613Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24955, socket: /private/tmp/plugin20610-139-7761797.118917.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24956, socket: /private/tmp/plugin20610-140-7761798.154833.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24957, socket: /private/tmp/plugin20610-141-7761798.601792.sock)
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.618Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.5684170005843043ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 24955) listening on /private/tmp/plugin20610-139-7761797.118917.sock
+[plugin-worker] "nx/core/package-json" (pid: 24956) listening on /private/tmp/plugin20610-140-7761798.154833.sock
+[plugin-worker] "nx/core/project-json" (pid: 24957) listening on /private/tmp/plugin20610-141-7761798.601792.sock
+[1m[33mTime taken for 'plugin worker 24955 code loading' 35.988291000000004ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24956 code loading' 35.906292ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24957 code loading' 35.875833ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24955)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24956)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24957)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.692Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 77.58587499987334ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.692Z - Time taken for 'start-plugin-worker:nx/core/package-json' 76.63137500081211ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.692Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.19999999925494ms
+[plugin-worker] "nx/core/package-json" (pid: 24956) connected
+[plugin-worker] "@nx/next/plugin" (pid: 24955) connected
+[plugin-worker] "nx/core/project-json" (pid: 24957) connected
+[plugin-worker] "nx/core/project-json" (pid: 24957) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[plugin-worker] "nx/core/package-json" (pid: 24956) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.715Z - Time taken for 'build-project-configs' 100.3009580001235ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.715Z - Time taken for 'createNodes:merge' 0.8802089998498559ms
+[plugin-worker] "@nx/next/plugin" (pid: 24955) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.743Z - Time taken for 'loadSpecifiedNxPlugins' 129.10658299922943ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.743Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 129.07845900021493ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.873Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.876Z - [WATCHER]: libs/profile-preferences/api/src/parseService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.876Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.876Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/parseService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.876Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24958, socket: /private/tmp/plugin20610-142-7762059.801458.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24959, socket: /private/tmp/plugin20610-143-7762060.907333.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24960, socket: /private/tmp/plugin20610-144-7762061.338125.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 3.5093340007588267ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 24958) listening on /private/tmp/plugin20610-142-7762059.801458.sock
+[plugin-worker] "nx/core/project-json" (pid: 24960) listening on /private/tmp/plugin20610-144-7762061.338125.sock
+[plugin-worker] "nx/core/package-json" (pid: 24959) listening on /private/tmp/plugin20610-143-7762060.907333.sock
+[1m[33mTime taken for 'plugin worker 24958 code loading' 34.516375ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24960 code loading' 34.670625ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24959 code loading' 35.165ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24958)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24959)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24960)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.953Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 76.12870800029486ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.953Z - Time taken for 'start-plugin-worker:nx/core/package-json' 75.0918749999255ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.953Z - Time taken for 'start-plugin-worker:nx/core/project-json' 74.68304200004786ms
+[plugin-worker] "@nx/next/plugin" (pid: 24958) connected
+[plugin-worker] "nx/core/package-json" (pid: 24959) connected
+[plugin-worker] "nx/core/project-json" (pid: 24960) connected
+[plugin-worker] "nx/core/project-json" (pid: 24960) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 24959) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.974Z - Time taken for 'build-project-configs' 96.6636250000447ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:31.974Z - Time taken for 'createNodes:merge' 0.7461249995976686ms
+[plugin-worker] "@nx/next/plugin" (pid: 24958) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.000Z - Time taken for 'loadSpecifiedNxPlugins' 123.45291700027883ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.000Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 123.42516600061208ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.143Z - [WATCHER]: libs/profile-preferences/api/src/parseService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.143Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.143Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/parseService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.143Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24961, socket: /private/tmp/plugin20610-145-7762326.501208.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24962, socket: /private/tmp/plugin20610-146-7762327.58425.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24963, socket: /private/tmp/plugin20610-147-7762327.973875.sock)
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/parseService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.145Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.2794580003246665ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 24961) listening on /private/tmp/plugin20610-145-7762326.501208.sock
+[plugin-worker] "nx/core/package-json" (pid: 24962) listening on /private/tmp/plugin20610-146-7762327.58425.sock
+[plugin-worker] "nx/core/project-json" (pid: 24963) listening on /private/tmp/plugin20610-147-7762327.973875.sock
+[1m[33mTime taken for 'plugin worker 24962 code loading' 38.607749999999996ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24961 code loading' 37.027833ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24963 code loading' 38.164167000000006ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24961)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24962)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24963)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.222Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 77.88591699954122ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.222Z - Time taken for 'start-plugin-worker:nx/core/package-json' 77.10808300040662ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.222Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.77683399990201ms
+[plugin-worker] "nx/core/project-json" (pid: 24963) connected
+[plugin-worker] "@nx/next/plugin" (pid: 24961) connected
+[plugin-worker] "nx/core/package-json" (pid: 24962) connected
+[plugin-worker] "nx/core/project-json" (pid: 24963) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[plugin-worker] "nx/core/package-json" (pid: 24962) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.248Z - Time taken for 'build-project-configs' 103.75166699942201ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.248Z - Time taken for 'createNodes:merge' 1.0788749996572733ms
+[plugin-worker] "@nx/next/plugin" (pid: 24961) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.277Z - Time taken for 'loadSpecifiedNxPlugins' 134.32925000041723ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:32.277Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 134.3037080001086ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [create] libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.159Z - [WATCHER]: libs/profile-preferences/api/src/inferencesService.ts was created or restored
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.159Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: create:libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.159Z - [WATCHER]: File changes detected:
+Created:
+  - libs/profile-preferences/api/src/inferencesService.ts
+Updated:
+(none)
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.159Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24974, socket: /private/tmp/plugin20610-148-7781342.624375.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24975, socket: /private/tmp/plugin20610-149-7781343.613542.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [create] libs/profile-preferences/api/src/inferencesService.ts
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24976, socket: /private/tmp/plugin20610-150-7781343.978333.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.161Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.5340419998392463ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 24974) listening on /private/tmp/plugin20610-148-7781342.624375.sock
+[plugin-worker] "nx/core/package-json" (pid: 24975) listening on /private/tmp/plugin20610-149-7781343.613542.sock
+[plugin-worker] "nx/core/project-json" (pid: 24976) listening on /private/tmp/plugin20610-150-7781343.978333.sock
+[1m[33mTime taken for 'plugin worker 24974 code loading' 34.008666ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24975 code loading' 31.961291000000003ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24976 code loading' 33.077125ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24974)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24975)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24976)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.227Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 67.38174999970943ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.227Z - Time taken for 'start-plugin-worker:nx/core/package-json' 66.48079099971801ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.227Z - Time taken for 'start-plugin-worker:nx/core/project-json' 66.1332499999553ms
+[plugin-worker] "@nx/next/plugin" (pid: 24974) connected
+[plugin-worker] "nx/core/project-json" (pid: 24976) connected
+[plugin-worker] "nx/core/package-json" (pid: 24975) connected
+[plugin-worker] "nx/core/project-json" (pid: 24976) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 24975) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.251Z - Time taken for 'build-project-configs' 90.26116599980742ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.251Z - Time taken for 'createNodes:merge' 0.815417000092566ms
+[plugin-worker] "@nx/next/plugin" (pid: 24974) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.278Z - Time taken for 'loadSpecifiedNxPlugins' 118.71070799976587ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:49:51.278Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 118.68512499984354ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.714Z - [WATCHER]: libs/profile-preferences/api/src/inferencesService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.714Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.714Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/inferencesService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.714Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24985, socket: /private/tmp/plugin20610-151-7792898.280333.sock)
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferencesService.ts
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24986, socket: /private/tmp/plugin20610-152-7792900.468375.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24987, socket: /private/tmp/plugin20610-153-7792901.679458.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.720Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 4.375541999936104ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 24987) listening on /private/tmp/plugin20610-153-7792901.679458.sock
+[plugin-worker] "nx/core/package-json" (pid: 24986) listening on /private/tmp/plugin20610-152-7792900.468375.sock
+[plugin-worker] "@nx/next/plugin" (pid: 24985) listening on /private/tmp/plugin20610-151-7792898.280333.sock
+[1m[33mTime taken for 'plugin worker 24987 code loading' 38.951333ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24986 code loading' 39.72604199999999ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24985 code loading' 39.871167ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24985)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24986)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24987)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.815Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 99.44641599990427ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.815Z - Time taken for 'start-plugin-worker:nx/core/package-json' 97.25779099948704ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.815Z - Time taken for 'start-plugin-worker:nx/core/project-json' 96.20841700024903ms
+[plugin-worker] "nx/core/package-json" (pid: 24986) connected
+[plugin-worker] "@nx/next/plugin" (pid: 24985) connected
+[plugin-worker] "nx/core/project-json" (pid: 24987) connected
+[plugin-worker] "nx/core/project-json" (pid: 24987) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 24986) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.841Z - Time taken for 'build-project-configs' 123.41687500011176ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.841Z - Time taken for 'createNodes:merge' 0.8155840002000332ms
+[plugin-worker] "@nx/next/plugin" (pid: 24985) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.871Z - Time taken for 'loadSpecifiedNxPlugins' 156.2802499998361ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:02.871Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 156.23462499957532ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=2
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+DEBUG nx::native::watch::watcher:   [delete] libs/profile-preferences/api/src/inferencesService.ts
+DEBUG nx::native::watch::watcher: idle-window emitting events count=2
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+DEBUG nx::native::watch::watcher:   [delete] libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.097Z - [WATCHER]: 0 file(s) created or restored, 1 file(s) modified, 1 file(s) deleted
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.097Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 2 events: update:libs/profile-preferences/api/src/inferenceService.ts, delete:libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.097Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/inferenceService.ts
+Deleted:
+  - libs/profile-preferences/api/src/inferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.097Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 24989, socket: /private/tmp/plugin20610-154-7793280.8465.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 24990, socket: /private/tmp/plugin20610-155-7793281.834.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 24991, socket: /private/tmp/plugin20610-156-7793282.247167.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.100Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 3.208208999596536ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 24990) listening on /private/tmp/plugin20610-155-7793281.834.sock
+[plugin-worker] "@nx/next/plugin" (pid: 24989) listening on /private/tmp/plugin20610-154-7793280.8465.sock
+[1m[33mTime taken for 'plugin worker 24990 code loading' 39.019999999999996ms[39m[22m
+[1m[33mTime taken for 'plugin worker 24989 code loading' 38.992334ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 24991) listening on /private/tmp/plugin20610-156-7793282.247167.sock
+[1m[33mTime taken for 'plugin worker 24991 code loading' 40.815083ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 24989)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 24990)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 24991)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.173Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 74.62558300048113ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.173Z - Time taken for 'start-plugin-worker:nx/core/package-json' 73.73149999976158ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.173Z - Time taken for 'start-plugin-worker:nx/core/project-json' 73.33941700030118ms
+[plugin-worker] "@nx/next/plugin" (pid: 24989) connected
+[plugin-worker] "nx/core/project-json" (pid: 24991) connected
+[plugin-worker] "nx/core/package-json" (pid: 24990) connected
+[plugin-worker] "nx/core/package-json" (pid: 24990) loaded successfully
+[plugin-worker] "nx/core/project-json" (pid: 24991) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.199Z - Time taken for 'build-project-configs' 100.07441599946469ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.199Z - Time taken for 'createNodes:merge' 0.9149580001831055ms
+[plugin-worker] "@nx/next/plugin" (pid: 24989) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.228Z - Time taken for 'loadSpecifiedNxPlugins' 130.07291600015014ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:03.228Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 130.04704200010747ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.624Z - [WATCHER]: libs/profile-preferences/api/src/inferenceService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.624Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.624Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/inferenceService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.624Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25001, socket: /private/tmp/plugin20610-157-7809808.031625.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25002, socket: /private/tmp/plugin20610-158-7809809.173542.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25003, socket: /private/tmp/plugin20610-159-7809809.622708.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.627Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.9644170003011823ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 25002) listening on /private/tmp/plugin20610-158-7809809.173542.sock
+[plugin-worker] "nx/core/project-json" (pid: 25003) listening on /private/tmp/plugin20610-159-7809809.622708.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25001) listening on /private/tmp/plugin20610-157-7809808.031625.sock
+[1m[33mTime taken for 'plugin worker 25003 code loading' 35.456667ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25001 code loading' 36.636500000000005ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25002 code loading' 35.880584ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25001)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25002)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25003)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.704Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 78.36074999999255ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.704Z - Time taken for 'start-plugin-worker:nx/core/package-json' 77.26300000026822ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.704Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.83254100009799ms
+[plugin-worker] "@nx/next/plugin" (pid: 25001) connected
+[plugin-worker] "nx/core/package-json" (pid: 25002) connected
+[plugin-worker] "nx/core/project-json" (pid: 25003) connected
+[plugin-worker] "nx/core/project-json" (pid: 25003) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25002) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.727Z - Time taken for 'build-project-configs' 101.13545800000429ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.727Z - Time taken for 'createNodes:merge' 1.1532500004395843ms
+[plugin-worker] "@nx/next/plugin" (pid: 25001) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.754Z - Time taken for 'loadSpecifiedNxPlugins' 129.65004199929535ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:50:19.754Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 129.62204200029373ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] tsconfig.tsbuildinfo
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:21.870Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.568Z - [WATCHER]: libs/profile-preferences/api/src/inferenceService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.568Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.568Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/inferenceService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.568Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25163, socket: /private/tmp/plugin20610-160-7961750.580458.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25164, socket: /private/tmp/plugin20610-161-7961751.970458.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25165, socket: /private/tmp/plugin20610-162-7961752.398917.sock)
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.571Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 3.146666000597179ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25165) listening on /private/tmp/plugin20610-162-7961752.398917.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25163) listening on /private/tmp/plugin20610-160-7961750.580458.sock
+[plugin-worker] "nx/core/package-json" (pid: 25164) listening on /private/tmp/plugin20610-161-7961751.970458.sock
+[1m[33mTime taken for 'plugin worker 25165 code loading' 36.687375ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25163 code loading' 36.660084ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25164 code loading' 36.677667ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25163)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25164)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25165)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.656Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 87.34158300049603ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.656Z - Time taken for 'start-plugin-worker:nx/core/package-json' 86.00908300001174ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.656Z - Time taken for 'start-plugin-worker:nx/core/project-json' 85.59770799987018ms
+[plugin-worker] "@nx/next/plugin" (pid: 25163) connected
+[plugin-worker] "nx/core/package-json" (pid: 25164) connected
+[plugin-worker] "nx/core/project-json" (pid: 25165) connected
+[plugin-worker] "nx/core/project-json" (pid: 25165) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[plugin-worker] "nx/core/package-json" (pid: 25164) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.680Z - Time taken for 'build-project-configs' 109.52004200033844ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.680Z - Time taken for 'createNodes:merge' 0.8537910003215075ms
+[plugin-worker] "@nx/next/plugin" (pid: 25163) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.709Z - Time taken for 'loadSpecifiedNxPlugins' 140.63774999976158ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:52:51.709Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 140.59637499973178ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.465Z - [WATCHER]: Processing file changes in outputs
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.465Z - [WATCHER]: libs/profile-preferences/api/src/inferenceService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.465Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/inferenceService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.465Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/inferenceService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.465Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25170, socket: /private/tmp/plugin20610-163-7971647.93175.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25171, socket: /private/tmp/plugin20610-164-7971649.566083.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25172, socket: /private/tmp/plugin20610-165-7971650.278042.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 4.114165999926627ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25172) listening on /private/tmp/plugin20610-165-7971650.278042.sock
+[plugin-worker] "nx/core/package-json" (pid: 25171) listening on /private/tmp/plugin20610-164-7971649.566083.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25170) listening on /private/tmp/plugin20610-163-7971647.93175.sock
+[1m[33mTime taken for 'plugin worker 25171 code loading' 36.963ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25172 code loading' 35.047125ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25170 code loading' 36.928000000000004ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25170)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.551Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 84.6828749999404ms
+[plugin-worker] "@nx/next/plugin" (pid: 25170) connected
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25171)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.552Z - Time taken for 'start-plugin-worker:nx/core/package-json' 84.45395800005645ms
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25172)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.552Z - Time taken for 'start-plugin-worker:nx/core/project-json' 83.81291599944234ms
+[plugin-worker] "nx/core/package-json" (pid: 25171) connected
+[plugin-worker] "nx/core/project-json" (pid: 25172) connected
+[plugin-worker] "nx/core/project-json" (pid: 25172) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[plugin-worker] "nx/core/package-json" (pid: 25171) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.576Z - Time taken for 'build-project-configs' 107.83675000071526ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.576Z - Time taken for 'createNodes:merge' 0.7725420007482171ms
+[plugin-worker] "@nx/next/plugin" (pid: 25170) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.603Z - Time taken for 'loadSpecifiedNxPlugins' 137.4895829996094ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:01.603Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 137.4594160001725ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] tsconfig.tsbuildinfo
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:53:09.655Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/handlers.ts
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/handlers.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.067Z - [WATCHER]: libs/profile-preferences/api/src/handlers.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.068Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/handlers.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.068Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/handlers.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.068Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25294, socket: /private/tmp/plugin20610-166-8069250.232958.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25295, socket: /private/tmp/plugin20610-167-8069252.310583.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25296, socket: /private/tmp/plugin20610-168-8069253.65675.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.073Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 5.0683339992538095ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25296) listening on /private/tmp/plugin20610-168-8069253.65675.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25294) listening on /private/tmp/plugin20610-166-8069250.232958.sock
+[plugin-worker] "nx/core/package-json" (pid: 25295) listening on /private/tmp/plugin20610-167-8069252.310583.sock
+[1m[33mTime taken for 'plugin worker 25296 code loading' 37.337666ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25294 code loading' 37.945541999999996ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25295 code loading' 35.715792ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25294)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25295)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25296)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.167Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 97.50820899941027ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.167Z - Time taken for 'start-plugin-worker:nx/core/package-json' 95.51191699970514ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.167Z - Time taken for 'start-plugin-worker:nx/core/project-json' 94.19900000002235ms
+[plugin-worker] "@nx/next/plugin" (pid: 25294) connected
+[plugin-worker] "nx/core/package-json" (pid: 25295) connected
+[plugin-worker] "nx/core/project-json" (pid: 25296) connected
+[plugin-worker] "nx/core/project-json" (pid: 25296) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25295) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.192Z - Time taken for 'build-project-configs' 121.33220799919218ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.192Z - Time taken for 'createNodes:merge' 1.1227500000968575ms
+[plugin-worker] "@nx/next/plugin" (pid: 25294) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.220Z - Time taken for 'loadSpecifiedNxPlugins' 151.60004199948162ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:39.220Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 151.55137499980628ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/handlers.ts
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/handlers.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.545Z - [WATCHER]: Processing file changes in outputs
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.545Z - [WATCHER]: libs/profile-preferences/api/src/handlers.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.545Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/handlers.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.545Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/handlers.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.545Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25304, socket: /private/tmp/plugin20610-169-8076726.489625.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25305, socket: /private/tmp/plugin20610-170-8076727.461833.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25306, socket: /private/tmp/plugin20610-171-8076727.93025.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.7072089994326234ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25306) listening on /private/tmp/plugin20610-171-8076727.93025.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25304) listening on /private/tmp/plugin20610-169-8076726.489625.sock
+[plugin-worker] "nx/core/package-json" (pid: 25305) listening on /private/tmp/plugin20610-170-8076727.461833.sock
+[1m[33mTime taken for 'plugin worker 25306 code loading' 35.464042000000006ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25305 code loading' 35.190749999999994ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25304 code loading' 35.903958ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25304)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25305)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25306)
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.623Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 77.35891599953175ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.623Z - Time taken for 'start-plugin-worker:nx/core/package-json' 76.47720800060779ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.623Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.02579199988395ms
+[plugin-worker] "@nx/next/plugin" (pid: 25304) connected
+[plugin-worker] "nx/core/package-json" (pid: 25305) connected
+[plugin-worker] "nx/core/project-json" (pid: 25306) connected
+[plugin-worker] "nx/core/project-json" (pid: 25306) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25305) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.647Z - Time taken for 'build-project-configs' 100.38883399963379ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.647Z - Time taken for 'createNodes:merge' 1.2644999995827675ms
+[plugin-worker] "@nx/next/plugin" (pid: 25304) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.675Z - Time taken for 'loadSpecifiedNxPlugins' 129.5417080000043ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:46.675Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 129.51683400012553ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] tsconfig.tsbuildinfo
+[NX v23.0.0 Daemon Server] - 2026-07-26T09:54:53.676Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/preferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.493Z - [WATCHER]: libs/profile-preferences/api/src/preferencesService.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.493Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/api/src/preferencesService.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.493Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/api/src/preferencesService.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.493Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25480, socket: /private/tmp/plugin20610-172-8951694.392292.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25481, socket: /private/tmp/plugin20610-173-8951695.390792.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25482, socket: /private/tmp/plugin20610-174-8951695.923542.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 3.871375000104308ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 25481) listening on /private/tmp/plugin20610-173-8951695.390792.sock
+[plugin-worker] "nx/core/project-json" (pid: 25482) listening on /private/tmp/plugin20610-174-8951695.923542.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25480) listening on /private/tmp/plugin20610-172-8951694.392292.sock
+[1m[33mTime taken for 'plugin worker 25482 code loading' 95.195667ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25481 code loading' 96.257375ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25480 code loading' 96.394125ms[39m[22m
+DEBUG nx::native::watch::watcher: idle-window emitting events count=36
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.e88763fba170ba11.hot-update.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.e88763fba170ba11.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/e88763fba170ba11.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/api/src/preferencesService.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25480)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25481)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25482)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.635Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 141.84233400039375ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.635Z - Time taken for 'start-plugin-worker:nx/core/package-json' 140.933749999851ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.635Z - Time taken for 'start-plugin-worker:nx/core/project-json' 140.41845799982548ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.635Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/package-json" (pid: 25481) connected
+[plugin-worker] "@nx/next/plugin" (pid: 25480) connected
+[plugin-worker] "nx/core/project-json" (pid: 25482) connected
+[plugin-worker] "nx/core/project-json" (pid: 25482) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25481) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.704Z - Time taken for 'build-project-configs' 209.88458400033414ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.704Z - Time taken for 'createNodes:merge' 1.2273329999297857ms
+[plugin-worker] "@nx/next/plugin" (pid: 25480) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.812Z - Time taken for 'loadSpecifiedNxPlugins' 319.3176669999957ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:09:21.812Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 319.2690829988569ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=26
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/3.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/7.pack.gz_
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/client-development/9.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/1.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/7.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/9.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/2.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/1.pack.gz
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/index.pack.gz.old
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/1.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/0.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/0.pack.gz
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/client-development/2.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/index.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/11.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/3.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/1.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/index.pack.gz.old
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/11.pack.gz
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:21.800Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.046Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.048Z - [WATCHER]: libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.048Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.048Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.049Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25536, socket: /private/tmp/plugin20610-175-9014250.077958.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25537, socket: /private/tmp/plugin20610-176-9014251.093375.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25538, socket: /private/tmp/plugin20610-177-9014251.459042.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 8.71216700039804ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 25536) listening on /private/tmp/plugin20610-175-9014250.077958.sock
+[plugin-worker] "nx/core/package-json" (pid: 25537) listening on /private/tmp/plugin20610-176-9014251.093375.sock
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25536)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25537)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.126Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 76.8344160001725ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.126Z - Time taken for 'start-plugin-worker:nx/core/package-json' 75.93808300048113ms
+[1m[33mTime taken for 'plugin worker 25537 code loading' 42.667333ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25536 code loading' 39.87025ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25538) listening on /private/tmp/plugin20610-177-9014251.459042.sock
+[plugin-worker] "nx/core/package-json" (pid: 25537) connected
+[plugin-worker] "@nx/next/plugin" (pid: 25536) connected
+[1m[33mTime taken for 'plugin worker 25538 code loading' 43.658583ms[39m[22m
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25538)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.136Z - Time taken for 'start-plugin-worker:nx/core/project-json' 85.34337500110269ms
+[plugin-worker] "nx/core/project-json" (pid: 25538) connected
+[plugin-worker] "nx/core/package-json" (pid: 25537) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+[plugin-worker] "nx/core/project-json" (pid: 25538) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.159Z - Time taken for 'build-project-configs' 108.7390000000596ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.159Z - Time taken for 'createNodes:merge' 1.2187919989228249ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=35
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.b7c96e51c00bfecb.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.b7c96e51c00bfecb.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/b7c96e51c00bfecb.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.216Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "@nx/next/plugin" (pid: 25536) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.238Z - Time taken for 'loadSpecifiedNxPlugins' 189.56974999979138ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.238Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 189.54566700011492ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.321Z - [WATCHER]: libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.321Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.321Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.321Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25539, socket: /private/tmp/plugin20610-178-9014522.85125.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25540, socket: /private/tmp/plugin20610-179-9014523.694708.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25541, socket: /private/tmp/plugin20610-180-9014524.238833.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.2774590011686087ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 25540) listening on /private/tmp/plugin20610-179-9014523.694708.sock
+[plugin-worker] "nx/core/project-json" (pid: 25541) listening on /private/tmp/plugin20610-180-9014524.238833.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25539) listening on /private/tmp/plugin20610-178-9014522.85125.sock
+[1m[33mTime taken for 'plugin worker 25540 code loading' 33.002292ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25541 code loading' 33.052417ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25539 code loading' 32.979667ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25539)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25540)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25541)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.388Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 66.34741699881852ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.388Z - Time taken for 'start-plugin-worker:nx/core/package-json' 65.59349999949336ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.388Z - Time taken for 'start-plugin-worker:nx/core/project-json' 65.11437499895692ms
+[plugin-worker] "nx/core/package-json" (pid: 25540) connected
+[plugin-worker] "@nx/next/plugin" (pid: 25539) connected
+[plugin-worker] "nx/core/project-json" (pid: 25541) connected
+[plugin-worker] "nx/core/project-json" (pid: 25541) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[plugin-worker] "nx/core/package-json" (pid: 25540) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.412Z - Time taken for 'build-project-configs' 89.57545799948275ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.412Z - Time taken for 'createNodes:merge' 0.7896669991314411ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=29
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/hooks/usePreferencesManager.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.430Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "@nx/next/plugin" (pid: 25539) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.440Z - Time taken for 'loadSpecifiedNxPlugins' 118.20212499983609ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:10:24.440Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 118.17833299934864ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.734Z - [WATCHER]: libs/profile-preferences/ui/src/pages/PreferencesPage.tsx was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.734Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.734Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.734Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25573, socket: /private/tmp/plugin20610-181-9066935.381792.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25574, socket: /private/tmp/plugin20610-182-9066936.231833.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25575, socket: /private/tmp/plugin20610-183-9066936.599292.sock)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.736Z - [WATCHER]: Processing file changes in outputs
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 1.9422919992357492ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25575) listening on /private/tmp/plugin20610-183-9066936.599292.sock
+[plugin-worker] "nx/core/package-json" (pid: 25574) listening on /private/tmp/plugin20610-182-9066936.231833.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25573) listening on /private/tmp/plugin20610-181-9066935.381792.sock
+[1m[33mTime taken for 'plugin worker 25575 code loading' 34.900000000000006ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25574 code loading' 37.817375ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25573 code loading' 37.86825ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25573)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25574)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25575)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.812Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 77.34004200063646ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.812Z - Time taken for 'start-plugin-worker:nx/core/package-json' 76.57108299992979ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.812Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.22433399967849ms
+[plugin-worker] "@nx/next/plugin" (pid: 25573) connected
+[plugin-worker] "nx/core/package-json" (pid: 25574) connected
+[plugin-worker] "nx/core/project-json" (pid: 25575) connected
+[plugin-worker] "nx/core/project-json" (pid: 25575) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25574) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.837Z - Time taken for 'build-project-configs' 101.40891599841416ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.837Z - Time taken for 'createNodes:merge' 0.9614169988781214ms
+[plugin-worker] "@nx/next/plugin" (pid: 25573) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.865Z - Time taken for 'loadSpecifiedNxPlugins' 131.0129589997232ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.865Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 130.98687499947846ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=35
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.45414be8ba503f18.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.45414be8ba503f18.hot-update.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/45414be8ba503f18.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:16.912Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.599Z - [WATCHER]: libs/profile-preferences/ui/src/pages/PreferencesPage.tsx was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.599Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.599Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.599Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25597, socket: /private/tmp/plugin20610-184-9090800.831958.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25598, socket: /private/tmp/plugin20610-185-9090801.641708.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25599, socket: /private/tmp/plugin20610-186-9090801.93075.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.4797499999403954ms[39m[22m
+[plugin-worker] "nx/core/project-json" (pid: 25599) listening on /private/tmp/plugin20610-186-9090801.93075.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25597) listening on /private/tmp/plugin20610-184-9090800.831958.sock
+[plugin-worker] "nx/core/package-json" (pid: 25598) listening on /private/tmp/plugin20610-185-9090801.641708.sock
+[1m[33mTime taken for 'plugin worker 25599 code loading' 36.008084000000004ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25597 code loading' 34.130958ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25598 code loading' 35.997375000000005ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25597)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25598)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25599)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.677Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 77.34754199907184ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.677Z - Time taken for 'start-plugin-worker:nx/core/package-json' 76.6067909989506ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.677Z - Time taken for 'start-plugin-worker:nx/core/project-json' 76.34266699850559ms
+[plugin-worker] "@nx/next/plugin" (pid: 25597) connected
+[plugin-worker] "nx/core/project-json" (pid: 25599) connected
+[plugin-worker] "nx/core/package-json" (pid: 25598) connected
+DEBUG nx::native::watch::watcher: idle-window emitting events count=36
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.c7b243f4b4dcfe4c.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.c7b243f4b4dcfe4c.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/c7b243f4b4dcfe4c.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.682Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/project-json" (pid: 25599) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25598) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.701Z - Time taken for 'build-project-configs' 100.6453339997679ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.701Z - Time taken for 'createNodes:merge' 0.8609580006450415ms
+[plugin-worker] "@nx/next/plugin" (pid: 25597) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.730Z - Time taken for 'loadSpecifiedNxPlugins' 129.95537499897182ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:11:40.730Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 129.92999999970198ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.042Z - [WATCHER]: libs/profile-preferences/ui/src/pages/PreferencesPage.tsx was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.042Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.042Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.042Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25623, socket: /private/tmp/plugin20610-187-9119243.650667.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25624, socket: /private/tmp/plugin20610-188-9119244.622583.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25625, socket: /private/tmp/plugin20610-189-9119244.991042.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.6396670006215572ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 25624) listening on /private/tmp/plugin20610-188-9119244.622583.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25623) listening on /private/tmp/plugin20610-187-9119243.650667.sock
+[plugin-worker] "nx/core/project-json" (pid: 25625) listening on /private/tmp/plugin20610-189-9119244.991042.sock
+[1m[33mTime taken for 'plugin worker 25624 code loading' 35.239999999999995ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25623 code loading' 34.55275ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25625 code loading' 35.312749999999994ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25623)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25624)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25625)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.118Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 75.31120800040662ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.118Z - Time taken for 'start-plugin-worker:nx/core/package-json' 74.41645799949765ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.118Z - Time taken for 'start-plugin-worker:nx/core/project-json' 74.07058399915695ms
+[plugin-worker] "@nx/next/plugin" (pid: 25623) connected
+[plugin-worker] "nx/core/project-json" (pid: 25625) connected
+[plugin-worker] "nx/core/package-json" (pid: 25624) connected
+DEBUG nx::native::watch::watcher: idle-window emitting events count=36
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/2e1b6e32eaa9e4c9.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.2e1b6e32eaa9e4c9.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.2e1b6e32eaa9e4c9.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.120Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/project-json" (pid: 25625) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25624) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.142Z - Time taken for 'build-project-configs' 98.45275000110269ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.142Z - Time taken for 'createNodes:merge' 0.857166999951005ms
+[plugin-worker] "@nx/next/plugin" (pid: 25623) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.171Z - Time taken for 'loadSpecifiedNxPlugins' 128.62095800042152ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:09.171Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 128.5950830001384ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.366Z - [WATCHER]: libs/profile-preferences/ui/src/pages/PreferencesPage.tsx was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.366Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.366Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.366Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25650, socket: /private/tmp/plugin20610-190-9151567.756.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25651, socket: /private/tmp/plugin20610-191-9151568.678125.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25652, socket: /private/tmp/plugin20610-192-9151569.054625.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.49558399990201ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 25650) listening on /private/tmp/plugin20610-190-9151567.756.sock
+[plugin-worker] "nx/core/package-json" (pid: 25651) listening on /private/tmp/plugin20610-191-9151568.678125.sock
+[plugin-worker] "nx/core/project-json" (pid: 25652) listening on /private/tmp/plugin20610-192-9151569.054625.sock
+[1m[33mTime taken for 'plugin worker 25650 code loading' 36.01483399999999ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25652 code loading' 36.005375ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25651 code loading' 35.973833ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25650)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25651)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25652)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.443Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 76.01370899938047ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.443Z - Time taken for 'start-plugin-worker:nx/core/package-json' 75.16091699898243ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.443Z - Time taken for 'start-plugin-worker:nx/core/project-json' 74.80783299915493ms
+[plugin-worker] "nx/core/package-json" (pid: 25651) connected
+[plugin-worker] "@nx/next/plugin" (pid: 25650) connected
+[plugin-worker] "nx/core/project-json" (pid: 25652) connected
+DEBUG nx::native::watch::watcher: idle-window emitting events count=36
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.e8d6f8c337fe4ed9.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.e8d6f8c337fe4ed9.hot-update.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/e8d6f8c337fe4ed9.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.445Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/project-json" (pid: 25652) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25651) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.467Z - Time taken for 'build-project-configs' 99.09295799955726ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.467Z - Time taken for 'createNodes:merge' 0.8919590003788471ms
+[plugin-worker] "@nx/next/plugin" (pid: 25650) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.496Z - Time taken for 'loadSpecifiedNxPlugins' 128.9864170011133ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:12:41.496Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 128.9591669999063ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:28.943Z - [WATCHER]: libs/profile-preferences/ui/src/pages/PreferencesPage.tsx was modified
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:28.943Z - [WATCHER]: [watcher] routeWorkspaceChanges batch: 1 events: update:libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:28.943Z - [WATCHER]: File changes detected:
+Created:
+(none)
+Updated:
+  - libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+Deleted:
+(none)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:28.943Z - [SYNC]: clearing sync generators cache due to file changes
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 25699, socket: /private/tmp/plugin20610-193-9199144.531083.sock)
+[plugin-client] restarting worker for "nx/core/package-json"
+[isolated-plugin] spawned worker for "nx/core/package-json" (pid: 25700, socket: /private/tmp/plugin20610-194-9199145.669458.sock)
+[plugin-client] restarting worker for "nx/core/project-json"
+[isolated-plugin] spawned worker for "nx/core/project-json" (pid: 25701, socket: /private/tmp/plugin20610-195-9199146.159458.sock)
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.8644580002874136ms[39m[22m
+[plugin-worker] "nx/core/package-json" (pid: 25700) listening on /private/tmp/plugin20610-194-9199145.669458.sock
+[plugin-worker] "nx/core/project-json" (pid: 25701) listening on /private/tmp/plugin20610-195-9199146.159458.sock
+[plugin-worker] "@nx/next/plugin" (pid: 25699) listening on /private/tmp/plugin20610-193-9199144.531083.sock
+[1m[33mTime taken for 'plugin worker 25700 code loading' 39.537958ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25701 code loading' 39.61125ms[39m[22m
+[1m[33mTime taken for 'plugin worker 25699 code loading' 38.893875ms[39m[22m
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 25699)
+[isolated-plugin] connected to worker for "nx/core/package-json" (pid: 25700)
+[isolated-plugin] connected to worker for "nx/core/project-json" (pid: 25701)
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.021Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 76.83320800028741ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.021Z - Time taken for 'start-plugin-worker:nx/core/package-json' 75.78245799988508ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.021Z - Time taken for 'start-plugin-worker:nx/core/project-json' 75.30483299866319ms
+[plugin-worker] "@nx/next/plugin" (pid: 25699) connected
+[plugin-worker] "nx/core/package-json" (pid: 25700) connected
+[plugin-worker] "nx/core/project-json" (pid: 25701) connected
+DEBUG nx::native::watch::watcher: idle-window emitting events count=36
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/app/profile-preferences/page.0f4aeb63aea7d93b.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.0f4aeb63aea7d93b.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] libs/profile-preferences/ui/src/pages/PreferencesPage.tsx
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/0f4aeb63aea7d93b.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/profile-preferences/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.034Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "nx/core/project-json" (pid: 25701) loaded successfully
+[plugin-worker] "nx/core/package-json" (pid: 25700) loaded successfully
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.044Z - Time taken for 'build-project-configs' 99.12199999950826ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.044Z - Time taken for 'createNodes:merge' 0.8052079994231462ms
+[plugin-worker] "@nx/next/plugin" (pid: 25699) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.072Z - Time taken for 'loadSpecifiedNxPlugins' 128.8676249999553ms
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:29.072Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 128.84149999916553ms
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] tsconfig.tsbuildinfo
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:32.516Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=14
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/favicon.ico/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/next.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:40.478Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=21
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/getPreferences/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@jz92.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/eventsource-parser.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/zod.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/ai.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@workflow.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@ai-sdk.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/vendor-chunks/@vercel.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:41.786Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=22
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/profile-preferences/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-build-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/webpack.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/_not-found/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/admin/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/react-loadable-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/middleware-react-loadable-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_buildManifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/d67ea6b152d8c5e1.webpack.hot-update.json
+DEBUG nx::native::watch::watcher:   [update] .next/app-build-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/receipt-scanner/page_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/next-font-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/chunks/app/_not-found/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/static/development/_ssgManifest.js
+DEBUG nx::native::watch::watcher:   [create] .next/static/webpack/webpack.d67ea6b152d8c5e1.hot-update.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route_client-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/build-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:49.267Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=14
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/getPreferences/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/_not-found/page.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:13:49.523Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=16
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/orders/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/getPreferences/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/getPreferences/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/orders/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:15.890Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=8
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/1.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/7.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/0.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/4.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/3.pack.gz_
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:16.951Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=17
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/3.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/1.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/7.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/4.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/9.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/0.pack.gz_
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/2.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/4.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/1.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz.old
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/7.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/3.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/0.pack.gz
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:17.094Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=16
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/getPreferences/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/extractReceipt/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/orders/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/extractReceipt/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:23.714Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=17
+DEBUG nx::native::watch::watcher:   [update] .next/server/webpack-runtime.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/getPreferences/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/layout.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/admin/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app/api/saveOrder/route.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.js
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/orders/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/saveOrder/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/receipt-scanner/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/package.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/profile-preferences/page.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/pages-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/types/app/api/extractReceipt/route.ts
+DEBUG nx::native::watch::watcher:   [update] .next/types/cache-life.d.ts
+DEBUG nx::native::watch::watcher:   [update] .next/server/app-paths-manifest.json
+DEBUG nx::native::watch::watcher:   [update] .next/server/server-reference-manifest.json
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:35.182Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=13
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/9.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/3.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/1.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/0.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/0.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/2.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/index.pack.gz
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/9.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/3.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/client-development/1.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/client-development/index.pack.gz.old
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:14:49.330Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: idle-window emitting events count=7
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/index.pack.gz_
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/2.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/5.pack.gz
+DEBUG nx::native::watch::watcher:   [update] .next/cache/webpack/server-development/2.pack.gz
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz.old
+DEBUG nx::native::watch::watcher:   [delete] .next/cache/webpack/server-development/5.pack.gz_
+DEBUG nx::native::watch::watcher:   [create] .next/cache/webpack/server-development/index.pack.gz
+[NX v23.0.0 Daemon Server] - 2026-07-26T10:15:35.326Z - [WATCHER]: Processing file changes in outputs
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-07-26T13:19:45.879Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (sources)
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-07-26T13:19:45.880Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (outputs)
+[NX v23.0.0 Daemon Server] - 2026-07-26T13:19:45.881Z - [LATEST-NX]: Cleaning up latest Nx installation from /private/tmp/tmp-20610-tnCowAWAb1au
+[NX v23.0.0 Daemon Server] - 2026-07-26T13:19:45.882Z - Server stopped because: "10800000ms of inactivity"

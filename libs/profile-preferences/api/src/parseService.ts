@@ -17,7 +17,7 @@ const PreferenceItemSchema = z.object({
   confident: z.boolean().default(true),
 });
 
-const PreferencesSchema = z.object({
+export const PreferencesSchema = z.object({
   categories: z.array(PreferenceItemSchema).default([]),
   dietary:    z.array(PreferenceItemSchema).default([]),
   events:     z.array(PreferenceItemSchema).default([]),
@@ -62,7 +62,7 @@ Common preferences:
   * Brands: Nike, Adidas, Puma, Tommy Hilfiger, H&M, Zara, Gucci, Calvin Klein
   * Categories: Fashion, Home, Electronics, Beauty, Sports, Books, Toys, Food & Grocery`;
 
-const normalise = (raw: ParsedPreferences): ParsedPreferences => {
+export const normalise = (raw: ParsedPreferences): ParsedPreferences => {
   const dropped: string[] = [];
 
   const filterCategory = <K extends keyof typeof VALID_PREFERENCES>(

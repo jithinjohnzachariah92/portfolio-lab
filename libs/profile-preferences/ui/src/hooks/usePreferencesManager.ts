@@ -35,6 +35,7 @@ export function usePreferencesManager() {
   const [preferences, setPreferences] = useState<ICustomerPreferences>(
     initializePreferences()
   );
+  const [inferredPreferences, setInferredPreferences] = useState<ICustomerPreferences | null>(null);
   const [customerId, setCustomerId] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
@@ -46,6 +47,7 @@ export function usePreferencesManager() {
       try {
         const data = await preferencesService.fetchPreferences(id);
         setPreferences(data.preferences);
+        setInferredPreferences(data.inferredPreferences);
       } catch (err) {
         console.error("Failed to load preferences:", err);
       } finally {
@@ -59,6 +61,8 @@ export function usePreferencesManager() {
   return {
     preferences,
     setPreferences,
+    inferredPreferences,
+    setInferredPreferences,
     customerId,
     loading,
     initializePreferences,
