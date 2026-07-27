@@ -24,7 +24,7 @@ export const features: Feature[] = [
     slug: "admin",
     title: "Admin",
     description:
-      "Scan a receipt and Claude reads it directly using vision — no OCR. Confirm the extracted items and total, and it's saved to your order history.",
+      "Ask about your customers in plain English — Claude turns the question into a MongoDB query and runs it live, using examples retrieved from past queries to stay accurate over time.",
     icon: "🔎",
     needsDb: true,
   },
