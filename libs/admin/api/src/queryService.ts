@@ -8,6 +8,22 @@ import {
   getStoreOptions,
 } from "./rag/retriever"
 
+// ── Schema Context for LLM ────────────────────────────────────────────────
+//
+// This is the system prompt that teaches the LLM how to extract MongoDB
+// conditions from natural language. It includes:
+//
+// 1. The Customer schema (so the LLM knows what fields exist)
+// 2. Condition type definitions (equality, elemMatch, comparison, absence)
+// 3. Type requirements for each field (Boolean, Number, String)
+// 4. Case sensitivity rules (Title Case for preference names)
+// 5. Field path conventions (preferences.brands, etc.)
+// 6. Rules for when to include/omit 'name' in elemMatch conditions
+// 7. Distinction between explicit dislike vs absence
+//
+// See Principle 1: Lead with the "why" before the "how" —
+// this prompt explains WHY each rule exists, not just WHAT the rule is.
+// This helps the LLM understand intent and apply rules correctly.
 export const SCHEMA_CONTEXT = `
 You are a MongoDB query analyzer for an M&S customer database.
 The collection is called "customers" and has this schema:
@@ -88,54 +104,99 @@ Two different kinds of "negative" questions — do not confuse them:
     { type: "absence", field: "preferences.brands", name: "Nike" }
 `;
 
-// ── Single unified condition schema ───────────────────────────────────────────
-// One array, one flat object shape, discriminated by `type` — this is the
-// pattern confirmed to work reliably on Ollama's structured-output mode.
-// Earlier attempts (union-inside-record, then four parallel arrays) both
-// caused the model to collapse to an empty/near-empty result more often
-// than this single-array design.
+// ── Zod Schemas ────────────────────────────────────────────────────────
+//
+// Using Zod for runtime validation of LLM outputs ensures type safety
+// and provides clear error messages when the model produces invalid output.
+//
+// See Principle 6: Bake in invisible qualities —
+// validation is an invisible quality that prevents subtle bugs.
 
+// ── Condition Schema ──────────────────────────────────────────────
+//
+// Single unified schema for all condition types, discriminated by `type` field.
+// This pattern works reliably with structured output mode.
+//
+// Earlier attempts that failed:
+// 1. Union-inside-record: Model collapsed to empty result
+// 2. Four parallel arrays: Model also collapsed to empty result
+//
+// The single-array-with-discriminator pattern is the most reliable.
 const conditionSchema = z.object({
+  // Condition type - determines how to interpret other fields
   type: z.enum(["equality", "elemMatch", "comparison", "absence"]),
+  // Field path - either top-level (e.g., "sparksMember") or nested (e.g., "preferences.brands")
   field: z.string(), // top-level field OR array path
+  // For elemMatch and absence: the preference item name (e.g., "Nike")
   name: z.string().optional(), // for elemMatch / absence
+  // For elemMatch: whether the preference is opted in (true = like, false = dislike)
   optedIn: z.boolean().optional(), // for elemMatch
+  // For comparison: MongoDB comparison operator
   operator: z.enum(["$gt", "$lt", "$gte", "$lte"]).optional(), // for comparison
+  // For equality and comparison: the value to compare against
   value: z.union([z.string(), z.number(), z.boolean()]).optional(), // for equality / comparison
 });
 
+// ── Generated Query Schema ──────────────────────────────────────────
+//
+// The complete extraction output from the LLM.
 const generatedQuerySchema = z.object({
+  // Array of condition objects (can be empty if no conditions extracted)
   conditions: z.array(conditionSchema).default([]),
+  // How to combine multiple conditions ($and or $or)
   combineWith: z.enum(["$and", "$or"]).default("$and"),
-  // Hard-capped — prevents the model inventing absurd values like
-  // 1000000000000000 when it means "no specific limit."
+  // Result limit - hard capped to prevent model from inventing absurd values
+  // Principle 5: Right-size the engineering to the stage
+  // We don't need "infinite" results, and 100 is plenty for most use cases.
   limit: z.number().int().min(1).max(100).default(10),
 });
 
 export type ExtractedQuery = z.infer<typeof generatedQuerySchema>;
 
+// ── Generated Query Interface ────────────────────────────────────────
+//
+// The final query structure passed to MongoDB.
+// Separated from ExtractedQuery to allow for future transformations.
 export interface GeneratedQuery {
-  filter: Record<string, unknown>;
-  projection: Record<string, unknown>;
-  sort: Record<string, unknown>;
-  limit: number;
+  filter: Record<string, unknown>;    // MongoDB filter object
+  projection: Record<string, unknown>; // Fields to include/exclude
+  sort: Record<string, unknown>;      // Sort criteria
+  limit: number;                       // Result limit
 }
 
+// ── Result Interface ───────────────────────────────────────────────
+//
+// The complete result returned to the caller.
 export interface NaturalLanguageQueryResult {
-  question: string;
-  generatedQuery: GeneratedQuery;
-  results: unknown[];
-  count: number;
+  question: string;                    // Original question
+  generatedQuery: GeneratedQuery;      // The query that was executed
+  results: unknown[];                 // Query results (Customer documents)
+  count: number;                       // Number of results
 }
 
-// ── Fields with known real types on the Customer schema ──────────────────────
-// Used to coerce/validate equality/comparison values before they reach Mongo,
-// so a model mistake (e.g. sending 1000 for a Boolean field) is corrected or
-// dropped here instead of crashing Mongoose with a CastError.
+// ── Field Type Coercion ──────────────────────────────────────────────
+//
+// Used to coerce/validate equality/comparison values before they reach MongoDB.
+// This prevents model mistakes from causing runtime errors.
+//
+// See Principle 3: Refuse hacks; fix root causes —
+// Instead of letting bad data reach MongoDB and cause CastError,
+// we validate and coerce at the boundary.
 
 const BOOLEAN_FIELDS = new Set(["sparksMember", "profileComplete"]);
 const NUMBER_FIELDS = new Set(["totalOrders", "totalSpend"]);
 
+/**
+ * Coerce a value to the correct type for its field.
+ * 
+ * @param field - The MongoDB field name
+ * @param value - The value extracted by the LLM
+ * @returns The coerced value, or undefined if coercion fails
+ * 
+ * For boolean fields: accept only boolean values, reject numbers/strings
+ * For number fields: coerce strings to numbers, reject NaN
+ * For string fields: pass through as-is
+ */
 const coerceValue = (
   field: string,
   value: string | number | boolean | undefined,
@@ -146,6 +207,7 @@ const coerceValue = (
     if (typeof value === "boolean") return value;
     // Model sent the wrong type for a boolean field — treat any non-zero
     // number or truthy string as an invalid condition rather than guessing.
+    // This prevents silent bugs where we incorrectly filter data.
     return undefined;
   }
 
@@ -157,8 +219,35 @@ const coerceValue = (
   return value;
 };
 
-// ── buildMongoFilter — deterministic assembly, never done by the LLM ────────
+// ── MongoDB Filter Builder ────────────────────────────────────────────
+//
+// Deterministic filter assembly from extracted conditions.
+// 
+// CRITICAL: The LLM only extracts conditions, NEVER builds MongoDB syntax directly.
+// This function is the single source of truth for MongoDB filter construction.
+//
+// See Principle 3: Refuse hacks; fix root causes —
+// By keeping filter building deterministic and separate from the LLM,
+// we ensure:
+//   - Correct MongoDB syntax (no injection vulnerabilities)
+//   - Consistent behavior across runs
+//   - Easy to test and debug
+//   - Safe to evolve the schema without breaking existing queries
 
+/**
+ * Build a MongoDB filter object from extracted conditions.
+ * 
+ * @param parsed - The extracted query with conditions array
+ * @returns A MongoDB filter object, or empty object if no valid conditions
+ * 
+ * Handles all four condition types:
+ *   - equality: { field: value }
+ *   - elemMatch: { field: { $elemMatch: { name, optedIn } } }
+ *   - comparison: { field: { [operator]: value } }
+ *   - absence: { field: { $not: { $elemMatch: { name } } } }
+ * 
+ * Invalid conditions (failed coercion) are silently dropped.
+ */
 const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
   const conditions: Record<string, unknown>[] = [];
 
@@ -166,6 +255,7 @@ const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
     switch (c.type) {
       case "equality": {
         const value = coerceValue(c.field, c.value);
+        // Only add if coercion succeeded (not undefined)
         if (value !== undefined) conditions.push({ [c.field]: value });
         break;
       }
@@ -173,6 +263,7 @@ const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
         const matchClause: Record<string, unknown> = {};
         if (c.name !== undefined) matchClause.name = c.name;
         if (c.optedIn !== undefined) matchClause.optedIn = c.optedIn;
+        // Only add if we have at least one property in the match clause
         if (Object.keys(matchClause).length > 0) {
           conditions.push({ [c.field]: { $elemMatch: matchClause } });
         }
@@ -187,6 +278,7 @@ const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
       }
       case "absence": {
         if (c.name !== undefined) {
+          // $not + $elemMatch = array does NOT contain element with this name
           conditions.push({
             [c.field]: { $not: { $elemMatch: { name: c.name } } },
           });
@@ -196,27 +288,60 @@ const buildMongoFilter = (parsed: ExtractedQuery): Record<string, unknown> => {
     }
   }
 
+  // Optimize: no conditions = match all documents
   if (conditions.length === 0) return {};
+  // Optimize: single condition = no need for $and/$or wrapper
   if (conditions.length === 1) return conditions[0];
+  // Multiple conditions: combine with the specified operator
   return { [parsed.combineWith]: conditions };
 };
 
-// ── Main export ────────────────────────────────────────────────────────────
+// ── Main Export ────────────────────────────────────────────────────────────
+//
+// This is the primary entry point for NL2Mongo translation.
+// It orchestrates the full pipeline: RAG retrieval → LLM extraction →
+// filter building → query execution → result formatting.
 
+/**
+ * Execute a natural language query against the Customer collection.
+ * 
+ * @param question - The natural language question to translate
+ * @param context - Optional tracing/context information
+ * @returns Complete query result including generated query and matching documents
+ * 
+ * Pipeline:
+ *   1. RAG: Retrieve similar past extractions as few-shot examples
+ *   2. LLM: Extract structured conditions from the question
+ *   3. RAG: Store good extractions for future use
+ *   4. Build: Convert conditions to MongoDB filter
+ *   5. Execute: Run the query against MongoDB
+ *   6. Return: Results with metadata
+ */
 export const runNaturalLanguageQuery = async (
   question: string,
   context?: { traceId?: string; userId?: string },
 ): Promise<NaturalLanguageQueryResult> => {
-  // ── RAG: retrieve similar past extractions ─────────────────────────────
+  // ── Step 1: RAG Retrieval ─────────────────────────────────────────────
+  //
+  // Find similar past questions and their extracted conditions.
+  // These are used as few-shot examples to guide the LLM.
+  //
+  // See Principle 2: Think in systems, not features —
+  // RAG is a system-level improvement that benefits all queries.
   const { fewShotText } = await nl2mongoRetriever.retrieve(
     question,
     context?.traceId,
   );
 
+  // Enrich the schema context with few-shot examples if available
   const enrichedSchemaContext = fewShotText
     ? `${SCHEMA_CONTEXT}\n${fewShotText}`
     : SCHEMA_CONTEXT;
 
+  // ── Step 2: LLM Extraction ────────────────────────────────────────────
+  //
+  // Call the LLM with structured output to extract conditions.
+  // The schema ensures we get valid, typed output.
   const { data: extracted } = await generateStructured({
     systemPrompt: enrichedSchemaContext,
     prompt: `Question: ${question}`,
@@ -226,7 +351,13 @@ export const runNaturalLanguageQuery = async (
     userId: context?.userId,
   });
 
-  // ── RAG: store good extractions for future retrieval ───────────────────
+  // ── Step 3: RAG Storage ───────────────────────────────────────────────
+  //
+  // Store good extractions for future retrieval.
+  // Quality gate ensures we only store useful examples (with at least one condition).
+  //
+  // Fire-and-forget: we don't await the store promise to avoid blocking the response.
+  // Errors are silently caught to avoid failing the query due to storage issues.
   if (nl2mongoQualityGate(extracted)) {
     nl2mongoRetriever
       .store(
@@ -239,8 +370,15 @@ export const runNaturalLanguageQuery = async (
       .catch(() => {});
   }
 
+  // ── Step 4: Filter Building ───────────────────────────────────────────
+  //
+  // Convert extracted conditions to MongoDB filter.
+  // Invalid conditions (failed coercion) are dropped.
   const filter = buildMongoFilter(extracted);
 
+  // ── Step 5: Query Execution ─────────────────────────────────────────
+  //
+  // Build the complete query object and execute against MongoDB.
   const generatedQuery: GeneratedQuery = {
     filter,
     projection: {},
@@ -248,13 +386,16 @@ export const runNaturalLanguageQuery = async (
     limit: extracted.limit,
   };
 
+  // Log the generated query for debugging/transparency
   console.log("Generated MongoDB Query:", generatedQuery);
 
+  // Connect to database and execute query
   await connectDB();
   const results = await Customer.find(generatedQuery.filter)
     .sort(generatedQuery.sort as Record<string, 1 | -1>)
     .limit(generatedQuery.limit);
 
+  // ── Step 6: Return Results ──────────────────────────────────────────
   return {
     question,
     generatedQuery,

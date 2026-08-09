@@ -1,0 +1,20 @@
+{
+  "name": "agent-demo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/agent-demo",
+  "projectType": "library",
+  "prefix": "lib",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/agent-demo/**/*.ts",
+          "libs/agent-demo/**/*.tsx"
+        ]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:agent-demo"]
+}

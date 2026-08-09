@@ -48,7 +48,11 @@
       "@receipt-scanner/api/*": ["libs/receipt-scanner/api/src/*"],
       "@receipt-scanner/ui": ["libs/receipt-scanner/ui/src/index.ts"],
       "@receipt-scanner/ui/*": ["libs/receipt-scanner/ui/src/*"],
-      "@receipt-scanner/types": ["libs/receipt-scanner/types/src/index.ts"]
+      "@receipt-scanner/types": ["libs/receipt-scanner/types/src/index.ts"],
+      "@agent-demo/api": ["libs/agent-demo/api/src/index.ts"],
+      "@agent-demo/api/*": ["libs/agent-demo/api/src/*"],
+      "@agent-demo-ui": ["libs/agent-demo/ui/src/index.ts"],
+      "@agent-demo-ui/*": ["libs/agent-demo/ui/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

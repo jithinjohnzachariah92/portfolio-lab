@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AVAILABLE_PREFERENCES } from "@profile-preferences/utils";
 import { ICustomerPreferences } from "@profile-preferences/types";
-import { inferPreferences } from "./parseService";
+import { inferPreferences, ParsedPreferences } from "./parseService";
 import { saveCustomerPreference } from "./customerService";
 import { Customer } from "@shared/models";
 import { connectDB } from "@shared/db";
@@ -112,7 +112,7 @@ export const handleParsePreferences = async (req: NextRequest) => {
     // ── Parse ────────────────────────────────────────────────────────────
     const result = await inferPreferences(trimmed, { traceId });
     printTraceSummary(traceId);
-    
+
     if (!result.success) {
       return errorResponse(result.errorCode);
     }
@@ -227,6 +227,29 @@ const mergeWithAvailable = (
   }));
 };
 
+const filterAlreadySaved = (
+  inferred: ParsedPreferences,
+  saved: ICustomerPreferences | undefined,
+): ParsedPreferences => {
+  const isAlreadySaved = (
+    category: keyof ParsedPreferences,
+    name: string,
+  ): boolean =>
+    (saved?.[category] ?? []).some(
+      (item) => item.name === name && item.optedIn === true,
+    );
+
+  return {
+    categories: inferred.categories.filter(
+      (i) => !isAlreadySaved("categories", i.name),
+    ),
+    dietary: inferred.dietary.filter((i) => !isAlreadySaved("dietary", i.name)),
+    events: inferred.events.filter((i) => !isAlreadySaved("events", i.name)),
+    style: inferred.style.filter((i) => !isAlreadySaved("style", i.name)),
+    brands: inferred.brands.filter((i) => !isAlreadySaved("brands", i.name)),
+  };
+};
+
 export const handleGetPreferences = async (req: NextRequest) => {
   try {
     const customerId = req.nextUrl.searchParams.get("customerId");
@@ -254,11 +277,22 @@ export const handleGetPreferences = async (req: NextRequest) => {
     // A customer could have scanned receipts before ever saving explicit
     // preferences — inference shouldn't be gated on customer.preferences
     // already existing.
-    const inferenceResult = await inferPreferencesFromOrders(customerId, traceId);
-    const inferredPreferences =
-      inferenceResult.success && !inferenceResult.isEmpty
-        ? inferenceResult.inferredPreferences
-        : null;
+    const inferenceResult = await inferPreferencesFromOrders(
+      customerId,
+      traceId,
+    );
+    let inferredPreferences: ParsedPreferences | null = null;
+
+    if (inferenceResult.success) {
+      const filtered = filterAlreadySaved(
+        inferenceResult.inferredPreferences,
+        customer?.preferences,
+      );
+      const stillHasSomething = Object.values(filtered).some(
+        (items) => items.length > 0,
+      );
+      inferredPreferences = stillHasSomething ? filtered : null;
+    }
 
     printTraceSummary(traceId);
 
@@ -272,7 +306,10 @@ export const handleGetPreferences = async (req: NextRequest) => {
     }
 
     const preferences: ICustomerPreferences = {
-      categories: mergeWithAvailable("categories", customer.preferences?.categories),
+      categories: mergeWithAvailable(
+        "categories",
+        customer.preferences?.categories,
+      ),
       dietary: mergeWithAvailable("dietary", customer.preferences?.dietary),
       events: mergeWithAvailable("events", customer.preferences?.events),
       style: mergeWithAvailable("style", customer.preferences?.style),
@@ -296,7 +333,10 @@ export const handleGetPreferences = async (req: NextRequest) => {
 
     console.error("[handleGetPreferences] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch preferences. Please try again." },
+      {
+        success: false,
+        error: "Failed to fetch preferences. Please try again.",
+      },
       { status: 500 },
     );
   }

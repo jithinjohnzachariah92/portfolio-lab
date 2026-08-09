@@ -99,6 +99,15 @@
         "hash": "sha512-sDyu+aM9cE6uZE+HgRjjHRb+qqb87GHZOx+8bE0YlWetdL1YcVLxn8h9ltxGOflyChTe6PMEo50kMQV4cw0hfg=="
       }
     },
+    "npm:@anthropic-ai/sdk@0.115.0": {
+      "type": "npm",
+      "name": "npm:@anthropic-ai/sdk@0.115.0",
+      "data": {
+        "version": "0.115.0",
+        "packageName": "@anthropic-ai/sdk",
+        "hash": "sha512-BJrFIVyjNuU8lfDyIJTvlRYzgQg+zEl78BxE7fq8esULsGz9IRQvGtW5spq3tydmtjQb/GFdooKGdGsetpx+lQ=="
+      }
+    },
     "npm:@babel/code-frame": {
       "type": "npm",
       "name": "npm:@babel/code-frame",
@@ -1717,6 +1726,24 @@
         "version": "0.3.31",
         "packageName": "@jridgewell/trace-mapping",
         "hash": "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="
+      }
+    },
+    "npm:@jz92/agents": {
+      "type": "npm",
+      "name": "npm:@jz92/agents",
+      "data": {
+        "version": "0.1.1",
+        "packageName": "@jz92/agents",
+        "hash": "sha512-lV/0QZ86f7aLN0ejbtJW5UBEDe3PdIVB00uNrx2owz9Lc9VAvmO3aWBQG8Jfmv1ROcz+Q9megOd7/EmHa0JF/g=="
+      }
+    },
+    "npm:@jz92/ai-core@0.3.0": {
+      "type": "npm",
+      "name": "npm:@jz92/ai-core@0.3.0",
+      "data": {
+        "version": "0.3.0",
+        "packageName": "@jz92/ai-core",
+        "hash": "sha512-5ioT5VYO/IhteMJFwefS6zJhTPCG6ko2kERYrQiC3By0vAYBMnvEUactCuEqWur65vHvmnxhHxclNBr5hMSAxg=="
       }
     },
     "npm:@jz92/ai-core": {
@@ -10138,6 +10165,9 @@
     "node_modules/@jridgewell/source-map": "npm:@jridgewell/source-map",
     "node_modules/@jridgewell/sourcemap-codec": "npm:@jridgewell/sourcemap-codec",
     "node_modules/@jridgewell/trace-mapping": "npm:@jridgewell/trace-mapping",
+    "node_modules/@jz92/agents": "npm:@jz92/agents",
+    "node_modules/@jz92/agents/node_modules/@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@0.115.0",
+    "node_modules/@jz92/agents/node_modules/@jz92/ai-core": "npm:@jz92/ai-core@0.3.0",
     "node_modules/@jz92/ai-core": "npm:@jz92/ai-core",
     "node_modules/@jz92/ai-provider": "npm:@jz92/ai-provider",
     "node_modules/@jz92/retrieval": "npm:@jz92/retrieval",

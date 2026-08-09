@@ -3,7 +3,9 @@
   "extends": "nx/presets/npm.json",
   "defaultBase": "main",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*"],
+    "default": [
+      "{projectRoot}/**/*"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/*.spec.ts",
@@ -22,7 +24,10 @@
       "plugin": "@nx/react/plugin",
       "options": {
         "namedInputs": {
-          "production": ["default", "!{projectRoot}/**/*.spec.tsx"],
+          "production": [
+            "default",
+            "!{projectRoot}/**/*.spec.tsx"
+          ],
           "test": [
             "default",
             "{projectRoot}/**/*.spec.tsx",
@@ -31,5 +36,6 @@
         }
       }
     }
-  ]
+  ],
+  "analytics": false
 }

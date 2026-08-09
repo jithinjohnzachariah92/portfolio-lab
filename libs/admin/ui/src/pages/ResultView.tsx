@@ -14,6 +14,10 @@ import styles from "./QueryPage.module.css";
  *   - single object           → key/value table
  *   - scalar (number/string)  → big value (e.g. a count answer)
  *   - empty array / null      → empty state
+ *
+ * See Principle 4: Design for the consumer, not yourself —
+ * This component handles all possible response shapes gracefully,
+ * so consumers (QueryPage) don't need to know about the shape.
  */
 
 type Json = unknown;

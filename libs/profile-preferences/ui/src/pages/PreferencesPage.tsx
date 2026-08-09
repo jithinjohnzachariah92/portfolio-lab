@@ -51,14 +51,16 @@ export default function PreferencesPage() {
   }, [loading, inferredPreferences]);
 
   const inferredPanels = inferredPreferences
-    ? PREFERENCE_TYPES.filter(
-        (pref) => inferredPreferences[pref.type].length > 0,
-      ).map((pref) => ({
-        type: pref.type,
-        title: pref.title,
-        items: inferredPreferences[pref.type],
-      }))
-    : [];
+  ? PREFERENCE_TYPES.filter((pref) => inferredPreferences[pref.type].length > 0).map((pref) => {
+      const inferredNames = new Set(inferredPreferences[pref.type].map((i) => i.name));
+      // Start from the FULL existing list (preferences[pref.type], already merged
+      // with saved state) so confirming never silently discards other saved items.
+      const merged = preferences[pref.type].map((item) =>
+        inferredNames.has(item.name) ? { ...item, optedIn: true } : item
+      );
+      return { type: pref.type, title: pref.title, items: merged };
+    })
+  : [];
 
   const handleParse = async () => {
     const result = await parse(naturalInput, preferences);

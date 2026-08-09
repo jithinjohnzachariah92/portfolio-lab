@@ -1,0 +1,1 @@
+export { default } from '@agent-demo-ui/pages/AgentDemoPage';

@@ -6,6 +6,17 @@ import type { IOrderItem, IOrder } from "@shared/models";
 import type { ExtractedOrder } from "@receipt-scanner/api";
 import { getClientId } from "@profile-preferences/utils";
 
+// ── Receipt Scanner Page Component ────────────────────────────────────────
+//
+// Main page for scanning receipts. Allows users to:
+//   - Upload receipt images
+//   - Preview the image
+//   - Scan using AI vision
+//   - Review and confirm extracted data
+//   - View their order history
+//
+// See Principle 4: Design for the consumer, not yourself —
+// This page provides a complete, self-contained receipt scanning experience.
 export default function ReceiptScannerPage() {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -41,15 +52,21 @@ export default function ReceiptScannerPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * Handle image file selection.
+   * Validates the file is an image, then reads it as base64.
+   */
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
     if (!file.type.startsWith("image/")) {
       setError("Please upload an image file");
       return;
     }
 
+    // Read file as data URL (base64)
     const reader = new FileReader();
     reader.onload = (event) => {
       setImage(event.target?.result as string);
@@ -58,6 +75,10 @@ export default function ReceiptScannerPage() {
     reader.readAsDataURL(file);
   };
 
+  /**
+   * Trigger vision-based receipt extraction.
+   * Sends the image to the API and displays the results in a modal.
+   */
   const handleScan = async () => {
     if (!image) {
       setError("Please upload an image first");
