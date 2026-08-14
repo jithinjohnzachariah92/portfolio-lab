@@ -41,6 +41,9 @@ gha-creds-*.json
 .idea/
 .vscode/
 *.swp
+.claude/
+.cline/
+.vibe/
 
 # debug
 npm-debug.log*

@@ -17,11 +17,12 @@
   "dependencies": {
     "@ai-sdk/google": "^4.0.19",
     "@anthropic-ai/sdk": "^0.105.0",
-    "@jz92/agents": "^0.1.1",
+    "@jz92/agents": "^0.2.1",
     "@jz92/ai-core": "^0.2.1",
     "@jz92/ai-provider": "^0.9.3",
     "@jz92/retrieval": "^0.2.0",
     "@jz92/telemetry": "^0.1.2",
+    "@jz92/tools": "^0.2.0",
     "@jz92/vector": "^0.1.0",
     "@primer/css": "^22.3.0",
     "@primer/react": "^38.29.0",

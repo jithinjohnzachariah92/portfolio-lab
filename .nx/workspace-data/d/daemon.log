@@ -44153,3 +44153,429 @@ AggregateError: Failed to load 1 Nx plugin(s):
     at async /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server/server.js:82:9
 [NX v23.0.0 Daemon Server] - 2026-08-09T21:41:15.909Z - Done responding to the client null
 [NX v23.0.0 Daemon Client] - 2026-08-09T21:41:15.909Z - [Messenger] Received message, length: 4438
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.265Z - [Client] Starting new daemon server in background
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.269Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.465Z - New daemon starting from: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server/server.js
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.466Z - New daemon __dirname: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.466Z - New daemon nxVersion: 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.466Z - New daemon getInstalledNxVersion(): 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.467Z - Time taken for 'workspace context init' 4.32204200000001ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.468Z - [Server] Starting outdated check interval (20ms)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.469Z - Started listening on: /private/tmp/a8348a7fe5ac7e228525/d.sock
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.472Z - [Client] Server available
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.472Z - [Client] Daemon server started, pid=15910
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.475Z - [WATCHER]: Subscribed to changes within: /Users/jz/Documents/portfolio-lab (native)
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.478Z - [LATEST-NX]: Pulling latest Nx...
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.480Z - [AI-AGENTS]: Starting agent configuration status computation
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.481Z - [Messenger] Setting up socket listeners
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.481Z - [Messenger] listen() complete
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 15917, socket: /private/tmp/plugin15910-0-192.180375.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 15918, socket: /private/tmp/plugin15910-1-193.421833.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 15919, socket: /private/tmp/plugin15910-2-193.953875.sock)
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 15920, socket: /private/tmp/plugin15910-3-194.710875.sock)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.485Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.485Z - Established a connection. Number of open connections: 2
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.486Z - Closed a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.486Z - Established a connection. Number of open connections: 2
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.486Z - Closed a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.489Z - [Messenger] Sending message type: REQUEST_PROJECT_GRAPH
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.489Z - [Messenger] Message sent
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.489Z - Received raw message of length 1866
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.490Z - Received json message of type REQUEST_PROJECT_GRAPH
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.490Z - Graph recompute necessary due to env variable refresh. Changed keys: NODE, INIT_CWD, COLOR, PATH, PWD, EDITOR, NX_CLI_SET
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.490Z - [REQUEST]: Client Request for Project Graph Received
+DEBUG nx::native::watch::watcher: force-flush END count=0 replies=1 elapsed=9.355667ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.500Z - No in-memory cached project graph found. Recomputing it...
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 15919) listening on /private/tmp/plugin15910-2-193.953875.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 15918) listening on /private/tmp/plugin15910-1-193.421833.sock
+[1m[33mTime taken for 'plugin worker 15918 code loading' 48.174291ms[39m[22m
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 15917) listening on /private/tmp/plugin15910-0-192.180375.sock
+[1m[33mTime taken for 'plugin worker 15919 code loading' 47.515583ms[39m[22m
+[plugin-worker] "@nx/next/plugin" (pid: 15920) listening on /private/tmp/plugin15910-3-194.710875.sock
+[1m[33mTime taken for 'plugin worker 15917 code loading' 46.101917ms[39m[22m
+[1m[33mTime taken for 'plugin worker 15920 code loading' 47.291ms[39m[22m
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 15917)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 15918)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.577Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 95.381417ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.577Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 94.45662499999997ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 15917) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 15918) connected
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 15919)
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 15920)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.577Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 94.13416599999996ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.577Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 93.46341699999999ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 15919) connected
+[plugin-worker] "@nx/next/plugin" (pid: 15920) connected
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] .nx/workspace-data/d/server-process.json
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.582Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 15919) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.617Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 140.43029200000004ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 15918) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.618Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 141.889917ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 15917) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.627Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.627Z - [Messenger] Received message, length: 47
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.627Z - Time taken for 'loadDefaultNxPlugins' 149.562959ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.627Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 149.48908300000002ms
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.629Z - Streaming message to client: progress update for topic graph-construction
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.629Z - [Messenger] Received message, length: 153
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.630Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.630Z - [Messenger] Received message, length: 112
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 4.559459000000004ms[39m[22m
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.635Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.635Z - [Messenger] Received message, length: 47
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.639Z - Time taken for 'build-project-configs' 12.01991700000002ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.639Z - Time taken for 'createNodes:merge' 3.1803750000000264ms
+[plugin-worker] "@nx/next/plugin" (pid: 15920) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.728Z - [REQUEST]: Responding to the client with an error. Error when preparing serialized project graph. Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+AggregateError: Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+    at /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/project-graph/plugins/get-plugins.js:91:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.729Z - Done responding to the client null
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Received message, length: 2648
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Message sent
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.738Z - [Reconnect] Connection error detected: Daemon process terminated and closed the connection
+
+Messages from the log:
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.639Z - Time taken for 'build-project-configs' 12.01991700000002ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.639Z - Time taken for 'createNodes:merge' 3.1803750000000264ms
+[plugin-worker] "@nx/next/plugin" (pid: 15920) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.728Z - [REQUEST]: Responding to the client with an error. Error when preparing serialized project graph. Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+AggregateError: Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+    at /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/project-graph/plugins/get-plugins.js:91:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:23:28.729Z - Done responding to the client null
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Received message, length: 2648
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.729Z - [Messenger] Message sent
+
+
+
+More information: /Users/jz/Documents/portfolio-lab/.nx/workspace-data/d/daemon.log
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:23:28.738Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:24:35.486Z - [Client] Server not available after 6000 attempts
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:24:35.952Z - [Client] Starting new daemon server in background
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:24:35.953Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.020Z - New daemon starting from: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server/server.js
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.020Z - New daemon __dirname: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.020Z - New daemon nxVersion: 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.021Z - New daemon getInstalledNxVersion(): 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.021Z - Time taken for 'workspace context init' 0.8015000000000043ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.022Z - [Server] Starting outdated check interval (20ms)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.022Z - Started listening on: /private/tmp/2371462d00a5ec7a367e/d.sock
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.025Z - [WATCHER]: Subscribed to changes within: /Users/jz/Documents/portfolio-lab (native)
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.027Z - [LATEST-NX]: Pulling latest Nx...
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.028Z - [AI-AGENTS]: Starting agent configuration status computation
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 16168, socket: /private/tmp/plugin16166-0-63.30425.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 16169, socket: /private/tmp/plugin16166-1-63.877958.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 16170, socket: /private/tmp/plugin16166-2-64.220666.sock)
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 16171, socket: /private/tmp/plugin16166-3-64.525166.sock)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.031Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:24:36.031Z - [Client] Server available
+[NX v23.0.0 Daemon Client] - 2026-08-09T22:24:36.031Z - [Client] Daemon server started, pid=16166
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.032Z - Closed a connection. Number of open connections: 0
+[plugin-worker] "@nx/next/plugin" (pid: 16171) listening on /private/tmp/plugin16166-3-64.525166.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 16169) listening on /private/tmp/plugin16166-1-63.877958.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 16170) listening on /private/tmp/plugin16166-2-64.220666.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 16168) listening on /private/tmp/plugin16166-0-63.30425.sock
+[1m[33mTime taken for 'plugin worker 16171 code loading' 34.244667ms[39m[22m
+[1m[33mTime taken for 'plugin worker 16170 code loading' 35.228500000000004ms[39m[22m
+[1m[33mTime taken for 'plugin worker 16168 code loading' 35.287334ms[39m[22m
+[1m[33mTime taken for 'plugin worker 16169 code loading' 35.1495ms[39m[22m
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 16168)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 16169)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 16170)
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 16171)
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.106Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 77.1445ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.106Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 76.88570899999999ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.106Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 76.608ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.106Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 76.35162499999998ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 16168) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 16169) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 16170) connected
+[plugin-worker] "@nx/next/plugin" (pid: 16171) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 16170) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.127Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 100.66466600000001ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 16169) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.128Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 101.51541699999999ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 16168) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.131Z - Time taken for 'loadDefaultNxPlugins' 103.59479200000001ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.131Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 103.52937500000002ms
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 2.825499999999991ms[39m[22m
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] .nx/workspace-data/d/server-process.json
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.135Z - [WATCHER]: Processing file changes in outputs
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.139Z - Time taken for 'build-project-configs' 7.986499999999978ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.139Z - Time taken for 'createNodes:merge' 1.9828749999999786ms
+[plugin-worker] "@nx/next/plugin" (pid: 16171) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.163Z - Time taken for 'loadSpecifiedNxPlugins' 136.12937499999998ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.163Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 136.078042ms
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.634Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:36.634Z - Closed a connection. Number of open connections: 0
+Fetching nx...
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:39.040Z - [LATEST-NX]: Successfully pulled latest Nx to /private/tmp/tmp-16166-2CoR8Ea3dhfj
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:39.041Z - [NX-CONSOLE]: Using local implementation (NX_USE_LOCAL=true or inner call)
+DEBUG nx::native::ide::preferences: Loaded console preferences: NxConsolePreferences { auto_install_console: Some(false), path: "/Users/jz/.config/nx/ide.json" }
+DEBUG nx::native::ide::install: Detected editor: Unknown
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:39.046Z - [NX-CONSOLE]: Console status check completed, shouldPrompt: false
+DEBUG nx::native::ide::install: Editor command 'code' not found
+DEBUG nx::native::ide::install: Editor command 'code-insiders' not found
+DEBUG nx::native::ide::install: Editor command 'cursor' not found
+DEBUG nx::native::ide::install: Checking if Nx Console extension is installed with: cursor --list-extensions
+DEBUG nx::native::ide::install: Command 'cursor' not found, cannot check extension status
+[NX v23.0.0 Daemon Server] - 2026-08-09T22:24:39.049Z - [AI-AGENTS]: Agent configuration status computation completed: 0 fully configured, 0 outdated, 0 partially configured, 4 non-configured
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T23:01:07.455Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (sources)
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-09T23:01:07.456Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (outputs)
+[NX v23.0.0 Daemon Server] - 2026-08-09T23:01:07.457Z - [LATEST-NX]: Cleaning up latest Nx installation from /private/tmp/tmp-16166-2CoR8Ea3dhfj
+[NX v23.0.0 Daemon Server] - 2026-08-09T23:01:07.458Z - Server stopped because: "received process SIGTERM"
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.209Z - [Client] Starting new daemon server in background
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.210Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.537Z - New daemon starting from: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server/server.js
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.538Z - New daemon __dirname: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.538Z - New daemon nxVersion: 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.538Z - New daemon getInstalledNxVersion(): 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.539Z - Time taken for 'workspace context init' 3.137708000000032ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.539Z - [Server] Starting outdated check interval (20ms)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.540Z - Started listening on: /private/tmp/e658dcc8bcc013e8104c/d.sock
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.545Z - [WATCHER]: Subscribed to changes within: /Users/jz/Documents/portfolio-lab (native)
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.549Z - [LATEST-NX]: Pulling latest Nx...
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.550Z - [Client] Server available
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.550Z - [AI-AGENTS]: Starting agent configuration status computation
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.550Z - [Client] Daemon server started, pid=6008
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6020, socket: /private/tmp/plugin6008-0-328.839042.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6021, socket: /private/tmp/plugin6008-1-329.88075.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6022, socket: /private/tmp/plugin6008-2-330.348542.sock)
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 6023, socket: /private/tmp/plugin6008-3-330.712125.sock)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.554Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.555Z - Closed a connection. Number of open connections: 0
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6020) listening on /private/tmp/plugin6008-0-328.839042.sock
+[1m[33mTime taken for 'plugin worker 6020 code loading' 50.086665999999994ms[39m[22m
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6021) listening on /private/tmp/plugin6008-1-329.88075.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6022) listening on /private/tmp/plugin6008-2-330.348542.sock
+[plugin-worker] "@nx/next/plugin" (pid: 6023) listening on /private/tmp/plugin6008-3-330.712125.sock
+[1m[33mTime taken for 'plugin worker 6021 code loading' 52.730458999999996ms[39m[22m
+[1m[33mTime taken for 'plugin worker 6022 code loading' 52.899874999999994ms[39m[22m
+[1m[33mTime taken for 'plugin worker 6023 code loading' 52.562250000000006ms[39m[22m
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [create] .nx/workspace-data/d/server-process.json
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.650Z - [WATCHER]: Processing file changes in outputs
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6020)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6021)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6022)
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 6023)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.652Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 100.16533400000003ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.652Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 99.441666ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.652Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 99.14158300000003ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.652Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 98.89916699999998ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6021) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6020) connected
+[plugin-worker] "@nx/next/plugin" (pid: 6023) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6022) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6022) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.691Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 143.67258300000003ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.691Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.691Z - Closed a connection. Number of open connections: 0
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.691Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.691Z - [Messenger] Setting up socket listeners
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.692Z - [Messenger] listen() complete
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6021) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.693Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 146.48145900000003ms
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.703Z - [Messenger] Sending message type: REQUEST_PROJECT_GRAPH
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.703Z - [Messenger] Message sent
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.704Z - Received raw message of length 2038
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.704Z - Received json message of type REQUEST_PROJECT_GRAPH
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.705Z - Graph recompute necessary due to env variable refresh. Changed keys: NODE, INIT_CWD, COLOR, PATH, PWD, EDITOR, NX_CLI_SET
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.705Z - [REQUEST]: Client Request for Project Graph Received
+DEBUG nx::native::watch::watcher: force-flush END count=0 replies=1 elapsed=8.91175ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6020) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.717Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.717Z - [Messenger] Received message, length: 47
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.718Z - No in-memory cached project graph found. Recomputing it...
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.718Z - Time taken for 'loadDefaultNxPlugins' 169.723708ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.718Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 169.650125ms
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.720Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.720Z - [Messenger] Received message, length: 153
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.721Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.721Z - [Messenger] Received message, length: 112
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 5.910082999999986ms[39m[22m
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.727Z - Streaming message to client: progress update for topic graph-construction
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.727Z - [Messenger] Received message, length: 47
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.730Z - Time taken for 'build-project-configs' 13.505667000000017ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.730Z - Time taken for 'createNodes:merge' 3.03449999999998ms
+[plugin-worker] "@nx/next/plugin" (pid: 6023) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.839Z - [REQUEST]: Responding to the client with an error. Error when preparing serialized project graph. Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+AggregateError: Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+    at /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/project-graph/plugins/get-plugins.js:91:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.839Z - Done responding to the client null
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.839Z - [Messenger] Received message, length: 2648
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.840Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.840Z - [Messenger] Message sent
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.890Z - [Reconnect] Connection error detected: Daemon process terminated and closed the connection
+
+Messages from the log:
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.730Z - Time taken for 'build-project-configs' 13.505667000000017ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.730Z - Time taken for 'createNodes:merge' 3.03449999999998ms
+[plugin-worker] "@nx/next/plugin" (pid: 6023) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.839Z - [REQUEST]: Responding to the client with an error. Error when preparing serialized project graph. Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+AggregateError: Failed to load 1 Nx plugin(s):
+  - @nx/react/plugin: Package subpath './plugin' is not defined by "exports" in /Users/jz/Documents/portfolio-lab/node_modules/@nx/react/package.json
+    at /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/project-graph/plugins/get-plugins.js:91:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:47:52.839Z - Done responding to the client null
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.839Z - [Messenger] Received message, length: 2648
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.840Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.840Z - [Messenger] Message sent
+
+
+
+More information: /Users/jz/Documents/portfolio-lab/.nx/workspace-data/d/daemon.log
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:47:52.891Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:48:59.276Z - [Client] Server not available after 6000 attempts
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:49:00.058Z - [Client] Starting new daemon server in background
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:49:00.059Z - [Client] Waiting for server (max: 6000 attempts, 10ms interval)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.184Z - New daemon starting from: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server/server.js
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.185Z - New daemon __dirname: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/daemon/server
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.185Z - New daemon nxVersion: 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.185Z - New daemon getInstalledNxVersion(): 23.0.0
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.185Z - Time taken for 'workspace context init' 4.776624999999996ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.186Z - [Server] Starting outdated check interval (20ms)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.187Z - Started listening on: /private/tmp/1663ef980739c1e3a805/d.sock
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.193Z - [WATCHER]: Subscribed to changes within: /Users/jz/Documents/portfolio-lab (native)
+DEBUG nx::native::watch::watcher: watching started origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:49:00.194Z - [Client] Server available
+[NX v23.0.0 Daemon Client] - 2026-08-12T15:49:00.194Z - [Client] Daemon server started, pid=6090
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.195Z - [LATEST-NX]: Pulling latest Nx...
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.196Z - [AI-AGENTS]: Starting agent configuration status computation
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6092, socket: /private/tmp/plugin6090-0-125.387958.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6093, socket: /private/tmp/plugin6090-1-126.173333.sock)
+[isolated-plugin] spawned worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6094, socket: /private/tmp/plugin6090-2-126.568791.sock)
+[isolated-plugin] spawned worker for "@nx/next/plugin" (pid: 6095, socket: /private/tmp/plugin6090-3-126.904.sock)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.199Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.200Z - Closed a connection. Number of open connections: 0
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6094) listening on /private/tmp/plugin6090-2-126.568791.sock
+[plugin-worker] "@nx/next/plugin" (pid: 6095) listening on /private/tmp/plugin6090-3-126.904.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6092) listening on /private/tmp/plugin6090-0-125.387958.sock
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6093) listening on /private/tmp/plugin6090-1-126.173333.sock
+[1m[33mTime taken for 'plugin worker 6094 code loading' 36.113125ms[39m[22m
+[1m[33mTime taken for 'plugin worker 6095 code loading' 37.077459ms[39m[22m
+[1m[33mTime taken for 'plugin worker 6092 code loading' 36.66775ms[39m[22m
+[1m[33mTime taken for 'plugin worker 6093 code loading' 37.050583ms[39m[22m
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6092)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6093)
+[isolated-plugin] connected to worker for "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6094)
+[isolated-plugin] connected to worker for "@nx/next/plugin" (pid: 6095)
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.273Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 76.51812500000001ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.273Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 76.054167ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.273Z - Time taken for 'start-plugin-worker:/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 75.71254200000001ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.273Z - Time taken for 'start-plugin-worker:@nx/next/plugin' 75.42458299999998ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6092) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6093) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6094) connected
+[plugin-worker] "@nx/next/plugin" (pid: 6095) connected
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json" (pid: 6094) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.297Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/project-json/build-nodes/project-json' 102.912ms
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json" (pid: 6093) loaded successfully
+DEBUG nx::native::watch::watcher: idle-window emitting events count=1
+DEBUG nx::native::watch::watcher:   [update] .nx/workspace-data/d/server-process.json
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.299Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/package-json' 104.444125ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.299Z - [WATCHER]: Processing file changes in outputs
+[plugin-worker] "/Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js" (pid: 6092) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.306Z - Time taken for 'loadDefaultNxPlugins' 109.906792ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.306Z - Time taken for 'Load Nx Plugin: /Users/jz/Documents/portfolio-lab/node_modules/nx/dist/src/plugins/js' 109.828542ms
+[isolated-plugin] shutting down worker for "nx/core/package-json" after createNodes
+[isolated-plugin] shutting down worker for "nx/core/project-json" after createNodes
+[1m[33mTime taken for 'nx/js/dependencies-and-lockfile:createNodes' 3.546915999999996ms[39m[22m
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+Unable to find local plugin [] Map(0) {}
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.314Z - Time taken for 'build-project-configs' 8.438458999999995ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.314Z - Time taken for 'createNodes:merge' 2.058290999999997ms
+[plugin-worker] "@nx/next/plugin" (pid: 6095) loaded successfully
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.377Z - Time taken for 'loadSpecifiedNxPlugins' 182.98408299999997ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.378Z - Time taken for 'Load Nx Plugin: @nx/next/plugin' 182.93545800000004ms
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.447Z - Established a connection. Number of open connections: 1
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:00.448Z - Closed a connection. Number of open connections: 0
+Fetching nx...
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:03.215Z - [LATEST-NX]: Successfully pulled latest Nx to /private/tmp/tmp-6090-4DGmFKQQ1YST
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:03.216Z - [NX-CONSOLE]: Using local implementation (NX_USE_LOCAL=true or inner call)
+DEBUG nx::native::ide::preferences: Loaded console preferences: NxConsolePreferences { auto_install_console: Some(false), path: "/Users/jz/.config/nx/ide.json" }
+DEBUG nx::native::ide::install: Detected editor: Unknown
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:03.220Z - [NX-CONSOLE]: Console status check completed, shouldPrompt: false
+DEBUG nx::native::ide::install: Editor command 'code' not found
+DEBUG nx::native::ide::install: Editor command 'code-insiders' not found
+DEBUG nx::native::ide::install: Editor command 'cursor' not found
+DEBUG nx::native::ide::install: Checking if Nx Console extension is installed with: cursor --list-extensions
+DEBUG nx::native::ide::install: Command 'cursor' not found, cannot check extension status
+[NX v23.0.0 Daemon Server] - 2026-08-12T15:49:03.223Z - [AI-AGENTS]: Agent configuration status computation completed: 0 fully configured, 0 outdated, 0 partially configured, 4 non-configured
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-12T19:00:37.863Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (sources)
+DEBUG nx::native::watch::watcher: watching stopped origin=/Users/jz/Documents/portfolio-lab
+[NX v23.0.0 Daemon Server] - 2026-08-12T19:00:37.863Z - [WATCHER]: Stopping the watcher for /Users/jz/Documents/portfolio-lab (outputs)
+[NX v23.0.0 Daemon Server] - 2026-08-12T19:00:37.863Z - [LATEST-NX]: Cleaning up latest Nx installation from /private/tmp/tmp-6090-4DGmFKQQ1YST
+[NX v23.0.0 Daemon Server] - 2026-08-12T19:00:37.864Z - Server stopped because: "10800000ms of inactivity"
